@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "usesAppleSignIn": true,
@@ -28,13 +26,14 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-apple-authentication"
-    ],
+    "plugins": ["expo-apple-authentication"],
     "extra": {
       "eas": {
         "projectId": "096b25fb-91e1-4331-96bd-65cbd5373e03"
       }
+    },
+    "experiments": {
+      "tsconfigPaths": true
     }
   }
 }
