@@ -11,10 +11,13 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
-      "usesAppleSignIn": true
+      "usesAppleSignIn": true,
+      "bundleIdentifier": "com.scyuenab.demoreactnative"
     },
     "android": {
       "adaptiveIcon": {
@@ -25,6 +28,13 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-apple-authentication"]
+    "plugins": [
+      "expo-apple-authentication"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "096b25fb-91e1-4331-96bd-65cbd5373e03"
+      }
+    }
   }
 }

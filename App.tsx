@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import * as AppleAuthentication from "expo-apple-authentication";
 import { CodedError } from "./src/types/CodedError";
+import Config from "./src/types/Config";
 
 export default function App() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
           }
         }}
       />
+      <Text>{JSON.stringify(Config)}</Text>
     </View>
   );
 }
