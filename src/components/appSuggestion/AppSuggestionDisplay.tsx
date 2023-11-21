@@ -1,5 +1,5 @@
 import { AppSuggestion } from "@/data/appSuggestions";
-import { memo } from "react";
+import { memo, useRef } from "react";
 import {
   Image,
   ImageBackground,
@@ -8,19 +8,46 @@ import {
   Text,
   View,
 } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 interface IAppSuggestionDisplayProps {
   appSuggestion: AppSuggestion;
-  open: boolean;
+  onPress: () => void;
 }
 
 const AppSuggestionDisplay = memo<IAppSuggestionDisplayProps>(
-  ({ appSuggestion: { description, id, imageUrl, title }, open }) => (
-    <ImageBackground source={{ uri: imageUrl }} style={styles.container}>
-      <Text style={[styles.text, styles.title]}>{title}</Text>
-      <Text style={[styles.text, styles.description]}>{description}</Text>
-    </ImageBackground>
-  )
+  ({ appSuggestion: { description, id, imageUrl, title }, onPress }) => {
+    const scale = useSharedValue(1);
+    const animatedStyle = useAnimatedStyle(() => ({
+      transform: [{ scale: scale.value }],
+    }));
+
+    return (
+      <Pressable
+        onPress={onPress}
+        onPressIn={() => {
+          scale.value = withTiming(0.95, { duration: 300 });
+        }}
+        onPressOut={() => {
+          scale.value = withTiming(1, { duration: 300 });
+        }}
+      >
+        <Animated.View style={[styles.container, animatedStyle]}>
+          <ImageBackground
+            source={{ uri: imageUrl }}
+            style={styles.imageBackground}
+          >
+            <Text style={[styles.text, styles.title]}>{title}</Text>
+            <Text style={[styles.text, styles.description]}>{description}</Text>
+          </ImageBackground>
+        </Animated.View>
+      </Pressable>
+    );
+  }
 );
 
 const styles = StyleSheet.create({
@@ -30,8 +57,11 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: "lightgray",
     overflow: "hidden",
-    justifyContent: "space-between",
+  },
+  imageBackground: {
+    flex: 1,
     paddingVertical: 32,
+    justifyContent: "space-between",
   },
   text: {
     color: "white",
