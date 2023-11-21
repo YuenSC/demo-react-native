@@ -13,6 +13,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import * as Haptics from "expo-haptics";
 
 interface IAppSuggestionDisplayProps {
   appSuggestion: AppSuggestion;
@@ -31,6 +32,7 @@ const AppSuggestionDisplay = memo<IAppSuggestionDisplayProps>(
         onPress={onPress}
         onPressIn={() => {
           scale.value = withTiming(0.95, { duration: 300 });
+          Haptics.impactAsync();
         }}
         onPressOut={() => {
           scale.value = withTiming(1, { duration: 300 });
