@@ -2,15 +2,19 @@ import AppSuggestionDetailScreen from "@/screens/AppSuggestionDetailScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { memo } from "react";
 import { StyleSheet } from "react-native";
-import BottomTabNavigator from "./BottomTabNavigator";
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 import { IRootStackParamList } from "@/types/navigation";
+import MainNavigation from "./MainNavigation";
 
 const Stack = createSharedElementStackNavigator<IRootStackParamList>();
 
 const StackNavigator = memo(() => (
-  <Stack.Navigator screenOptions={{ headerShown: true }}>
-    <Stack.Screen name="Root" component={BottomTabNavigator} />
+  <Stack.Navigator>
+    <Stack.Screen
+      name="Root"
+      component={MainNavigation}
+      options={{ headerShown: false }}
+    />
     <Stack.Screen
       name="AppSuggestionDetail"
       component={AppSuggestionDetailScreen}

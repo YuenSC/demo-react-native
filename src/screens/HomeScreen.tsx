@@ -1,13 +1,13 @@
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const SampleScreen = () => (
+const HomeScreen = () => (
   <SafeAreaView style={styles.container}>
-    <Text>SampleScreen</Text>
+    <Text>HomeScreen</Text>
   </SafeAreaView>
 );
 
-export default SampleScreen;
+export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {

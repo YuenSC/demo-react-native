@@ -25,7 +25,6 @@ const AppSuggestionListScreen = () => {
             id={`appSuggestion.${appSuggestion.id}.photo`}
           >
             <AppSuggestionDisplay
-              open
               appSuggestion={appSuggestion}
               onPress={() =>
                 navigation.navigate("AppSuggestionDetail", {
