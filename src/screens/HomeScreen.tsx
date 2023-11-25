@@ -1,6 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import { Appbar, Text } from "react-native-paper";
 import Animated, {
+  interpolate,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
@@ -15,42 +16,54 @@ const HeaderHeight = 64;
 
 const HomeScreen = () => {
   const translationY = useSharedValue(0);
+  const hideHeader = useSharedValue(false);
   const insets = useSafeAreaInsets();
 
-  const scrollHandler = useAnimatedScrollHandler((event) => {
-    console.log("event.contentOffset.y", event.contentOffset.y);
-    translationY.value = event.contentOffset.y;
+  const scrollHandler = useAnimatedScrollHandler<{ startY: number }>({
+    onScroll: (event, ctx) => {
+      const diff = event.contentOffset.y - ctx.startY;
+      hideHeader.value = diff > 0 ? diff > 10 : diff < -10;
+      translationY.value = event.contentOffset.y;
+    },
+    onBeginDrag: (event, ctx) => {
+      ctx.startY = event.contentOffset.y;
+    },
   });
 
   const headerStyle = useAnimatedStyle(() => {
     return {
-      opacity: withTiming(translationY.value > HeaderHeight ? 0 : 1),
-      height: withTiming(
-        translationY.value > HeaderHeight
-          ? insets.top
-          : HeaderHeight + insets.top
-      ),
+      backgroundColor: "black",
+      opacity: withTiming(hideHeader.value ? 0 : 1, { duration: 500 }),
+    };
+  });
+
+  const testStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: withTiming(hideHeader.value ? -HeaderHeight : 0, {
+            duration: 500,
+          }),
+        },
+      ],
     };
   });
 
   return (
     <View style={styles.container}>
-      <Animated.View style={headerStyle}>
-        <Appbar.Header
-          mode="small"
-          style={{
-            backgroundColor: "black",
-            borderBottomWidth: 1,
-            borderColor: "white",
-          }}
-        >
+      <Animated.View style={[headerStyle, testStyle]}>
+        <Appbar.Header mode="small" style={styles.appBarHeader}>
           <Appbar.Content title="Calvin" titleStyle={{ color: "white" }} />
           <Appbar.Action icon="calendar" onPress={() => {}} />
           <Appbar.Action icon="magnify" onPress={() => {}} />
         </Appbar.Header>
       </Animated.View>
 
-      <Animated.ScrollView scrollEventThrottle={16} onScroll={scrollHandler}>
+      <Animated.ScrollView
+        scrollEventThrottle={16}
+        onScroll={scrollHandler}
+        style={testStyle}
+      >
         <Text style={styles.whiteColor}>HomeScreen</Text>
         <Text variant="bodyLarge" style={styles.whiteColor}>
           Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aliquid
@@ -122,5 +135,10 @@ const styles = StyleSheet.create({
   },
   whiteColor: {
     color: "#fff",
+  },
+  appBarHeader: {
+    backgroundColor: "black",
+    borderBottomWidth: 1,
+    borderColor: "white",
   },
 });
