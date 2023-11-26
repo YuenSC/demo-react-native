@@ -1,3 +1,5 @@
+import Device from "@/constants/Device";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { Image, StyleSheet, View } from "react-native";
 import { Appbar, Text } from "react-native-paper";
 import Animated, {
@@ -5,6 +7,7 @@ import Animated, {
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
   withTiming,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -18,50 +21,79 @@ const clamp = (value: number, lowerBound: number, upperBound: number) => {
 
 const HomeScreen = () => {
   const insets = useSafeAreaInsets();
-  const maxHeaderHeight = HeaderHeight + insets.top;
-  const minHeaderHeight = insets.top;
-  const headerHeight = useSharedValue(maxHeaderHeight);
+  const headerTranslateY = useSharedValue(0);
+  const bottomTabHeight = useBottomTabBarHeight();
 
-  const scrollHandler = useAnimatedScrollHandler<{ startY: number }>({
+  const minScrollViewHeight =
+    Device.screen.height - insets.top - HeaderHeight - bottomTabHeight;
+  const maxScrollViewHeight = minScrollViewHeight + HeaderHeight;
+
+  const scrollHandler = useAnimatedScrollHandler<{
+    startY: number;
+    initialHeaderTranslateY: number;
+    isEndDrag: boolean;
+  }>({
+    onScroll: (event, ctx) => {
+      if (ctx.isEndDrag) return;
+      const diff = event.contentOffset.y - ctx.startY;
+      const nextHeaderTranslateY = clamp(
+        ctx.initialHeaderTranslateY - diff,
+        -HeaderHeight,
+        0
+      );
+
+      headerTranslateY.value = nextHeaderTranslateY;
+    },
     onBeginDrag: (event, ctx) => {
-      console.log("onBeginDrag");
       ctx.startY = event.contentOffset.y;
+      ctx.initialHeaderTranslateY = headerTranslateY.value;
+      ctx.isEndDrag = false;
     },
     onEndDrag: (event, ctx) => {
-      console.log("onEndDrag");
+      ctx.isEndDrag = true;
+
       const diff = event.contentOffset.y - ctx.startY;
-      headerHeight.value = diff > 0 ? minHeaderHeight : maxHeaderHeight;
+      headerTranslateY.value = withTiming(diff > 0 ? -HeaderHeight : 0, {
+        duration: 300,
+      });
     },
   });
 
   const headerStyle = useAnimatedStyle(() => {
     return {
-      backgroundColor: "black",
-      opacity: withTiming(
-        interpolate(
-          headerHeight.value,
-          [minHeaderHeight, maxHeaderHeight],
-          [0, 1]
-        ),
-        { duration: 300 }
+      opacity: interpolate(headerTranslateY.value, [-HeaderHeight, 0], [0, 1]),
+      transform: [{ translateY: headerTranslateY.value }],
+    };
+  });
+
+  const scrollViewStyle = useAnimatedStyle(() => {
+    return {
+      maxHeight: interpolate(
+        headerTranslateY.value,
+        [-HeaderHeight, 0],
+        [maxScrollViewHeight, minScrollViewHeight]
       ),
-      height: withTiming(headerHeight.value, { duration: 300 }),
     };
   });
 
   return (
-    <View style={styles.container}>
-      <Animated.View style={headerStyle}>
-        <Appbar.Header mode="small" style={styles.appBarHeader}>
-          <Appbar.Content title="Calvin" titleStyle={{ color: "white" }} />
-          <Appbar.Action icon="calendar" onPress={() => {}} />
-          <Appbar.Action icon="magnify" onPress={() => {}} />
-        </Appbar.Header>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
+      <Animated.View
+        style={[styles.appBarHeader, headerStyle, { marginTop: insets.top }]}
+      >
+        <Text variant="headlineMedium" style={styles.whiteColor}>
+          Calvin
+        </Text>
       </Animated.View>
 
-      <Animated.ScrollView scrollEventThrottle={16} onScroll={scrollHandler}>
+      <Animated.ScrollView
+        scrollEventThrottle={16}
+        onScroll={scrollHandler}
+        style={[styles.scrollView, scrollViewStyle]}
+      >
         {Array.from(Array(10).keys()).map((index) => (
           <Image
+            key={index}
             source={{ uri: "https://picsum.photos/400/300?" + index }}
             style={styles.image}
             resizeMode="contain"
@@ -86,6 +118,16 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     borderBottomWidth: 1,
     borderColor: "lightgray",
+    height: HeaderHeight,
+    width: "100%",
+    position: "absolute",
+    top: 0,
+    zIndex: 10,
+    justifyContent: "center",
+    paddingHorizontal: 16,
+  },
+  scrollView: {
+    marginTop: "auto",
   },
   image: {
     width: "100%",
