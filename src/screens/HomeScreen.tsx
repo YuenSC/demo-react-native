@@ -1,83 +1,41 @@
+import StyledText from "@/components/common/StyledText";
 import Device from "@/constants/Device";
-import clamp from "@/utils/reanimated/clamp";
+import useCollapsibleHeader from "@/hooks/useCollapsibleHeader";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { makeStyles } from "@rneui/themed";
-import { Image, Text, View } from "react-native";
-import Animated, {
-  interpolate,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+import { useMemo } from "react";
+import { Image, View } from "react-native";
+import Animated from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const HEADER_HEIGHT = 64;
 
 const HomeScreen = () => {
   const insets = useSafeAreaInsets();
-  const headerTranslateY = useSharedValue(0);
   const bottomTabHeight = useBottomTabBarHeight();
   const styles = useStyles();
 
-  const minScrollViewHeight =
-    Device.screen.height - insets.top - HEADER_HEIGHT - bottomTabHeight;
-  const maxScrollViewHeight = minScrollViewHeight + HEADER_HEIGHT;
-
-  const scrollHandler = useAnimatedScrollHandler<{
-    startY: number;
-    initialHeaderTranslateY: number;
-    isEndDrag: boolean;
-  }>({
-    onScroll: (event, ctx) => {
-      if (ctx.isEndDrag) return;
-      const diff = event.contentOffset.y - ctx.startY;
-      const nextHeaderTranslateY = clamp(
-        ctx.initialHeaderTranslateY - diff,
-        -HEADER_HEIGHT,
-        0
-      );
-
-      headerTranslateY.value = nextHeaderTranslateY;
-    },
-    onBeginDrag: (event, ctx) => {
-      ctx.startY = event.contentOffset.y;
-      ctx.initialHeaderTranslateY = headerTranslateY.value;
-      ctx.isEndDrag = false;
-    },
-    onEndDrag: (event, ctx) => {
-      ctx.isEndDrag = true;
-
-      const diff = event.contentOffset.y - ctx.startY;
-      headerTranslateY.value = withTiming(diff > 0 ? -HEADER_HEIGHT : 0, {
-        duration: 300,
-      });
-    },
-  });
-
-  const headerStyle = useAnimatedStyle(() => {
-    return {
-      opacity: interpolate(headerTranslateY.value, [-HEADER_HEIGHT, 0], [0, 1]),
-      transform: [{ translateY: headerTranslateY.value }],
-    };
-  });
-
-  const scrollViewStyle = useAnimatedStyle(() => {
-    return {
-      maxHeight: interpolate(
-        headerTranslateY.value,
-        [-HEADER_HEIGHT, 0],
-        [maxScrollViewHeight, minScrollViewHeight]
-      ),
-    };
-  });
+  const { headerStyle, scrollHandler, scrollViewStyle } = useCollapsibleHeader(
+    useMemo(
+      () => ({
+        headerHeight: HEADER_HEIGHT,
+        maxScrollViewHeight:
+          Device.screen.height - insets.top - bottomTabHeight,
+        minScrollViewHeight:
+          Device.screen.height - insets.top - HEADER_HEIGHT - bottomTabHeight,
+      }),
+      [insets, bottomTabHeight]
+    )
+  );
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <Animated.View
         style={[styles.appBarHeader, headerStyle, { marginTop: insets.top }]}
       >
-        <Text style={styles.whiteColor}>Calvin</Text>
+        <StyledText h3 style={styles.whiteColor}>
+          Calvin
+        </StyledText>
       </Animated.View>
 
       <Animated.ScrollView
@@ -99,7 +57,6 @@ const HomeScreen = () => {
 };
 
 const useStyles = makeStyles((theme) => {
-  console.log("theme.colors", theme.colors);
   return {
     container: {
       flex: 1,
