@@ -1,9 +1,10 @@
-import AppSuggestionDisplay from "@/components/appSuggestion/AppSuggestionDisplay";
-import { appSuggestions } from "@/data/appSuggestions";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { ScrollView } from "react-native";
 import { SharedElement } from "react-navigation-shared-element";
+
+import AppSuggestionDisplay from "@/components/appSuggestion/AppSuggestionDisplay";
+import { appSuggestions } from "@/data/appSuggestions";
 
 const AppSuggestionListScreen = () => {
   const navigation = useNavigation();

@@ -1,13 +1,14 @@
-import StyledText from "@/components/common/StyledText";
-import Device from "@/constants/Device";
-import useCollapsibleHeader from "@/hooks/useCollapsibleHeader";
-import { IBottomTabScreenProps } from "@/types/navigation";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { Button, makeStyles } from "@rneui/themed";
+import { makeStyles } from "@rneui/themed";
 import { useEffect, useMemo, useRef } from "react";
 import { Image, View } from "react-native";
 import Animated from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+import StyledText from "@/components/common/StyledText";
+import Device from "@/constants/Device";
+import useCollapsibleHeader from "@/hooks/useCollapsibleHeader";
+import { IBottomTabScreenProps } from "@/types/navigation";
 
 const HEADER_HEIGHT = 64;
 
@@ -27,13 +28,13 @@ const HomeScreen = ({ navigation }: IBottomTabScreenProps<"Home">) => {
           minScrollViewHeight:
             Device.screen.height - insets.top - HEADER_HEIGHT - bottomTabHeight,
         }),
-        [insets, bottomTabHeight]
-      )
+        [insets, bottomTabHeight],
+      ),
     );
 
   useEffect(() => {
     console.log("addListener");
-    navigation.addListener("tabPress", (e) => {
+    navigation.addListener("tabPress", () => {
       scrollViewRef.current?.scrollTo({ y: 0, animated: true });
       onShowHeader();
     });

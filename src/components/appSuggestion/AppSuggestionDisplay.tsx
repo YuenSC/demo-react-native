@@ -1,20 +1,14 @@
-import { AppSuggestion } from "@/data/appSuggestions";
-import { memo, useRef } from "react";
-import {
-  Image,
-  ImageBackground,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { makeStyles } from "@rneui/themed";
+import * as Haptics from "expo-haptics";
+import { memo } from "react";
+import { ImageBackground, Pressable, Text } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import * as Haptics from "expo-haptics";
-import { makeStyles } from "@rneui/themed";
+
+import { AppSuggestion } from "@/data/appSuggestions";
 
 interface IAppSuggestionDisplayProps {
   appSuggestion: AppSuggestion;
@@ -51,7 +45,7 @@ const AppSuggestionDisplay = memo<IAppSuggestionDisplayProps>(
         </Animated.View>
       </Pressable>
     );
-  }
+  },
 );
 
 const useStyles = makeStyles((theme) => ({

@@ -1,8 +1,10 @@
-import AppSuggestionDetailScreen from "@/screens/AppSuggestionDetailScreen";
-import { IRootStackParamList } from "@/types/navigation";
 import { memo } from "react";
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
+
 import MainNavigation from "./MainNavigation";
+
+import AppSuggestionDetailScreen from "@/screens/AppSuggestionDetailScreen";
+import { IRootStackParamList } from "@/types/navigation";
 
 const Stack = createSharedElementStackNavigator<IRootStackParamList>();
 

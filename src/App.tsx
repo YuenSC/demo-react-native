@@ -1,9 +1,9 @@
 import { ThemeProvider } from "@rneui/themed";
 import { registerRootComponent } from "expo";
 import { StatusBar } from "expo-status-bar";
-import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+
 import Navigation from "./navigation/Navigation";
 import theme from "./styles/rneui";
 

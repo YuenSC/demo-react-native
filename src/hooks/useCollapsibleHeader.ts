@@ -1,4 +1,3 @@
-import clamp from "@/utils/reanimated/clamp";
 import { useCallback } from "react";
 import {
   interpolate,
@@ -7,6 +6,8 @@ import {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+
+import clamp from "@/utils/reanimated/clamp";
 
 const useCollapsibleHeader = ({
   headerHeight,
@@ -38,7 +39,7 @@ const useCollapsibleHeader = ({
       const nextHeaderTranslateY = clamp(
         ctx.initialHeaderTranslateY - diff,
         -headerHeight,
-        0
+        0,
       );
 
       headerTranslateY.value = nextHeaderTranslateY;
@@ -70,7 +71,7 @@ const useCollapsibleHeader = ({
       maxHeight: interpolate(
         headerTranslateY.value,
         [-headerHeight, 0],
-        [maxScrollViewHeight, minScrollViewHeight]
+        [maxScrollViewHeight, minScrollViewHeight],
       ),
     };
   });

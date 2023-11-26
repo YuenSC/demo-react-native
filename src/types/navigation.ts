@@ -1,4 +1,3 @@
-import { AppSuggestion } from "@/data/appSuggestions";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { MaterialTopTabScreenProps } from "@react-navigation/material-top-tabs";
 import {

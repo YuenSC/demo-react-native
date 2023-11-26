@@ -2,7 +2,7 @@ import { makeStyles } from "@rneui/themed";
 import { memo } from "react";
 import { Text, View } from "react-native";
 
-type ISampleComponentProps = {};
+type ISampleComponentProps = object;
 
 const SampleComponent = memo<ISampleComponentProps>(() => {
   const styles = useStyles();

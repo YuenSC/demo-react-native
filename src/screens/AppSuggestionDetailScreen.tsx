@@ -1,8 +1,9 @@
+import { makeStyles } from "@rneui/themed";
+import { Image, View } from "react-native";
+import { SharedElement } from "react-navigation-shared-element";
+
 import { appSuggestions } from "@/data/appSuggestions";
 import { IRootStackScreenProps } from "@/types/navigation";
-import { makeStyles } from "@rneui/themed";
-import { Image, StyleSheet, View } from "react-native";
-import { SharedElement } from "react-navigation-shared-element";
 
 const AppSuggestionDetailScreen = ({
   navigation,
@@ -10,7 +11,7 @@ const AppSuggestionDetailScreen = ({
 }: IRootStackScreenProps<"AppSuggestionDetail">) => {
   const styles = useStyles();
   const appSuggestion = appSuggestions.find(
-    (item) => item.id === route.params.id
+    (item) => item.id === route.params.id,
   );
 
   if (!appSuggestion) return null;

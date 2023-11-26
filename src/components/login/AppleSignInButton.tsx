@@ -1,7 +1,8 @@
-import { CodedError } from "@/types/CodedError";
 import { makeStyles } from "@rneui/themed";
 import * as AppleAuthentication from "expo-apple-authentication";
 import { memo } from "react";
+
+import { CodedError } from "@/types/CodedError";
 
 interface IAppleSignInButtonProps {
   foo?: string;
