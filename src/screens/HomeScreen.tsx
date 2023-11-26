@@ -1,13 +1,11 @@
 import Device from "@/constants/Device";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { Image, StyleSheet, View } from "react-native";
-import { Appbar, Text } from "react-native-paper";
+import { Image, StyleSheet, Text, View } from "react-native";
 import Animated, {
   interpolate,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
-  withDelay,
   withTiming,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -81,9 +79,7 @@ const HomeScreen = () => {
       <Animated.View
         style={[styles.appBarHeader, headerStyle, { marginTop: insets.top }]}
       >
-        <Text variant="headlineMedium" style={styles.whiteColor}>
-          Calvin
-        </Text>
+        <Text style={styles.whiteColor}>Calvin</Text>
       </Animated.View>
 
       <Animated.ScrollView
