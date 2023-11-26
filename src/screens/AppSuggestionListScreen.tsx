@@ -1,10 +1,8 @@
 import AppSuggestionDisplay from "@/components/appSuggestion/AppSuggestionDisplay";
-import { AppSuggestion, appSuggestions } from "@/data/appSuggestions";
-import { Position } from "@/types/postions";
+import { appSuggestions } from "@/data/appSuggestions";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import { useCallback, useState } from "react";
-import { Pressable, ScrollView, StyleSheet } from "react-native";
+import { ScrollView } from "react-native";
 import { SharedElement } from "react-navigation-shared-element";
 
 const AppSuggestionListScreen = () => {
@@ -40,10 +38,3 @@ const AppSuggestionListScreen = () => {
 };
 
 export default AppSuggestionListScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-});

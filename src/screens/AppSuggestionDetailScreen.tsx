@@ -1,13 +1,14 @@
 import { appSuggestions } from "@/data/appSuggestions";
 import { IRootStackScreenProps } from "@/types/navigation";
-import { useNavigation } from "@react-navigation/native";
-import { Image, StyleSheet, Text, View, Modal } from "react-native";
+import { makeStyles } from "@rneui/themed";
+import { Image, StyleSheet, View } from "react-native";
 import { SharedElement } from "react-navigation-shared-element";
 
 const AppSuggestionDetailScreen = ({
   navigation,
   route,
 }: IRootStackScreenProps<"AppSuggestionDetail">) => {
+  const styles = useStyles();
   const appSuggestion = appSuggestions.find(
     (item) => item.id === route.params.id
   );
@@ -31,9 +32,9 @@ const AppSuggestionDetailScreen = ({
 
 export default AppSuggestionDetailScreen;
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: theme.colors.black,
   },
-});
+}));

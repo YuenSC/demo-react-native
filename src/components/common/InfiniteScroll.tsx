@@ -1,11 +1,6 @@
+import { makeStyles } from "@rneui/themed";
 import { memo } from "react";
-import {
-  FlatListProps,
-  RefreshControl,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { FlatListProps, RefreshControl } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 
 interface IInfiniteScrollProps<T> extends FlatListProps<T> {
@@ -23,26 +18,30 @@ const InfiniteScroll = <T,>({
   onFetchMore,
   hasMore,
   ...props
-}: IInfiniteScrollProps<T>) => (
-  <FlatList
-    {...props}
-    refreshControl={
-      onRefetch ? (
-        <RefreshControl
-          refreshing={Boolean(isRefetching)}
-          onRefresh={onRefetch}
-        />
-      ) : undefined
-    }
-  />
-);
+}: IInfiniteScrollProps<T>) => {
+  const styles = useStyles();
 
-const styles = StyleSheet.create({
+  return (
+    <FlatList
+      {...props}
+      refreshControl={
+        onRefetch ? (
+          <RefreshControl
+            refreshing={Boolean(isRefetching)}
+            onRefresh={onRefetch}
+          />
+        ) : undefined
+      }
+    />
+  );
+};
+
+const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: theme.colors.black,
   },
-});
+}));
 
 InfiniteScroll.displayName = "InfiniteScroll";
 export default memo(InfiniteScroll);

@@ -9,7 +9,6 @@ import {
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { memo } from "react";
-import { StyleSheet } from "react-native";
 
 const TopTab = createMaterialTopTabNavigator<ITopTabParamList>();
 const BottomTab = createBottomTabNavigator<IBottomTabParamList>();
@@ -52,13 +51,6 @@ const MainNavigation = () => {
     </TopTab.Navigator>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-});
 
 MainNavigation.displayName = "MainNavigation";
 export default MainNavigation;

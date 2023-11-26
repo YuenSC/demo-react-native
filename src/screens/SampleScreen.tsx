@@ -1,17 +1,22 @@
-import { StyleSheet, Text, View } from "react-native";
+import { makeStyles } from "@rneui/themed";
+import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const SampleScreen = () => (
-  <SafeAreaView style={styles.container}>
-    <Text>SampleScreen</Text>
-  </SafeAreaView>
-);
+const SampleScreen = () => {
+  const styles = useStyles();
 
-export default SampleScreen;
+  return (
+    <SafeAreaView style={styles.container}>
+      <Text>SampleScreen</Text>
+    </SafeAreaView>
+  );
+};
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: theme.colors.black,
   },
-});
+}));
+
+export default SampleScreen;

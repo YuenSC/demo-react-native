@@ -1,9 +1,7 @@
 import AppSuggestionDetailScreen from "@/screens/AppSuggestionDetailScreen";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { memo } from "react";
-import { StyleSheet } from "react-native";
-import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 import { IRootStackParamList } from "@/types/navigation";
+import { memo } from "react";
+import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 import MainNavigation from "./MainNavigation";
 
 const Stack = createSharedElementStackNavigator<IRootStackParamList>();
@@ -33,13 +31,6 @@ const StackNavigator = memo(() => (
     />
   </Stack.Navigator>
 ));
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-});
 
 StackNavigator.displayName = "StackNavigator";
 export default StackNavigator;

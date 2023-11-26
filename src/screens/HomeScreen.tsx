@@ -1,6 +1,8 @@
 import Device from "@/constants/Device";
+import clamp from "@/utils/reanimated/clamp";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { makeStyles } from "@rneui/themed";
+import { Image, Text, View } from "react-native";
 import Animated, {
   interpolate,
   useAnimatedScrollHandler,
@@ -10,21 +12,17 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const HeaderHeight = 64;
-
-const clamp = (value: number, lowerBound: number, upperBound: number) => {
-  "worklet";
-  return Math.min(Math.max(lowerBound, value), upperBound);
-};
+const HEADER_HEIGHT = 64;
 
 const HomeScreen = () => {
   const insets = useSafeAreaInsets();
   const headerTranslateY = useSharedValue(0);
   const bottomTabHeight = useBottomTabBarHeight();
+  const styles = useStyles();
 
   const minScrollViewHeight =
-    Device.screen.height - insets.top - HeaderHeight - bottomTabHeight;
-  const maxScrollViewHeight = minScrollViewHeight + HeaderHeight;
+    Device.screen.height - insets.top - HEADER_HEIGHT - bottomTabHeight;
+  const maxScrollViewHeight = minScrollViewHeight + HEADER_HEIGHT;
 
   const scrollHandler = useAnimatedScrollHandler<{
     startY: number;
@@ -36,7 +34,7 @@ const HomeScreen = () => {
       const diff = event.contentOffset.y - ctx.startY;
       const nextHeaderTranslateY = clamp(
         ctx.initialHeaderTranslateY - diff,
-        -HeaderHeight,
+        -HEADER_HEIGHT,
         0
       );
 
@@ -51,7 +49,7 @@ const HomeScreen = () => {
       ctx.isEndDrag = true;
 
       const diff = event.contentOffset.y - ctx.startY;
-      headerTranslateY.value = withTiming(diff > 0 ? -HeaderHeight : 0, {
+      headerTranslateY.value = withTiming(diff > 0 ? -HEADER_HEIGHT : 0, {
         duration: 300,
       });
     },
@@ -59,7 +57,7 @@ const HomeScreen = () => {
 
   const headerStyle = useAnimatedStyle(() => {
     return {
-      opacity: interpolate(headerTranslateY.value, [-HeaderHeight, 0], [0, 1]),
+      opacity: interpolate(headerTranslateY.value, [-HEADER_HEIGHT, 0], [0, 1]),
       transform: [{ translateY: headerTranslateY.value }],
     };
   });
@@ -68,7 +66,7 @@ const HomeScreen = () => {
     return {
       maxHeight: interpolate(
         headerTranslateY.value,
-        [-HeaderHeight, 0],
+        [-HEADER_HEIGHT, 0],
         [maxScrollViewHeight, minScrollViewHeight]
       ),
     };
@@ -100,34 +98,37 @@ const HomeScreen = () => {
   );
 };
 
-export default HomeScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#000",
-  },
-  whiteColor: {
-    color: "#fff",
-  },
-  appBarHeader: {
-    backgroundColor: "black",
-    borderBottomWidth: 1,
-    borderColor: "lightgray",
-    height: HeaderHeight,
-    width: "100%",
-    position: "absolute",
-    top: 0,
-    zIndex: 10,
-    justifyContent: "center",
-    paddingHorizontal: 16,
-  },
-  scrollView: {
-    marginTop: "auto",
-  },
-  image: {
-    width: "100%",
-    aspectRatio: 4 / 3,
-    marginBottom: 16,
-  },
+const useStyles = makeStyles((theme) => {
+  console.log("theme.colors", theme.colors);
+  return {
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.black,
+    },
+    whiteColor: {
+      color: theme.colors.white,
+    },
+    appBarHeader: {
+      backgroundColor: theme.colors.black,
+      borderBottomWidth: 1,
+      borderColor: theme.colors.grey0,
+      height: HEADER_HEIGHT,
+      width: "100%",
+      position: "absolute",
+      top: 0,
+      zIndex: 10,
+      justifyContent: "center",
+      paddingHorizontal: 16,
+    },
+    scrollView: {
+      marginTop: "auto",
+    },
+    image: {
+      width: "100%",
+      aspectRatio: 4 / 3,
+      marginBottom: 16,
+    },
+  };
 });
+
+export default HomeScreen;

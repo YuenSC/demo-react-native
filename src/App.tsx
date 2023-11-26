@@ -1,26 +1,23 @@
+import { ThemeProvider } from "@rneui/themed";
 import { registerRootComponent } from "expo";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet } from "react-native";
 import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import Navigation from "./navigation/Navigation";
+import theme from "./styles/rneui";
 
 const App = () => {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <StatusBar style="light" />
-      <Navigation />
-    </GestureHandlerRootView>
+    <SafeAreaProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <ThemeProvider theme={theme}>
+          <StatusBar style="light" />
+          <Navigation />
+        </ThemeProvider>
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
 
 registerRootComponent(App);

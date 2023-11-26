@@ -1,6 +1,5 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { memo } from "react";
-import { StyleSheet } from "react-native";
 import StackNavigator from "./navigators/StackNavigator";
 
 const Navigation = memo(() => (
@@ -8,8 +7,6 @@ const Navigation = memo(() => (
     <StackNavigator />
   </NavigationContainer>
 ));
-
-const styles = StyleSheet.create({});
 
 Navigation.displayName = "Navigation";
 

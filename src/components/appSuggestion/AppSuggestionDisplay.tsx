@@ -14,6 +14,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
+import { makeStyles } from "@rneui/themed";
 
 interface IAppSuggestionDisplayProps {
   appSuggestion: AppSuggestion;
@@ -22,6 +23,7 @@ interface IAppSuggestionDisplayProps {
 
 const AppSuggestionDisplay = memo<IAppSuggestionDisplayProps>(
   ({ appSuggestion: { description, id, imageUrl, title }, onPress }) => {
+    const styles = useStyles();
     const scale = useSharedValue(1);
     const animatedStyle = useAnimatedStyle(() => ({
       transform: [{ scale: scale.value }],
@@ -52,12 +54,12 @@ const AppSuggestionDisplay = memo<IAppSuggestionDisplayProps>(
   }
 );
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((theme) => ({
   container: {
     width: "100%",
     aspectRatio: 3 / 4,
     borderRadius: 16,
-    backgroundColor: "lightgray",
+    backgroundColor: theme.colors.grey2,
     overflow: "hidden",
   },
   imageBackground: {
@@ -76,7 +78,8 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 20,
   },
-});
+}));
 
 AppSuggestionDisplay.displayName = "AppSuggestionDisplay";
+
 export default AppSuggestionDisplay;
