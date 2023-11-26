@@ -1,4 +1,5 @@
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { useIsFocused } from "@react-navigation/core";
 import { makeStyles } from "@rneui/themed";
 import { useEffect, useMemo, useRef } from "react";
 import { Image, View } from "react-native";
@@ -17,6 +18,7 @@ const HomeScreen = ({ navigation }: IBottomTabScreenProps<"Home">) => {
   const bottomTabHeight = useBottomTabBarHeight();
   const styles = useStyles();
   const scrollViewRef = useRef<Animated.ScrollView>(null);
+  const isFocused = useIsFocused();
 
   const { headerStyle, scrollHandler, scrollViewStyle, onShowHeader } =
     useCollapsibleHeader(
@@ -33,12 +35,14 @@ const HomeScreen = ({ navigation }: IBottomTabScreenProps<"Home">) => {
     );
 
   useEffect(() => {
-    console.log("addListener");
-    navigation.addListener("tabPress", () => {
-      scrollViewRef.current?.scrollTo({ y: 0, animated: true });
-      onShowHeader();
+    const unsubscribe = navigation.addListener("tabPress", () => {
+      if (isFocused) {
+        scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+        onShowHeader();
+      }
     });
-  }, []);
+    return unsubscribe;
+  }, [isFocused, navigation, onShowHeader]);
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>

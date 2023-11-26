@@ -22,11 +22,11 @@ const useCollapsibleHeader = ({
 
   const onShowHeader = useCallback(() => {
     headerTranslateY.value = withTiming(0, { duration: 300 });
-  }, []);
+  }, [headerTranslateY]);
 
   const onHideHeader = useCallback(() => {
     headerTranslateY.value = withTiming(-headerHeight, { duration: 300 });
-  }, []);
+  }, [headerHeight, headerTranslateY]);
 
   const scrollHandler = useAnimatedScrollHandler<{
     startY: number;
