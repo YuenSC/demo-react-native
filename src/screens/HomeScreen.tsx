@@ -1,32 +1,43 @@
 import StyledText from "@/components/common/StyledText";
 import Device from "@/constants/Device";
 import useCollapsibleHeader from "@/hooks/useCollapsibleHeader";
+import { IBottomTabScreenProps } from "@/types/navigation";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { makeStyles } from "@rneui/themed";
-import { useMemo } from "react";
+import { Button, makeStyles } from "@rneui/themed";
+import { useEffect, useMemo, useRef } from "react";
 import { Image, View } from "react-native";
 import Animated from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const HEADER_HEIGHT = 64;
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }: IBottomTabScreenProps<"Home">) => {
   const insets = useSafeAreaInsets();
   const bottomTabHeight = useBottomTabBarHeight();
   const styles = useStyles();
+  const scrollViewRef = useRef<Animated.ScrollView>(null);
 
-  const { headerStyle, scrollHandler, scrollViewStyle } = useCollapsibleHeader(
-    useMemo(
-      () => ({
-        headerHeight: HEADER_HEIGHT,
-        maxScrollViewHeight:
-          Device.screen.height - insets.top - bottomTabHeight,
-        minScrollViewHeight:
-          Device.screen.height - insets.top - HEADER_HEIGHT - bottomTabHeight,
-      }),
-      [insets, bottomTabHeight]
-    )
-  );
+  const { headerStyle, scrollHandler, scrollViewStyle, onShowHeader } =
+    useCollapsibleHeader(
+      useMemo(
+        () => ({
+          headerHeight: HEADER_HEIGHT,
+          maxScrollViewHeight:
+            Device.screen.height - insets.top - bottomTabHeight,
+          minScrollViewHeight:
+            Device.screen.height - insets.top - HEADER_HEIGHT - bottomTabHeight,
+        }),
+        [insets, bottomTabHeight]
+      )
+    );
+
+  useEffect(() => {
+    console.log("addListener");
+    navigation.addListener("tabPress", (e) => {
+      scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+      onShowHeader();
+    });
+  }, []);
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -39,6 +50,7 @@ const HomeScreen = () => {
       </Animated.View>
 
       <Animated.ScrollView
+        ref={scrollViewRef}
         scrollEventThrottle={16}
         onScroll={scrollHandler}
         style={[styles.scrollView, scrollViewStyle]}

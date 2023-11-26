@@ -1,4 +1,5 @@
 import clamp from "@/utils/reanimated/clamp";
+import { useCallback } from "react";
 import {
   interpolate,
   useAnimatedScrollHandler,
@@ -17,6 +18,14 @@ const useCollapsibleHeader = ({
   headerHeight: number;
 }) => {
   const headerTranslateY = useSharedValue(0);
+
+  const onShowHeader = useCallback(() => {
+    headerTranslateY.value = withTiming(0, { duration: 300 });
+  }, []);
+
+  const onHideHeader = useCallback(() => {
+    headerTranslateY.value = withTiming(-headerHeight, { duration: 300 });
+  }, []);
 
   const scrollHandler = useAnimatedScrollHandler<{
     startY: number;
@@ -70,6 +79,8 @@ const useCollapsibleHeader = ({
     scrollHandler,
     headerStyle,
     scrollViewStyle,
+    onShowHeader,
+    onHideHeader,
   };
 };
 
