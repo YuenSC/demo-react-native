@@ -2,12 +2,13 @@ import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useIsFocused } from "@react-navigation/core";
 import { makeStyles } from "@rneui/themed";
 import { useEffect, useMemo, useRef } from "react";
-import { Image, View } from "react-native";
+import { FlatList, Image, View } from "react-native";
 import Animated from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import StyledText from "@/components/common/StyledText";
 import Device from "@/constants/Device";
+import { Post, posts } from "@/data/posts";
 import useCollapsibleHeader from "@/hooks/useCollapsibleHeader";
 import { IBottomTabScreenProps } from "@/types/navigation";
 
@@ -17,7 +18,7 @@ const HomeScreen = ({ navigation }: IBottomTabScreenProps<"Home">) => {
   const insets = useSafeAreaInsets();
   const bottomTabHeight = useBottomTabBarHeight();
   const styles = useStyles();
-  const scrollViewRef = useRef<Animated.ScrollView>(null);
+  const flatListRef = useRef<FlatList<Post>>(null);
   const isFocused = useIsFocused();
 
   const { headerStyle, scrollHandler, scrollViewStyle, onShowHeader } =
@@ -30,14 +31,14 @@ const HomeScreen = ({ navigation }: IBottomTabScreenProps<"Home">) => {
           minScrollViewHeight:
             Device.screen.height - insets.top - HEADER_HEIGHT - bottomTabHeight,
         }),
-        [insets, bottomTabHeight],
-      ),
+        [insets, bottomTabHeight]
+      )
     );
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("tabPress", () => {
       if (isFocused) {
-        scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+        flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
         onShowHeader();
       }
     });
@@ -54,21 +55,20 @@ const HomeScreen = ({ navigation }: IBottomTabScreenProps<"Home">) => {
         </StyledText>
       </Animated.View>
 
-      <Animated.ScrollView
-        ref={scrollViewRef}
+      <Animated.FlatList
+        ref={flatListRef as any}
         scrollEventThrottle={16}
         onScroll={scrollHandler}
         style={[styles.scrollView, scrollViewStyle]}
-      >
-        {Array.from(Array(10).keys()).map((index) => (
+        data={posts}
+        renderItem={({ item }) => (
           <Image
-            key={index}
-            source={{ uri: "https://picsum.photos/400/300?" + index }}
+            source={{ uri: item.imageUrl }}
             style={styles.image}
             resizeMode="contain"
           />
-        ))}
-      </Animated.ScrollView>
+        )}
+      />
     </View>
   );
 };
@@ -101,6 +101,7 @@ const useStyles = makeStyles((theme) => {
       width: "100%",
       aspectRatio: 4 / 3,
       marginBottom: 16,
+      backgroundColor: theme.colors.grey0,
     },
   };
 });
