@@ -1,14 +1,23 @@
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useIsFocused } from "@react-navigation/core";
 import { makeStyles } from "@rneui/themed";
+import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useMemo, useRef } from "react";
-import { FlatList, Image, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Animated from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import StyledText from "@/components/common/StyledText";
+import StoryButton from "@/components/story/StoryButton";
 import Device from "@/constants/Device";
 import { Post, posts } from "@/data/posts";
+import { stories } from "@/data/stories";
 import useCollapsibleHeader from "@/hooks/useCollapsibleHeader";
 import { IBottomTabScreenProps } from "@/types/navigation";
 
@@ -61,6 +70,20 @@ const HomeScreen = ({ navigation }: IBottomTabScreenProps<"Home">) => {
         onScroll={scrollHandler}
         style={[styles.scrollView, scrollViewStyle]}
         data={posts}
+        ListHeaderComponent={() => {
+          return (
+            <ScrollView
+              horizontal
+              style={styles.storyScrollView}
+              contentContainerStyle={styles.storyContentContainer}
+              showsHorizontalScrollIndicator={false}
+            >
+              {stories.map((story) => {
+                return <StoryButton key={story.id} story={story} />;
+              })}
+            </ScrollView>
+          );
+        }}
         renderItem={({ item }) => (
           <Image
             source={{ uri: item.imageUrl }}
@@ -102,6 +125,14 @@ const useStyles = makeStyles((theme) => {
       aspectRatio: 4 / 3,
       marginBottom: 16,
       backgroundColor: theme.colors.grey0,
+    },
+
+    storyScrollView: {
+      paddingVertical: 12,
+    },
+    storyContentContainer: {
+      gap: 16,
+      paddingHorizontal: 16,
     },
   };
 });
