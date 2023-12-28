@@ -15,7 +15,7 @@ const ProfileHeader = memo<IProfileHeaderProps>(({ user }) => {
   const styles = useStyles();
 
   return (
-    <View>
+    <View style={styles.container}>
       <View style={styles.profileRow}>
         <UserStoryButton userId={user.id} size="lg" hideName />
         <View style={styles.dataContainer}>
@@ -50,6 +50,9 @@ const ProfileHeader = memo<IProfileHeaderProps>(({ user }) => {
 });
 
 const useStyles = makeStyles((theme) => ({
+  container: {
+    padding: theme.spacing.md,
+  },
   profileRow: {
     flexDirection: "row",
   },
