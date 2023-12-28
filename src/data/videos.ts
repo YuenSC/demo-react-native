@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 
 import { users } from "./users";
 
-const createPost = () => {
+const createVideo = () => {
   return {
     id: faker.string.uuid(),
     imageUrl: faker.image.url({ width: 640, height: 480 }),
@@ -10,6 +10,6 @@ const createPost = () => {
   };
 };
 
-export const posts = Array.from({ length: 1000 }, createPost);
+export const videos = Array.from({ length: 1000 }, createVideo);
 
-export type Post = ReturnType<typeof createPost>;
+export type Video = ReturnType<typeof createVideo>;

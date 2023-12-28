@@ -45,9 +45,9 @@ export type IStackParamList = {
 
 export type IStackScreenProps<Screen extends keyof IStackParamList> =
   CompositeScreenProps<
+    StackScreenProps<IStackParamList, Screen>,
     CompositeScreenProps<
       BottomTabScreenProps<IBottomTabParamList>,
       MaterialTopTabScreenProps<ITopTabParamList>
-    >,
-    StackScreenProps<IStackParamList, Screen>
+    >
   >;

@@ -7,7 +7,7 @@ import Animated from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import StyledText from "@/components/common/StyledText";
-import StoryButton from "@/components/story/StoryButton";
+import UserStoryButton from "@/components/user/UserStoryButton";
 import Device from "@/constants/Device";
 import { Post, posts } from "@/data/posts";
 import { stories } from "@/data/stories";
@@ -73,8 +73,8 @@ const HomeScreen = ({ navigation }: IStackScreenProps<"Home">) => {
               contentContainerStyle={styles.storyContentContainer}
               showsHorizontalScrollIndicator={false}
             >
-              {stories.map((story) => {
-                return <StoryButton key={story.id} story={story} />;
+              {users.map((user) => {
+                return <UserStoryButton key={user.id} userId={user.id} />;
               })}
             </ScrollView>
           );
