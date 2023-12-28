@@ -2,14 +2,14 @@ import { makeStyles } from "@rneui/themed";
 import { memo } from "react";
 import { Text, View } from "react-native";
 
-type ISampleComponentProps = object;
+type IProfileTabBarProps = object;
 
-const SampleComponent = memo<ISampleComponentProps>(() => {
+const ProfileTabBar = memo<IProfileTabBarProps>(() => {
   const styles = useStyles();
 
   return (
     <View style={styles.container}>
-      <Text>SampleComponent</Text>
+      <Text>ProfileTabBar</Text>
     </View>
   );
 });
@@ -21,6 +21,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-SampleComponent.displayName = "SampleComponent";
+ProfileTabBar.displayName = "ProfileTabBar";
 
-export default SampleComponent;
+export default ProfileTabBar;
