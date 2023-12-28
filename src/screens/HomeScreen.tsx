@@ -1,15 +1,8 @@
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useIsFocused } from "@react-navigation/core";
 import { makeStyles } from "@rneui/themed";
-import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useMemo, useRef } from "react";
-import {
-  FlatList,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { FlatList, Image, Pressable, ScrollView, View } from "react-native";
 import Animated from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -18,12 +11,13 @@ import StoryButton from "@/components/story/StoryButton";
 import Device from "@/constants/Device";
 import { Post, posts } from "@/data/posts";
 import { stories } from "@/data/stories";
+import { users } from "@/data/users";
 import useCollapsibleHeader from "@/hooks/useCollapsibleHeader";
-import { IBottomTabScreenProps } from "@/types/navigation";
+import { IStackScreenProps } from "@/types/navigation";
 
 const HEADER_HEIGHT = 64;
 
-const HomeScreen = ({ navigation }: IBottomTabScreenProps<"Home">) => {
+const HomeScreen = ({ navigation }: IStackScreenProps<"Home">) => {
   const insets = useSafeAreaInsets();
   const bottomTabHeight = useBottomTabBarHeight();
   const styles = useStyles();
@@ -70,6 +64,7 @@ const HomeScreen = ({ navigation }: IBottomTabScreenProps<"Home">) => {
         onScroll={scrollHandler}
         style={[styles.scrollView, scrollViewStyle]}
         data={posts}
+        contentContainerStyle={styles.contentContainer}
         ListHeaderComponent={() => {
           return (
             <ScrollView
@@ -84,13 +79,32 @@ const HomeScreen = ({ navigation }: IBottomTabScreenProps<"Home">) => {
             </ScrollView>
           );
         }}
-        renderItem={({ item }) => (
-          <Image
-            source={{ uri: item.imageUrl }}
-            style={styles.image}
-            resizeMode="contain"
-          />
-        )}
+        renderItem={({ item }) => {
+          const user = users.find((user) => user.id === item.userId);
+          return (
+            <View>
+              {user && (
+                <Pressable
+                  style={styles.userRow}
+                  onPress={() =>
+                    navigation.navigate("Profile", { userId: item.userId })
+                  }
+                >
+                  <Image
+                    source={{ uri: user.imageUrl }}
+                    style={styles.userAvatar}
+                  />
+                  <StyledText style={styles.userName}>{user.name}</StyledText>
+                </Pressable>
+              )}
+              <Image
+                source={{ uri: item.imageUrl }}
+                style={styles.image}
+                resizeMode="contain"
+              />
+            </View>
+          );
+        }}
       />
     </View>
   );
@@ -101,6 +115,9 @@ const useStyles = makeStyles((theme) => {
     container: {
       flex: 1,
       backgroundColor: theme.colors.black,
+    },
+    contentContainer: {
+      paddingVertical: 0,
     },
     whiteColor: {
       color: theme.colors.white,
@@ -133,6 +150,26 @@ const useStyles = makeStyles((theme) => {
     storyContentContainer: {
       gap: 16,
       paddingHorizontal: 16,
+      marginBottom: 16,
+    },
+
+    userRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 8,
+      marginBottom: 16,
+    },
+    userName: {
+      color: theme.colors.white,
+      fontSize: 12,
+      fontWeight: "bold",
+    },
+    userAvatar: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      marginRight: 8,
+      backgroundColor: theme.colors.grey0,
     },
   };
 });

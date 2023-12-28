@@ -1,3 +1,4 @@
+import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";
 import {
   interpolate,
@@ -39,7 +40,7 @@ const useCollapsibleHeader = ({
       const nextHeaderTranslateY = clamp(
         ctx.initialHeaderTranslateY - diff,
         -headerHeight,
-        0,
+        0
       );
 
       headerTranslateY.value = nextHeaderTranslateY;
@@ -71,10 +72,16 @@ const useCollapsibleHeader = ({
       maxHeight: interpolate(
         headerTranslateY.value,
         [-headerHeight, 0],
-        [maxScrollViewHeight, minScrollViewHeight],
+        [maxScrollViewHeight, minScrollViewHeight]
       ),
     };
   });
+
+  useFocusEffect(
+    useCallback(() => {
+      return onShowHeader;
+    }, [onShowHeader])
+  );
 
   return {
     scrollHandler,

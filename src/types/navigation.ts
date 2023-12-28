@@ -7,23 +7,15 @@ import {
 import { StackScreenProps } from "@react-navigation/stack";
 
 // Structure of the navigation params
-// Stack -> Tab -> BottomTab
+// Tab -> BottomTab -> Stack
+// Tab has Chat and BottomTab for switching
+// Every Stack Screen is inside the BottomTab
 
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends IRootStackParamList {}
+    interface RootParamList extends ITopTabParamList {}
   }
 }
-
-export type IRootStackParamList = {
-  Root: NavigatorScreenParams<ITopTabParamList> | undefined;
-  AppSuggestionDetail: {
-    id: string;
-  };
-};
-
-export type IRootStackScreenProps<Screen extends keyof IRootStackParamList> =
-  StackScreenProps<IRootStackParamList, Screen>;
 
 export type ITopTabParamList = {
   BottomTab: NavigatorScreenParams<IBottomTabParamList> | undefined;
@@ -31,13 +23,10 @@ export type ITopTabParamList = {
 };
 
 export type ITopTabScreenProps<Screen extends keyof ITopTabParamList> =
-  CompositeScreenProps<
-    MaterialTopTabScreenProps<ITopTabParamList, Screen>,
-    StackScreenProps<IRootStackParamList>
-  >;
+  MaterialTopTabScreenProps<ITopTabParamList, Screen>;
 
 export type IBottomTabParamList = {
-  Home: undefined;
+  Main: NavigatorScreenParams<IStackParamList> | undefined;
   Settings: undefined;
   AppSuggestions: undefined;
 };
@@ -45,5 +34,20 @@ export type IBottomTabParamList = {
 export type IBottomTabScreenProps<Screen extends keyof IBottomTabParamList> =
   CompositeScreenProps<
     BottomTabScreenProps<IBottomTabParamList, Screen>,
-    StackScreenProps<ITopTabParamList>
+    MaterialTopTabScreenProps<ITopTabParamList>
+  >;
+
+export type IStackParamList = {
+  Home: undefined;
+  Profile: { userId: string };
+  AppSuggestionDetail: { id: string };
+};
+
+export type IStackScreenProps<Screen extends keyof IStackParamList> =
+  CompositeScreenProps<
+    CompositeScreenProps<
+      BottomTabScreenProps<IBottomTabParamList>,
+      MaterialTopTabScreenProps<ITopTabParamList>
+    >,
+    StackScreenProps<IStackParamList, Screen>
   >;

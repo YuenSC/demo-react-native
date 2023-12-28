@@ -3,7 +3,7 @@ import { faker } from "@faker-js/faker";
 const createUser = () => {
   return {
     id: faker.string.uuid(),
-    imageUrl: faker.image.avatar(),
+    imageUrl: faker.image.avatarGitHub(),
     name: faker.person.fullName(),
     description: faker.lorem.sentences({ min: 2, max: 4 }),
   };

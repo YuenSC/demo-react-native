@@ -3,15 +3,15 @@ import { Image, View } from "react-native";
 import { SharedElement } from "react-navigation-shared-element";
 
 import { appSuggestions } from "@/data/appSuggestions";
-import { IRootStackScreenProps } from "@/types/navigation";
+import { IStackScreenProps } from "@/types/navigation";
 
 const AppSuggestionDetailScreen = ({
   navigation,
   route,
-}: IRootStackScreenProps<"AppSuggestionDetail">) => {
+}: IStackScreenProps<"AppSuggestionDetail">) => {
   const styles = useStyles();
   const appSuggestion = appSuggestions.find(
-    (item) => item.id === route.params.id,
+    (item) => item.id === route.params.id
   );
 
   if (!appSuggestion) return null;

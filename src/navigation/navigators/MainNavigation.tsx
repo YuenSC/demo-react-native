@@ -2,8 +2,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { memo } from "react";
 
+import StackNavigator from "./StackNavigator";
+
 import AppSuggestionListScreen from "@/screens/AppSuggestionListScreen";
-import HomeScreen from "@/screens/HomeScreen";
 import SampleScreen from "@/screens/SampleScreen";
 import {
   IBottomTabParamList,
@@ -27,8 +28,8 @@ const BottomTabNavigator = memo(
       }}
     >
       <BottomTab.Screen
-        name="Home"
-        component={HomeScreen}
+        name="Main"
+        component={StackNavigator}
         options={{ headerShown: false }}
       />
       <BottomTab.Screen
@@ -37,7 +38,7 @@ const BottomTabNavigator = memo(
       />
       <BottomTab.Screen name="Settings" component={SampleScreen} />
     </BottomTab.Navigator>
-  ),
+  )
 );
 
 const MainNavigation = () => {

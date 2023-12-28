@@ -1,20 +1,21 @@
 import { memo } from "react";
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 
-import MainNavigation from "./MainNavigation";
-
 import AppSuggestionDetailScreen from "@/screens/AppSuggestionDetailScreen";
-import { IRootStackParamList } from "@/types/navigation";
+import HomeScreen from "@/screens/HomeScreen";
+import ProfileScreen from "@/screens/ProfileScreen";
+import { IStackParamList } from "@/types/navigation";
 
-const Stack = createSharedElementStackNavigator<IRootStackParamList>();
+const Stack = createSharedElementStackNavigator<IStackParamList>();
 
 const StackNavigator = memo(() => (
   <Stack.Navigator>
     <Stack.Screen
-      name="Root"
-      component={MainNavigation}
+      name="Home"
+      component={HomeScreen}
       options={{ headerShown: false }}
     />
+    <Stack.Screen name="Profile" component={ProfileScreen} />
     <Stack.Screen
       name="AppSuggestionDetail"
       component={AppSuggestionDetailScreen}
