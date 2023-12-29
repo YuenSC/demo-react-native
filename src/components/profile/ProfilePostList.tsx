@@ -1,16 +1,9 @@
 import { makeStyles } from "@rneui/themed";
 import { memo } from "react";
-import { FlatList, Image } from "react-native";
-import Animated, {
-  runOnJS,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-} from "react-native-reanimated";
+import { Image } from "react-native";
+import Animated, { useAnimatedScrollHandler } from "react-native-reanimated";
 
-import {
-  ProfileTabBarHeight,
-  ProfileTabHeaderInitialHeight,
-} from "@/constants/Tab";
+import { TabBarHeight, TabHeaderInitialHeight } from "@/constants/Tab";
 import { useTab } from "@/context/tab";
 import { posts } from "@/data/posts";
 
@@ -27,8 +20,8 @@ const ProfilePostList = memo<IProfilePostListProps>(({ routeKey }) => {
       if (innerScrollY) {
         innerScrollY.value = event.contentOffset.y;
       }
-      if (listOffset?.current) {
-        listOffset.current[routeKey] = event.contentOffset.y;
+      if (listOffset?.value) {
+        listOffset.value[routeKey] = event.contentOffset.y;
       }
     },
   });
@@ -58,7 +51,7 @@ const ProfilePostList = memo<IProfilePostListProps>(({ routeKey }) => {
       data={posts.slice(0, 30)}
       numColumns={3}
       contentContainerStyle={{
-        paddingTop: ProfileTabHeaderInitialHeight + ProfileTabBarHeight,
+        paddingTop: TabHeaderInitialHeight + TabBarHeight,
       }}
       renderItem={({ item }) => {
         return <Image source={{ uri: item.imageUrl }} style={styles.image} />;

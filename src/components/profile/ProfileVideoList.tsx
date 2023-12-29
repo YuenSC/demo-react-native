@@ -1,16 +1,9 @@
 import { makeStyles, useTheme } from "@rneui/themed";
 import { memo, useCallback, useState } from "react";
 import { Image, RefreshControl } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
-import Animated, {
-  runOnJS,
-  useAnimatedScrollHandler,
-} from "react-native-reanimated";
+import Animated, { useAnimatedScrollHandler } from "react-native-reanimated";
 
-import {
-  ProfileTabBarHeight,
-  ProfileTabHeaderInitialHeight,
-} from "@/constants/Tab";
+import { TabBarHeight, TabHeaderInitialHeight } from "@/constants/Tab";
 import { useTab } from "@/context/tab";
 import { posts } from "@/data/posts";
 
@@ -37,8 +30,8 @@ const ProfileVideoList = memo<IProfileVideoListProps>(({ routeKey }) => {
       if (innerScrollY) {
         innerScrollY.value = event.contentOffset.y;
       }
-      if (listOffset?.current[routeKey]) {
-        listOffset.current[routeKey] = event.contentOffset.y;
+      if (listOffset?.value) {
+        listOffset.value[routeKey] = event.contentOffset.y;
       }
     },
   });
@@ -60,9 +53,7 @@ const ProfileVideoList = memo<IProfileVideoListProps>(({ routeKey }) => {
           refreshing={refreshing}
           tintColor={theme.colors.warning}
           onRefresh={onRefresh}
-          progressViewOffset={
-            ProfileTabHeaderInitialHeight + ProfileTabBarHeight
-          }
+          progressViewOffset={TabHeaderInitialHeight + TabBarHeight}
         />
       }
       data={posts}
@@ -79,7 +70,7 @@ const ProfileVideoList = memo<IProfileVideoListProps>(({ routeKey }) => {
       directionalLockEnabled
       numColumns={3}
       contentContainerStyle={{
-        paddingTop: ProfileTabHeaderInitialHeight + ProfileTabBarHeight,
+        paddingTop: TabHeaderInitialHeight + TabBarHeight,
       }}
       renderItem={({ item }) => {
         return <Image source={{ uri: item.imageUrl }} style={styles.image} />;

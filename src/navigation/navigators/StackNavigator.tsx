@@ -1,7 +1,7 @@
 import { AntDesign } from "@expo/vector-icons";
 import { makeStyles, useTheme } from "@rneui/themed";
 import { memo } from "react";
-import { TouchableOpacity, useWindowDimensions } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 
 import AppSuggestionDetailScreen from "@/screens/AppSuggestionDetailScreen";
@@ -12,7 +12,6 @@ import { IStackParamList } from "@/types/navigation";
 const Stack = createSharedElementStackNavigator<IStackParamList>();
 
 const StackNavigator = memo(() => {
-  const { width } = useWindowDimensions();
   const styles = useStyles();
   const { theme } = useTheme();
 
@@ -27,7 +26,6 @@ const StackNavigator = memo(() => {
         name="Profile"
         component={ProfileScreen}
         options={{
-          gestureResponseDistance: width,
           headerStyle: styles.headerStyle,
           headerTitleStyle: styles.headerTitleStyle,
           headerShadowVisible: false,

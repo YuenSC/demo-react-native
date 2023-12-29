@@ -73,10 +73,10 @@ const TabViewContent = memo<ITabViewProps>(
           directionalLockEnabled
           onScroll={scrollHandler}
           overScrollMode="always"
+          hitSlop={{ left: -50 }}
           onMomentumScrollEnd={(
             event: NativeSyntheticEvent<NativeScrollEvent>
           ) => {
-            console.log("onMomentumEnd Tab");
             const currentIndex = Math.round(
               event.nativeEvent.contentOffset.x / Device.screen.width
             );

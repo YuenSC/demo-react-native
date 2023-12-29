@@ -1,2 +1,2 @@
-export const ProfileTabBarHeight = 48;
-export const ProfileTabHeaderInitialHeight = 200;
+export const TabBarHeight = 48;
+export const TabHeaderInitialHeight = 200;

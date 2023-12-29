@@ -8,7 +8,7 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 
-import { ProfileTabHeaderInitialHeight } from "@/constants/Tab";
+import { TabHeaderInitialHeight } from "@/constants/Tab";
 import { useTab } from "@/context/tab";
 
 type ITabHeaderProps = {
@@ -27,8 +27,8 @@ const TabHeader = memo<ITabHeaderProps>(({ children }) => {
             translateY: innerScrollY?.value
               ? interpolate(
                   innerScrollY.value,
-                  [0, ProfileTabHeaderInitialHeight],
-                  [0, -ProfileTabHeaderInitialHeight],
+                  [0, TabHeaderInitialHeight],
+                  [0, -TabHeaderInitialHeight],
                   Extrapolation.CLAMP
                 )
               : 0,
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
   },
   absoluteContainer: {
     position: "absolute",
-    height: ProfileTabHeaderInitialHeight,
+    height: TabHeaderInitialHeight,
   },
 }));
 

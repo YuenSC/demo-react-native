@@ -12,10 +12,7 @@ import { ITabViewProps } from "./TabView";
 import StyledText from "../common/StyledText";
 
 import Device from "@/constants/Device";
-import {
-  ProfileTabBarHeight,
-  ProfileTabHeaderInitialHeight as TabHeaderInitialHeight,
-} from "@/constants/Tab";
+import { TabBarHeight, TabHeaderInitialHeight } from "@/constants/Tab";
 import { useTab } from "@/context/tab";
 
 type ITabBarProps = {
@@ -92,7 +89,7 @@ const TabBar = memo<ITabBarProps>(({ navigationState, onIndexChange }) => {
 const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: theme.colors.black,
-    height: ProfileTabBarHeight,
+    height: TabBarHeight,
     flexDirection: "row",
     width: "100%",
     borderBottomWidth: 1,
