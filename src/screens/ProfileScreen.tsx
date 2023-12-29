@@ -6,7 +6,6 @@ import TabView from "@/components/Tab/TabView";
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import ProfilePostList from "@/components/profile/ProfilePostList";
 import ProfileVideoList from "@/components/profile/ProfileVideoList";
-import { TabProvider } from "@/context/tab";
 import { users } from "@/data/users";
 import { IStackScreenProps } from "@/types/navigation";
 
@@ -15,7 +14,7 @@ const scenes = {
   videos: ProfileVideoList,
 };
 
-const ProfileScreenContent = ({
+const ProfileScreen = ({
   route: {
     params: { userId },
   },
@@ -29,13 +28,14 @@ const ProfileScreenContent = ({
     { key: "videos", title: "Videos" },
   ]);
 
+  console.log("index", index);
   if (!user) return null;
 
   return (
     <View style={styles.container}>
-      <ProfileHeader user={user} />
-
       <TabView
+        isHeaderCollapsible
+        header={<ProfileHeader user={user} />}
         navigationState={{ index, routes }}
         onIndexChange={setIndex}
         scenes={scenes}
@@ -50,13 +50,5 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.black,
   },
 }));
-
-const ProfileScreen = (props: IStackScreenProps<"Profile">) => {
-  return (
-    <TabProvider>
-      <ProfileScreenContent {...props} />
-    </TabProvider>
-  );
-};
 
 export default ProfileScreen;

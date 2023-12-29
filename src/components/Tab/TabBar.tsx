@@ -1,18 +1,21 @@
 import { makeStyles } from "@rneui/themed";
 import { memo } from "react";
-import { Dimensions, TouchableOpacity, View, ViewStyle } from "react-native";
+import { TouchableOpacity, View, ViewStyle } from "react-native";
 import Animated, {
   AnimatedStyleProp,
+  Extrapolation,
   interpolate,
   useAnimatedStyle,
-  withSpring,
 } from "react-native-reanimated";
 
 import { ITabViewProps } from "./TabView";
 import StyledText from "../common/StyledText";
 
 import Device from "@/constants/Device";
-import { ProfileTabBarHeight } from "@/constants/Tab";
+import {
+  ProfileTabBarHeight,
+  ProfileTabHeaderInitialHeight as TabHeaderInitialHeight,
+} from "@/constants/Tab";
 import { useTab } from "@/context/tab";
 
 type ITabBarProps = {
@@ -22,11 +25,29 @@ type ITabBarProps = {
 
 const TabBar = memo<ITabBarProps>(({ navigationState, onIndexChange }) => {
   const styles = useStyles();
-  const { scrollY } = useTab();
+  const { scrollY, isHeaderCollapsible, innerScrollY } = useTab();
 
   const numberOfTabs = navigationState.routes.length;
 
   const tabAnimatedStyle = useAnimatedStyle(
+    () =>
+      ({
+        transform: [
+          {
+            translateY: innerScrollY?.value
+              ? interpolate(
+                  innerScrollY.value,
+                  [0, TabHeaderInitialHeight],
+                  [TabHeaderInitialHeight, 0],
+                  Extrapolation.CLAMP
+                )
+              : TabHeaderInitialHeight,
+          },
+        ],
+      }) as AnimatedStyleProp<ViewStyle>
+  );
+
+  const indicatorAnimatedStyle = useAnimatedStyle(
     () =>
       ({
         width: `${100 / navigationState.routes.length}%`,
@@ -45,7 +66,13 @@ const TabBar = memo<ITabBarProps>(({ navigationState, onIndexChange }) => {
   );
 
   return (
-    <View style={styles.container}>
+    <Animated.View
+      style={[
+        styles.container,
+        isHeaderCollapsible && styles.absoluteContainer,
+        isHeaderCollapsible && tabAnimatedStyle,
+      ]}
+    >
       {navigationState.routes.map((route, index) => (
         <TouchableOpacity
           key={route.key}
@@ -55,17 +82,25 @@ const TabBar = memo<ITabBarProps>(({ navigationState, onIndexChange }) => {
           <StyledText style={{ color: "white" }}>{route.title}</StyledText>
         </TouchableOpacity>
       ))}
-      <Animated.View style={[tabAnimatedStyle, styles.tabBarActiveIndicator]} />
-    </View>
+      <Animated.View
+        style={[indicatorAnimatedStyle, styles.tabBarActiveIndicator]}
+      />
+    </Animated.View>
   );
 });
 
 const useStyles = makeStyles((theme) => ({
   container: {
+    backgroundColor: theme.colors.black,
     height: ProfileTabBarHeight,
     flexDirection: "row",
     width: "100%",
     borderBottomWidth: 1,
+  },
+  absoluteContainer: {
+    position: "absolute",
+    top: 0,
+    zIndex: 1,
   },
   tabItem: {
     flex: 1,

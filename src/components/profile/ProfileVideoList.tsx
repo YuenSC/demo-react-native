@@ -1,19 +1,83 @@
-import { makeStyles } from "@rneui/themed";
-import { memo } from "react";
-import { Image } from "react-native";
+import { makeStyles, useTheme } from "@rneui/themed";
+import { memo, useCallback, useState } from "react";
+import { Image, RefreshControl } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
+import Animated, {
+  runOnJS,
+  useAnimatedScrollHandler,
+} from "react-native-reanimated";
 
+import {
+  ProfileTabBarHeight,
+  ProfileTabHeaderInitialHeight,
+} from "@/constants/Tab";
+import { useTab } from "@/context/tab";
 import { posts } from "@/data/posts";
 
-type IProfileVideoListProps = object;
+type IProfileVideoListProps = {
+  routeKey: string;
+};
 
-const ProfileVideoList = memo<IProfileVideoListProps>(() => {
+const ProfileVideoList = memo<IProfileVideoListProps>(({ routeKey }) => {
   const styles = useStyles();
+  const { theme } = useTheme();
+  const { innerScrollY, listRefArr, listOffset, syncScrollOffset } = useTab();
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      if (innerScrollY) {
+        innerScrollY.value = event.contentOffset.y;
+      }
+      if (listOffset?.current[routeKey]) {
+        listOffset.current[routeKey] = event.contentOffset.y;
+      }
+    },
+  });
 
   return (
-    <FlatList
+    <Animated.FlatList
+      ref={(ref) => {
+        if (ref) {
+          const found = listRefArr?.current.find((e) => e.key === routeKey);
+          console.log("found", found, routeKey);
+
+          if (!found) {
+            listRefArr?.current.push({ key: routeKey, value: ref });
+          }
+        }
+      }}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          tintColor={theme.colors.warning}
+          onRefresh={onRefresh}
+        />
+      }
       data={posts}
+      onScroll={scrollHandler}
+      scrollEventThrottle={16}
+      onScrollEndDrag={() => {
+        console.log("onEndDrag ProfileVideoList");
+        syncScrollOffset?.(routeKey);
+      }}
+      onMomentumScrollEnd={(event) => {
+        console.log("onMomentumEnd ProfileVideoList");
+        syncScrollOffset?.(routeKey);
+      }}
+      directionalLockEnabled
       numColumns={3}
+      contentContainerStyle={{
+        paddingTop: ProfileTabHeaderInitialHeight + ProfileTabBarHeight,
+      }}
       renderItem={({ item }) => {
         return <Image source={{ uri: item.imageUrl }} style={styles.image} />;
       }}
