@@ -1,64 +1,45 @@
-import { makeStyles } from "@rneui/themed";
-import { memo } from "react";
-import { Image } from "react-native";
+import { makeStyles, useTheme } from "@rneui/themed";
+import { memo, useCallback, useState } from "react";
+import { FlatList, Image, RefreshControl } from "react-native";
 import Animated, { useAnimatedScrollHandler } from "react-native-reanimated";
+
+import TabFlatList from "../Tab/TabFlatList";
 
 import { TabBarHeight } from "@/constants/Tab";
 import { useTab } from "@/context/tab";
 import { posts } from "@/data/posts";
 
-type IProfilePostListProps = {
+type IProfileVideoListProps = {
   routeKey: string;
 };
 
-const ProfilePostList = memo<IProfilePostListProps>(({ routeKey }) => {
+const ProfileVideoList = memo<IProfileVideoListProps>(({ routeKey }) => {
   const styles = useStyles();
-  const {
-    innerScrollY,
-    listRefArr,
-    listOffset,
-    syncScrollOffset,
-    tabHeaderHeight,
-  } = useTab();
+  const { theme } = useTheme();
+  const { tabHeaderHeight } = useTab();
 
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: (event) => {
-      if (innerScrollY) {
-        innerScrollY.value = event.contentOffset.y;
-      }
-      if (listOffset?.value) {
-        listOffset.value[routeKey] = event.contentOffset.y;
-      }
-    },
-  });
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   return (
-    <Animated.FlatList
-      ref={(ref) => {
-        if (ref) {
-          const found = listRefArr?.current.find((e) => e.key === routeKey);
-          console.log("found", found, routeKey);
-          if (!found) {
-            listRefArr?.current.push({ key: routeKey, value: ref });
-          }
-        }
-      }}
-      onScroll={scrollHandler}
-      onScrollEndDrag={() => {
-        console.log("onEndDrag ProfilePostList");
-        syncScrollOffset?.(routeKey);
-      }}
-      onMomentumScrollEnd={() => {
-        console.log("onMomentumEnd ProfilePostList");
-        syncScrollOffset?.(routeKey);
-      }}
-      directionalLockEnabled
-      scrollEventThrottle={16}
-      data={posts.slice(0, 30)}
-      numColumns={3}
-      contentContainerStyle={{
-        paddingTop: tabHeaderHeight + TabBarHeight,
-      }}
+    <TabFlatList
+      routeKey={routeKey}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          tintColor={theme.colors.warning}
+          onRefresh={onRefresh}
+          progressViewOffset={tabHeaderHeight + TabBarHeight}
+        />
+      }
+      data={posts}
+      numColumns={4}
       renderItem={({ item }) => {
         return <Image source={{ uri: item.imageUrl }} style={styles.image} />;
       }}
@@ -69,12 +50,12 @@ const ProfilePostList = memo<IProfilePostListProps>(({ routeKey }) => {
 const useStyles = makeStyles((theme) => ({
   image: {
     aspectRatio: 1,
-    flex: 1 / 3,
+    flex: 1 / 4,
     backgroundColor: theme.colors.grey0,
     margin: 1,
   },
 }));
 
-ProfilePostList.displayName = "ProfilePostList";
+ProfileVideoList.displayName = "ProfileVideoList";
 
-export default ProfilePostList;
+export default ProfileVideoList;

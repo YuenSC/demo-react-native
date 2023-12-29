@@ -28,7 +28,6 @@ const ProfileScreen = ({
     { key: "videos", title: "Videos" },
   ]);
 
-  console.log("index", index);
   if (!user) return null;
 
   return (

@@ -1,7 +1,9 @@
 import { makeStyles, useTheme } from "@rneui/themed";
 import { memo, useCallback, useState } from "react";
-import { Image, RefreshControl } from "react-native";
+import { FlatList, Image, RefreshControl } from "react-native";
 import Animated, { useAnimatedScrollHandler } from "react-native-reanimated";
+
+import TabFlatList from "../Tab/TabFlatList";
 
 import { TabBarHeight } from "@/constants/Tab";
 import { useTab } from "@/context/tab";
@@ -14,13 +16,7 @@ type IProfileVideoListProps = {
 const ProfileVideoList = memo<IProfileVideoListProps>(({ routeKey }) => {
   const styles = useStyles();
   const { theme } = useTheme();
-  const {
-    innerScrollY,
-    listRefArr,
-    listOffset,
-    syncScrollOffset,
-    tabHeaderHeight,
-  } = useTab();
+  const { tabHeaderHeight } = useTab();
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -31,29 +27,9 @@ const ProfileVideoList = memo<IProfileVideoListProps>(({ routeKey }) => {
     }, 2000);
   }, []);
 
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: (event) => {
-      if (innerScrollY) {
-        innerScrollY.value = event.contentOffset.y;
-      }
-      if (listOffset?.value) {
-        listOffset.value[routeKey] = event.contentOffset.y;
-      }
-    },
-  });
-
   return (
-    <Animated.FlatList
-      ref={(ref) => {
-        if (ref) {
-          const found = listRefArr?.current.find((e) => e.key === routeKey);
-          console.log("found", found, routeKey);
-
-          if (!found) {
-            listRefArr?.current.push({ key: routeKey, value: ref });
-          }
-        }
-      }}
+    <TabFlatList
+      routeKey={routeKey}
       refreshControl={
         <RefreshControl
           refreshing={refreshing}
@@ -63,21 +39,7 @@ const ProfileVideoList = memo<IProfileVideoListProps>(({ routeKey }) => {
         />
       }
       data={posts}
-      onScroll={scrollHandler}
-      scrollEventThrottle={16}
-      onScrollEndDrag={() => {
-        console.log("onEndDrag ProfileVideoList");
-        syncScrollOffset?.(routeKey);
-      }}
-      onMomentumScrollEnd={(event) => {
-        console.log("onMomentumEnd ProfileVideoList");
-        syncScrollOffset?.(routeKey);
-      }}
-      directionalLockEnabled
       numColumns={3}
-      contentContainerStyle={{
-        paddingTop: tabHeaderHeight + TabBarHeight,
-      }}
       renderItem={({ item }) => {
         return <Image source={{ uri: item.imageUrl }} style={styles.image} />;
       }}
