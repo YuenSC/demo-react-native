@@ -3,7 +3,7 @@ import { memo } from "react";
 import { Image } from "react-native";
 import Animated, { useAnimatedScrollHandler } from "react-native-reanimated";
 
-import { TabBarHeight, TabHeaderInitialHeight } from "@/constants/Tab";
+import { TabBarHeight } from "@/constants/Tab";
 import { useTab } from "@/context/tab";
 import { posts } from "@/data/posts";
 
@@ -13,7 +13,13 @@ type IProfilePostListProps = {
 
 const ProfilePostList = memo<IProfilePostListProps>(({ routeKey }) => {
   const styles = useStyles();
-  const { innerScrollY, listRefArr, listOffset, syncScrollOffset } = useTab();
+  const {
+    innerScrollY,
+    listRefArr,
+    listOffset,
+    syncScrollOffset,
+    tabHeaderHeight,
+  } = useTab();
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
@@ -51,7 +57,7 @@ const ProfilePostList = memo<IProfilePostListProps>(({ routeKey }) => {
       data={posts.slice(0, 30)}
       numColumns={3}
       contentContainerStyle={{
-        paddingTop: TabHeaderInitialHeight + TabBarHeight,
+        paddingTop: tabHeaderHeight + TabBarHeight,
       }}
       renderItem={({ item }) => {
         return <Image source={{ uri: item.imageUrl }} style={styles.image} />;

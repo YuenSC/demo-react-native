@@ -6,7 +6,7 @@ const createUser = () => {
     imageUrl: faker.image.avatarGitHub(),
     name: faker.person.fullName(),
     nickname: faker.internet.userName(),
-    description: faker.lorem.sentences({ min: 2, max: 4 }),
+    description: faker.lorem.sentences({ min: 2, max: 10 }),
     postCount: faker.number.int({ min: 0, max: 100000 }),
     fansCount: faker.number.int({ min: 0, max: 100000 }),
     followingsCount: faker.number.int({ min: 0, max: 100000 }),

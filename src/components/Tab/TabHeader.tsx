@@ -17,7 +17,12 @@ type ITabHeaderProps = {
 
 const TabHeader = memo<ITabHeaderProps>(({ children }) => {
   const styles = useStyles();
-  const { isHeaderCollapsible, innerScrollY } = useTab();
+  const {
+    isHeaderCollapsible,
+    innerScrollY,
+    tabHeaderHeight,
+    setTabHeaderHeight,
+  } = useTab();
 
   const tabHeaderAnimatedStyle = useAnimatedStyle(
     () =>
@@ -27,8 +32,8 @@ const TabHeader = memo<ITabHeaderProps>(({ children }) => {
             translateY: innerScrollY?.value
               ? interpolate(
                   innerScrollY.value,
-                  [0, TabHeaderInitialHeight],
-                  [0, -TabHeaderInitialHeight],
+                  [0, tabHeaderHeight],
+                  [0, -tabHeaderHeight],
                   Extrapolation.CLAMP
                 )
               : 0,
@@ -39,6 +44,14 @@ const TabHeader = memo<ITabHeaderProps>(({ children }) => {
 
   return (
     <Animated.View
+      onLayout={({
+        nativeEvent: {
+          layout: { height },
+        },
+      }) => {
+        console.log("height", height);
+        setTabHeaderHeight(height);
+      }}
       style={[
         styles.container,
         isHeaderCollapsible && styles.absoluteContainer,
@@ -57,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
   },
   absoluteContainer: {
     position: "absolute",
-    height: TabHeaderInitialHeight,
+    minHeight: TabHeaderInitialHeight,
   },
 }));
 

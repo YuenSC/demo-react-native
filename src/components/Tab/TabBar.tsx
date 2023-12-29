@@ -1,6 +1,6 @@
 import { makeStyles } from "@rneui/themed";
 import { memo } from "react";
-import { TouchableOpacity, View, ViewStyle } from "react-native";
+import { TouchableOpacity, ViewStyle } from "react-native";
 import Animated, {
   AnimatedStyleProp,
   Extrapolation,
@@ -12,7 +12,7 @@ import { ITabViewProps } from "./TabView";
 import StyledText from "../common/StyledText";
 
 import Device from "@/constants/Device";
-import { TabBarHeight, TabHeaderInitialHeight } from "@/constants/Tab";
+import { TabBarHeight } from "@/constants/Tab";
 import { useTab } from "@/context/tab";
 
 type ITabBarProps = {
@@ -22,7 +22,8 @@ type ITabBarProps = {
 
 const TabBar = memo<ITabBarProps>(({ navigationState, onIndexChange }) => {
   const styles = useStyles();
-  const { scrollY, isHeaderCollapsible, innerScrollY } = useTab();
+  const { scrollY, isHeaderCollapsible, innerScrollY, tabHeaderHeight } =
+    useTab();
 
   const numberOfTabs = navigationState.routes.length;
 
@@ -34,11 +35,11 @@ const TabBar = memo<ITabBarProps>(({ navigationState, onIndexChange }) => {
             translateY: innerScrollY?.value
               ? interpolate(
                   innerScrollY.value,
-                  [0, TabHeaderInitialHeight + 1000],
-                  [TabHeaderInitialHeight, 0 - 1000],
+                  [0, tabHeaderHeight + 1000],
+                  [tabHeaderHeight, 0 - 1000],
                   Extrapolation.CLAMP
                 )
-              : TabHeaderInitialHeight,
+              : tabHeaderHeight,
           },
         ],
       }) as AnimatedStyleProp<ViewStyle>

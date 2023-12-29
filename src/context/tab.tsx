@@ -1,4 +1,11 @@
-import { createContext, useCallback, useContext, useMemo, useRef } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { FlatList } from "react-native";
 import Animated, { SharedValue, useSharedValue } from "react-native-reanimated";
 
@@ -16,7 +23,12 @@ const TabContext = createContext<{
   >;
   listOffset?: SharedValue<Record<string, number>>;
   syncScrollOffset?: (curRouteKey: string) => void;
-}>({});
+  tabHeaderHeight: number;
+  setTabHeaderHeight: (height: number) => void;
+}>({
+  tabHeaderHeight: TabHeaderInitialHeight,
+  setTabHeaderHeight: () => {},
+});
 
 export const TabProvider = ({
   children,
@@ -31,18 +43,17 @@ export const TabProvider = ({
     []
   );
   const listOffset = useSharedValue<Record<string, number>>({});
+  const [tabHeaderHeight, setTabHeaderHeight] = useState(
+    TabHeaderInitialHeight
+  );
 
   const syncScrollOffset = useCallback(
     (curRouteKey: string) => {
-      const tabBarTopSpacing = TabHeaderInitialHeight + TabBarHeight;
-      console.log("listOffset", listOffset);
+      const tabBarTopSpacing = tabHeaderHeight + TabBarHeight;
 
       listRefArr.current.forEach((item) => {
         if (item.key !== curRouteKey) {
-          if (
-            innerScrollY.value < TabHeaderInitialHeight &&
-            innerScrollY.value >= 0
-          ) {
+          if (innerScrollY.value < tabHeaderHeight && innerScrollY.value >= 0) {
             if (item.value) {
               (item.value as any as FlatList).scrollToOffset({
                 offset: innerScrollY.value,
@@ -67,7 +78,7 @@ export const TabProvider = ({
         }
       });
     },
-    [innerScrollY.value, listOffset]
+    [innerScrollY.value, listOffset.value, tabHeaderHeight]
   );
 
   return (
@@ -80,6 +91,8 @@ export const TabProvider = ({
           listRefArr,
           listOffset,
           syncScrollOffset,
+          tabHeaderHeight,
+          setTabHeaderHeight,
         }),
         [
           innerScrollY,
@@ -87,6 +100,7 @@ export const TabProvider = ({
           listOffset,
           scrollY,
           syncScrollOffset,
+          tabHeaderHeight,
         ]
       )}
     >
