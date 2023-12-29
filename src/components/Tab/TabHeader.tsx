@@ -1,6 +1,6 @@
 import { makeStyles } from "@rneui/themed";
 import { ReactNode, memo } from "react";
-import { View, ViewStyle } from "react-native";
+import { ViewStyle } from "react-native";
 import Animated, {
   AnimatedStyleProp,
   Extrapolation,
@@ -53,7 +53,6 @@ const TabHeader = memo<ITabHeaderProps>(({ children }) => {
 const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: theme.colors.black,
-    zIndex: 1,
     width: "100%",
   },
   absoluteContainer: {

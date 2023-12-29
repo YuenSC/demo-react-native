@@ -33,11 +33,6 @@ const ProfilePostList = memo<IProfilePostListProps>(({ routeKey }) => {
     },
   });
 
-  useAnimatedStyle(() => {
-    console.log("listOffset.current", listOffset?.current);
-    return {};
-  });
-
   return (
     <Animated.FlatList
       ref={(ref) => {

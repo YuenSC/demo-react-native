@@ -34,9 +34,6 @@ export const TabProvider = ({
 
   const syncScrollOffset = useCallback(
     (curRouteKey: string) => {
-      console.log("syncScrollOffset");
-      console.log("listRefArr.current.length", listRefArr.current.length);
-      console.log("innerScrollY.value", innerScrollY.value);
       listRefArr.current.forEach((item) => {
         if (item.key !== curRouteKey) {
           if (

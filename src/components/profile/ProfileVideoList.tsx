@@ -60,6 +60,9 @@ const ProfileVideoList = memo<IProfileVideoListProps>(({ routeKey }) => {
           refreshing={refreshing}
           tintColor={theme.colors.warning}
           onRefresh={onRefresh}
+          progressViewOffset={
+            ProfileTabHeaderInitialHeight + ProfileTabBarHeight
+          }
         />
       }
       data={posts}

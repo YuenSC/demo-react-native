@@ -37,8 +37,8 @@ const TabBar = memo<ITabBarProps>(({ navigationState, onIndexChange }) => {
             translateY: innerScrollY?.value
               ? interpolate(
                   innerScrollY.value,
-                  [0, TabHeaderInitialHeight],
-                  [TabHeaderInitialHeight, 0],
+                  [0, TabHeaderInitialHeight + 1000],
+                  [TabHeaderInitialHeight, 0 - 1000],
                   Extrapolation.CLAMP
                 )
               : TabHeaderInitialHeight,
