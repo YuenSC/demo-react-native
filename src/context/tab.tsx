@@ -25,9 +25,11 @@ const TabContext = createContext<{
   syncScrollOffset?: (curRouteKey: string) => void;
   tabHeaderHeight: number;
   setTabHeaderHeight: (height: number) => void;
+  onScrollToTop: (curRouteKey: string) => void;
 }>({
   tabHeaderHeight: TabHeaderInitialHeight,
   setTabHeaderHeight: () => {},
+  onScrollToTop: () => {},
 });
 
 export const TabProvider = ({
@@ -49,6 +51,7 @@ export const TabProvider = ({
 
   const syncScrollOffset = useCallback(
     (curRouteKey: string) => {
+      console.log("syncScrollOffset");
       const tabBarTopSpacing = tabHeaderHeight + TabBarHeight;
 
       listRefArr.current.forEach((item) => {
@@ -81,6 +84,26 @@ export const TabProvider = ({
     [innerScrollY.value, listOffset.value, tabHeaderHeight]
   );
 
+  const onScrollToTop = useCallback(
+    (curRouteKey: string) => {
+      console.log("onScrollToTop");
+      const currentScrollViewRef = listRefArr.current.find(
+        (item) => item.key === curRouteKey
+      );
+      console.log("currentScrollViewRef?.value", !!currentScrollViewRef?.value);
+      console.log("tabHeaderHeight", tabHeaderHeight);
+
+      if (currentScrollViewRef?.value) {
+        (currentScrollViewRef.value as any as FlatList).scrollToOffset({
+          offset: tabHeaderHeight,
+          animated: true,
+        });
+        listOffset.value[curRouteKey] = tabHeaderHeight;
+      }
+    },
+    [listOffset.value, tabHeaderHeight]
+  );
+
   return (
     <TabContext.Provider
       value={useMemo(
@@ -93,11 +116,13 @@ export const TabProvider = ({
           syncScrollOffset,
           tabHeaderHeight,
           setTabHeaderHeight,
+          onScrollToTop,
         }),
         [
           innerScrollY,
           isHeaderCollapsible,
           listOffset,
+          onScrollToTop,
           scrollY,
           syncScrollOffset,
           tabHeaderHeight,

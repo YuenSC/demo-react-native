@@ -10,10 +10,9 @@ import StyledText from "@/components/common/StyledText";
 import UserStoryButton from "@/components/user/UserStoryButton";
 import Device from "@/constants/Device";
 import { Post, posts } from "@/data/posts";
-import { stories } from "@/data/stories";
 import { users } from "@/data/users";
 import useCollapsibleHeader from "@/hooks/useCollapsibleHeader";
-import { IStackScreenProps } from "@/types/navigation";
+import { IBottomTabScreenProps, IStackScreenProps } from "@/types/navigation";
 
 const HEADER_HEIGHT = 64;
 
@@ -23,6 +22,8 @@ const HomeScreen = ({ navigation }: IStackScreenProps<"Home">) => {
   const styles = useStyles();
   const flatListRef = useRef<FlatList<Post>>(null);
   const isFocused = useIsFocused();
+  const bottomTabNavigation =
+    navigation.getParent<IBottomTabScreenProps<"Main">["navigation"]>();
 
   const { headerStyle, scrollHandler, scrollViewStyle, onShowHeader } =
     useCollapsibleHeader(
@@ -39,14 +40,14 @@ const HomeScreen = ({ navigation }: IStackScreenProps<"Home">) => {
     );
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener("tabPress", () => {
+    const unsubscribe = bottomTabNavigation?.addListener("tabPress", () => {
       if (isFocused) {
         flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
         onShowHeader();
       }
     });
     return unsubscribe;
-  }, [isFocused, navigation, onShowHeader]);
+  }, [isFocused, navigation, onShowHeader, bottomTabNavigation]);
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>

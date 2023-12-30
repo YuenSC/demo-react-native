@@ -18,6 +18,7 @@ const BottomTab = createBottomTabNavigator<IBottomTabParamList>();
 const BottomTabNavigator = memo(
   ({ navigation }: ITopTabScreenProps<"BottomTab">) => (
     <BottomTab.Navigator
+      id="BottomTab"
       screenListeners={{
         state: (e) => {
           navigation.setOptions({
@@ -43,7 +44,7 @@ const BottomTabNavigator = memo(
 
 const MainNavigation = () => {
   return (
-    <TopTab.Navigator tabBar={() => null}>
+    <TopTab.Navigator tabBar={() => null} id="TopTab">
       <TopTab.Screen
         name="BottomTab"
         component={BottomTabNavigator}

@@ -38,7 +38,7 @@ const ProfileVideoList = memo<IProfileVideoListProps>(({ routeKey }) => {
           progressViewOffset={tabHeaderHeight + TabBarHeight}
         />
       }
-      data={posts}
+      data={posts.slice(0, 9)}
       numColumns={3}
       renderItem={({ item }) => {
         return <Image source={{ uri: item.imageUrl }} style={styles.image} />;

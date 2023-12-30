@@ -22,28 +22,34 @@ type ITabBarProps = {
 
 const TabBar = memo<ITabBarProps>(({ navigationState, onIndexChange }) => {
   const styles = useStyles();
-  const { scrollY, isHeaderCollapsible, innerScrollY, tabHeaderHeight } =
-    useTab();
+  const {
+    scrollY,
+    isHeaderCollapsible,
+    innerScrollY,
+    tabHeaderHeight,
+    onScrollToTop,
+  } = useTab();
 
   const numberOfTabs = navigationState.routes.length;
 
-  const tabAnimatedStyle = useAnimatedStyle(
-    () =>
-      ({
-        transform: [
-          {
-            translateY: innerScrollY?.value
-              ? interpolate(
-                  innerScrollY.value,
-                  [0, tabHeaderHeight + 1000],
-                  [tabHeaderHeight, 0 - 1000],
-                  Extrapolation.CLAMP
-                )
-              : tabHeaderHeight,
-          },
-        ],
-      }) as AnimatedStyleProp<ViewStyle>
-  );
+  const tabAnimatedStyle = useAnimatedStyle(() => {
+    const isTabBarSticky = true;
+
+    return {
+      transform: [
+        {
+          translateY: innerScrollY?.value
+            ? interpolate(
+                innerScrollY.value,
+                [0, tabHeaderHeight + (isTabBarSticky ? 0 : 1000)],
+                [tabHeaderHeight, 0 + (isTabBarSticky ? 0 : -1000)],
+                Extrapolation.CLAMP
+              )
+            : tabHeaderHeight,
+        },
+      ],
+    } as AnimatedStyleProp<ViewStyle>;
+  });
 
   const indicatorAnimatedStyle = useAnimatedStyle(
     () =>
@@ -75,7 +81,12 @@ const TabBar = memo<ITabBarProps>(({ navigationState, onIndexChange }) => {
         <TouchableOpacity
           key={route.key}
           style={styles.tabItem}
-          onPress={() => onIndexChange(index)}
+          onPress={() => {
+            if (navigationState.index === index) {
+              onScrollToTop(route.key);
+            }
+            onIndexChange(index);
+          }}
         >
           <StyledText style={{ color: "white" }}>{route.title}</StyledText>
         </TouchableOpacity>

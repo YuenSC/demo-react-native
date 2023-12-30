@@ -23,6 +23,7 @@ const TabFlatList = <T extends any>({
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
+      console.log("onScroll", routeKey);
       if (innerScrollY) {
         innerScrollY.value = event.contentOffset.y;
       }
@@ -42,10 +43,20 @@ const TabFlatList = <T extends any>({
           }
         }
       }}
+      indicatorStyle="white"
+      scrollIndicatorInsets={{
+        top: tabHeaderHeight + TabBarHeight,
+      }}
       onScroll={scrollHandler}
       scrollEventThrottle={16}
-      onScrollEndDrag={() => syncScrollOffset?.(routeKey)}
-      onMomentumScrollEnd={() => syncScrollOffset?.(routeKey)}
+      onScrollEndDrag={() => {
+        console.log("onScrollEndDrag", routeKey);
+        syncScrollOffset?.(routeKey);
+      }}
+      onMomentumScrollEnd={() => {
+        console.log("onMomentumScrollEnd", routeKey);
+        syncScrollOffset?.(routeKey);
+      }}
       directionalLockEnabled
       numColumns={3}
       contentContainerStyle={{
