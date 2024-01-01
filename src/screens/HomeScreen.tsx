@@ -3,7 +3,14 @@ import { useIsFocused } from "@react-navigation/core";
 import { makeStyles } from "@rneui/themed";
 import { useEffect, useMemo, useRef } from "react";
 import { FlatList, Image, Pressable, ScrollView, View } from "react-native";
-import Animated from "react-native-reanimated";
+import Animated, {
+  interpolate,
+  runOnJS,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import StyledText from "@/components/common/StyledText";
@@ -13,6 +20,7 @@ import { Post, posts } from "@/data/posts";
 import { users } from "@/data/users";
 import useCollapsibleHeader from "@/hooks/useCollapsibleHeader";
 import { IBottomTabScreenProps, IStackScreenProps } from "@/types/navigation";
+import clamp from "@/utils/reanimated/clamp";
 
 const HEADER_HEIGHT = 64;
 
@@ -25,20 +33,51 @@ const HomeScreen = ({ navigation }: IStackScreenProps<"Home">) => {
   const bottomTabNavigation =
     navigation.getParent<IBottomTabScreenProps<"Main">["navigation"]>();
 
-  const { headerStyle, scrollHandler, scrollViewStyle, onShowHeader } =
-    useCollapsibleHeader(
-      useMemo(
-        () => ({
-          headerHeight: HEADER_HEIGHT,
-          maxScrollViewHeight:
-            Device.screen.height - insets.top - bottomTabHeight,
-          minScrollViewHeight:
-            Device.screen.height - insets.top - HEADER_HEIGHT - bottomTabHeight,
-        }),
-        [insets, bottomTabHeight]
-      )
-    );
+  const { headerStyle, scrollViewStyle, onShowHeader } = useCollapsibleHeader(
+    useMemo(
+      () => ({
+        headerHeight: HEADER_HEIGHT,
+        maxScrollViewHeight:
+          Device.screen.height - insets.top - bottomTabHeight,
+        minScrollViewHeight:
+          Device.screen.height - insets.top - HEADER_HEIGHT - bottomTabHeight,
+      }),
+      [insets, bottomTabHeight]
+    )
+  );
 
+  const headerTranslateY = useSharedValue(0);
+
+  const scrollToOffset = (offset: number) => {
+    console.log("scrollToOffset", offset);
+    flatListRef.current?.scrollToOffset({ offset, animated: true });
+  };
+
+  const scrollHandler = useAnimatedScrollHandler<{
+    startY: number;
+    initialHeaderTranslateY: number;
+  }>({
+    onScroll: (event, ctx) => {
+      const nextHeaderTranslateY = clamp(
+        ctx.initialHeaderTranslateY,
+        event.contentOffset.y - HEADER_HEIGHT,
+        event.contentOffset.y
+      );
+
+      headerTranslateY.value = nextHeaderTranslateY;
+    },
+    onBeginDrag: (event, ctx) => {
+      ctx.startY = event.contentOffset.y;
+      ctx.initialHeaderTranslateY = headerTranslateY.value;
+    },
+    onEndDrag: (event, ctx) => {
+      const diff = event.contentOffset.y - ctx.startY;
+      if (Math.abs(diff) > HEADER_HEIGHT) return;
+      runOnJS(scrollToOffset)(
+        diff > 0 ? ctx.startY + HEADER_HEIGHT : ctx.startY - HEADER_HEIGHT
+      );
+    },
+  });
   useEffect(() => {
     const unsubscribe = bottomTabNavigation?.addListener("tabPress", () => {
       if (isFocused) {
@@ -49,41 +88,53 @@ const HomeScreen = ({ navigation }: IStackScreenProps<"Home">) => {
     return unsubscribe;
   }, [isFocused, navigation, onShowHeader, bottomTabNavigation]);
 
+  const headerAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: headerTranslateY.value }],
+      zIndex: 100,
+    };
+  });
+
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
-      <Animated.View
-        style={[styles.appBarHeader, headerStyle, { marginTop: insets.top }]}
-      >
-        <StyledText h3 style={styles.whiteColor}>
-          Calvin
-        </StyledText>
-      </Animated.View>
-
       <Animated.FlatList
         ref={flatListRef as any}
         scrollEventThrottle={16}
         onScroll={scrollHandler}
-        style={[styles.scrollView, scrollViewStyle]}
+        style={[styles.scrollView]}
         data={posts}
         contentContainerStyle={styles.contentContainer}
+        stickyHeaderIndices={[0]}
+        stickyHeaderHiddenOnScroll
+        StickyHeaderComponent={({ children }) => (
+          <Animated.View style={headerAnimatedStyle}>{children}</Animated.View>
+        )}
         ListHeaderComponent={() => {
           return (
-            <ScrollView
-              horizontal
-              style={styles.storyScrollView}
-              contentContainerStyle={styles.storyContentContainer}
-              showsHorizontalScrollIndicator={false}
-            >
-              {users.map((user) => {
-                return <UserStoryButton key={user.id} userId={user.id} />;
-              })}
-            </ScrollView>
+            <Animated.View style={[styles.appBarHeader]}>
+              <StyledText h3 style={styles.whiteColor}>
+                Calvin
+              </StyledText>
+            </Animated.View>
           );
         }}
-        renderItem={({ item }) => {
+        renderItem={({ item, index }) => {
           const user = users.find((user) => user.id === item.userId);
+          const isFirst = index === 0;
           return (
             <View>
+              {isFirst && (
+                <ScrollView
+                  horizontal
+                  style={styles.storyScrollView}
+                  contentContainerStyle={styles.storyContentContainer}
+                  showsHorizontalScrollIndicator={false}
+                >
+                  {users.map((user) => {
+                    return <UserStoryButton key={user.id} userId={user.id} />;
+                  })}
+                </ScrollView>
+              )}
               {user && (
                 <Pressable
                   style={styles.userRow}
@@ -129,9 +180,6 @@ const useStyles = makeStyles((theme) => {
       borderColor: theme.colors.grey0,
       height: HEADER_HEIGHT,
       width: "100%",
-      position: "absolute",
-      top: 0,
-      zIndex: 10,
       justifyContent: "center",
       paddingHorizontal: 16,
     },
