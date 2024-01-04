@@ -4,6 +4,7 @@ import { memo } from "react";
 import { TouchableOpacity } from "react-native";
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 
+import Device from "@/constants/Device";
 import AppSuggestionDetailScreen from "@/screens/AppSuggestionDetailScreen";
 import HomeScreen from "@/screens/HomeScreen";
 import ProfileScreen from "@/screens/ProfileScreen";
@@ -16,7 +17,11 @@ const StackNavigator = memo(() => {
   const { theme } = useTheme();
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        gestureResponseDistance: Device.screen.width,
+      }}
+    >
       <Stack.Screen
         name="Home"
         component={HomeScreen}

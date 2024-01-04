@@ -42,9 +42,10 @@ const useCollapsibleHeader = ({
         event.contentOffset.y - headerHeight,
         event.contentOffset.y
       );
-      console.log("headerTranslateY.value", headerTranslateY.value);
 
-      headerTranslateY.value = nextHeaderTranslateY;
+      headerTranslateY.value = Number.isNaN(nextHeaderTranslateY)
+        ? 0
+        : nextHeaderTranslateY;
     },
     onBeginDrag: (event, ctx) => {
       ctx.startY = event.contentOffset.y;
@@ -52,7 +53,6 @@ const useCollapsibleHeader = ({
     },
     onEndDrag: (event, ctx) => {
       const diff = event.contentOffset.y - ctx.startY;
-      console.log("diff", diff);
       if (Math.abs(diff) > headerHeight) return;
       runOnJS(scrollToOffset)(
         diff > 0 ? ctx.startY + headerHeight : ctx.startY - headerHeight

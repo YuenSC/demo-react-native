@@ -4,8 +4,8 @@ import {
   Dimensions,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  ScrollView,
 } from "react-native";
+import { ScrollView as RNGHScrollview } from "react-native-gesture-handler";
 import Animated, { useAnimatedScrollHandler } from "react-native-reanimated";
 
 import TabBar from "./TabBar";
@@ -13,6 +13,8 @@ import TabHeader from "./TabHeader";
 
 import Device from "@/constants/Device";
 import { TabProvider, useTab } from "@/context/tab";
+
+const AnimatedScrollView = Animated.createAnimatedComponent(RNGHScrollview);
 
 export type TabRoute = {
   key: string;
@@ -65,7 +67,7 @@ const TabViewContent = memo<ITabViewProps>(
           navigationState={navigationState}
           onIndexChange={onIndexChange}
         />
-        <Animated.ScrollView
+        <AnimatedScrollView
           ref={ref as any}
           scrollEventThrottle={16}
           horizontal
@@ -73,7 +75,6 @@ const TabViewContent = memo<ITabViewProps>(
           directionalLockEnabled
           onScroll={scrollHandler}
           overScrollMode="always"
-          hitSlop={{ left: -50 }}
           onMomentumScrollEnd={(
             event: NativeSyntheticEvent<NativeScrollEvent>
           ) => {
@@ -91,7 +92,7 @@ const TabViewContent = memo<ITabViewProps>(
               </Animated.View>
             );
           })}
-        </Animated.ScrollView>
+        </AnimatedScrollView>
       </>
     );
   }
