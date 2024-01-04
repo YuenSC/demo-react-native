@@ -1,7 +1,8 @@
 import { useFocusEffect } from "@react-navigation/native";
-import { useCallback } from "react";
+import { RefObject, useCallback } from "react";
+import { FlatList } from "react-native";
 import {
-  interpolate,
+  runOnJS,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
@@ -12,12 +13,10 @@ import clamp from "@/utils/reanimated/clamp";
 
 const useCollapsibleHeader = ({
   headerHeight,
-  maxScrollViewHeight,
-  minScrollViewHeight,
+  scrollViewRef,
 }: {
-  maxScrollViewHeight: number;
-  minScrollViewHeight: number;
   headerHeight: number;
+  scrollViewRef: RefObject<FlatList>;
 }) => {
   const headerTranslateY = useSharedValue(0);
 
@@ -29,51 +28,42 @@ const useCollapsibleHeader = ({
     headerTranslateY.value = withTiming(-headerHeight, { duration: 300 });
   }, [headerHeight, headerTranslateY]);
 
+  const scrollToOffset = (offset: number) => {
+    scrollViewRef.current?.scrollToOffset({ offset, animated: true });
+  };
+
   const scrollHandler = useAnimatedScrollHandler<{
     startY: number;
     initialHeaderTranslateY: number;
-    isEndDrag: boolean;
   }>({
     onScroll: (event, ctx) => {
-      if (ctx.isEndDrag) return;
-      const diff = event.contentOffset.y - ctx.startY;
       const nextHeaderTranslateY = clamp(
-        ctx.initialHeaderTranslateY - diff,
-        -headerHeight,
-        0
+        ctx.initialHeaderTranslateY,
+        event.contentOffset.y - headerHeight,
+        event.contentOffset.y
       );
+      console.log("headerTranslateY.value", headerTranslateY.value);
 
       headerTranslateY.value = nextHeaderTranslateY;
     },
     onBeginDrag: (event, ctx) => {
       ctx.startY = event.contentOffset.y;
       ctx.initialHeaderTranslateY = headerTranslateY.value;
-      ctx.isEndDrag = false;
     },
     onEndDrag: (event, ctx) => {
-      ctx.isEndDrag = true;
-
       const diff = event.contentOffset.y - ctx.startY;
-      headerTranslateY.value = withTiming(diff > 0 ? -headerHeight : 0, {
-        duration: 300,
-      });
+      console.log("diff", diff);
+      if (Math.abs(diff) > headerHeight) return;
+      runOnJS(scrollToOffset)(
+        diff > 0 ? ctx.startY + headerHeight : ctx.startY - headerHeight
+      );
     },
   });
 
-  const headerStyle = useAnimatedStyle(() => {
+  const animatedHeaderStyle = useAnimatedStyle(() => {
     return {
-      opacity: interpolate(headerTranslateY.value, [-headerHeight, 0], [0, 1]),
       transform: [{ translateY: headerTranslateY.value }],
-    };
-  });
-
-  const scrollViewStyle = useAnimatedStyle(() => {
-    return {
-      maxHeight: interpolate(
-        headerTranslateY.value,
-        [-headerHeight, 0],
-        [maxScrollViewHeight, minScrollViewHeight]
-      ),
+      zIndex: 100,
     };
   });
 
@@ -84,11 +74,10 @@ const useCollapsibleHeader = ({
   );
 
   return {
-    scrollHandler,
-    headerStyle,
-    scrollViewStyle,
     onShowHeader,
     onHideHeader,
+    animatedHeaderStyle,
+    scrollHandler,
   };
 };
 

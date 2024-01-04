@@ -51,7 +51,6 @@ export const TabProvider = ({
 
   const syncScrollOffset = useCallback(
     (curRouteKey: string) => {
-      console.log("syncScrollOffset");
       const tabBarTopSpacing = tabHeaderHeight + TabBarHeight;
 
       listRefArr.current.forEach((item) => {
