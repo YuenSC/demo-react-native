@@ -26,6 +26,7 @@ const TabContext = createContext<{
   tabHeaderHeight: number;
   setTabHeaderHeight: (height: number) => void;
   onScrollToTop: (curRouteKey: string) => void;
+  activeRouteKey?: string;
 }>({
   tabHeaderHeight: TabHeaderInitialHeight,
   setTabHeaderHeight: () => {},
@@ -35,9 +36,11 @@ const TabContext = createContext<{
 export const TabProvider = ({
   children,
   isHeaderCollapsible,
+  activeRouteKey,
 }: {
   children: React.ReactNode;
   isHeaderCollapsible?: boolean;
+  activeRouteKey?: string;
 }) => {
   const scrollY = useSharedValue(0);
   const innerScrollY = useSharedValue(0);
@@ -85,12 +88,9 @@ export const TabProvider = ({
 
   const onScrollToTop = useCallback(
     (curRouteKey: string) => {
-      console.log("onScrollToTop");
       const currentScrollViewRef = listRefArr.current.find(
         (item) => item.key === curRouteKey
       );
-      console.log("currentScrollViewRef?.value", !!currentScrollViewRef?.value);
-      console.log("tabHeaderHeight", tabHeaderHeight);
 
       if (currentScrollViewRef?.value) {
         (currentScrollViewRef.value as any as FlatList).scrollToOffset({
@@ -111,6 +111,7 @@ export const TabProvider = ({
           isHeaderCollapsible,
           innerScrollY,
           listRefArr,
+          activeRouteKey,
           listOffset,
           syncScrollOffset,
           tabHeaderHeight,
@@ -125,6 +126,7 @@ export const TabProvider = ({
           scrollY,
           syncScrollOffset,
           tabHeaderHeight,
+          activeRouteKey,
         ]
       )}
     >

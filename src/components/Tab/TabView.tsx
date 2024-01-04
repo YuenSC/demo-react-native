@@ -4,6 +4,7 @@ import {
   Dimensions,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  ScrollView,
 } from "react-native";
 import { ScrollView as RNGHScrollview } from "react-native-gesture-handler";
 import Animated, { useAnimatedScrollHandler } from "react-native-reanimated";
@@ -45,9 +46,6 @@ const TabViewContent = memo<ITabViewProps>(
     const scrollHandler = useAnimatedScrollHandler({
       onScroll: (event) => {
         if (scrollY) scrollY.value = event.contentOffset.x;
-      },
-      onMomentumEnd: (event) => {
-        console.log("event", event);
       },
     });
 
@@ -99,8 +97,14 @@ const TabViewContent = memo<ITabViewProps>(
 );
 
 const TabView = memo<ITabViewProps>((props) => {
+  const activeRouteKey =
+    props.navigationState.routes[props.navigationState.index].key;
+
   return (
-    <TabProvider isHeaderCollapsible={props.isHeaderCollapsible}>
+    <TabProvider
+      isHeaderCollapsible={props.isHeaderCollapsible}
+      activeRouteKey={activeRouteKey}
+    >
       <TabViewContent {...props} />
     </TabProvider>
   );

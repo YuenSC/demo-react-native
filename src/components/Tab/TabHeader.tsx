@@ -1,8 +1,6 @@
 import { makeStyles } from "@rneui/themed";
 import { ReactNode, memo } from "react";
-import { ViewStyle } from "react-native";
 import Animated, {
-  AnimatedStyleProp,
   Extrapolation,
   interpolate,
   useAnimatedStyle,
@@ -24,23 +22,18 @@ const TabHeader = memo<ITabHeaderProps>(({ children }) => {
     setTabHeaderHeight,
   } = useTab();
 
-  const tabHeaderAnimatedStyle = useAnimatedStyle(
-    () =>
-      ({
-        transform: [
-          {
-            translateY: innerScrollY?.value
-              ? interpolate(
-                  innerScrollY.value,
-                  [0, tabHeaderHeight],
-                  [0, -tabHeaderHeight],
-                  Extrapolation.CLAMP
-                )
-              : 0,
-          },
-        ],
-      }) as AnimatedStyleProp<ViewStyle>
-  );
+  const tabHeaderAnimatedStyle = useAnimatedStyle(() => {
+    const translateY = innerScrollY?.value
+      ? interpolate(
+          innerScrollY?.value,
+          [0, tabHeaderHeight],
+          [0, -tabHeaderHeight],
+          Extrapolation.CLAMP
+        )
+      : 0;
+
+    return { transform: [{ translateY }] };
+  });
 
   return (
     <Animated.View
@@ -49,7 +42,6 @@ const TabHeader = memo<ITabHeaderProps>(({ children }) => {
           layout: { height },
         },
       }) => {
-        console.log("height", height);
         setTabHeaderHeight(height);
       }}
       style={[
