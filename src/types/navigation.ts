@@ -41,6 +41,7 @@ export type IStackParamList = {
   Home: undefined;
   Profile: { userId: string };
   AppSuggestionDetail: { id: string };
+  ChatDetail: { id: string };
 };
 
 export type IStackScreenProps<Screen extends keyof IStackParamList> =

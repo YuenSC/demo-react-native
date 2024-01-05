@@ -6,6 +6,7 @@ import { createSharedElementStackNavigator } from "react-navigation-shared-eleme
 
 import Device from "@/constants/Device";
 import AppSuggestionDetailScreen from "@/screens/AppSuggestionDetailScreen";
+import ChatDetailScreen from "@/screens/ChatDetailScreen";
 import HomeScreen from "@/screens/HomeScreen";
 import ProfileScreen from "@/screens/ProfileScreen";
 import { IStackParamList } from "@/types/navigation";
@@ -39,6 +40,16 @@ const StackNavigator = memo(() => {
               <AntDesign name="left" size={24} color={theme.colors.white} />
             </TouchableOpacity>
           ),
+        }}
+      />
+      <Stack.Screen
+        name="ChatDetail"
+        component={ChatDetailScreen}
+        options={{
+          presentation: "transparentModal",
+          headerTransparent: true,
+          headerLeft: () => null,
+          headerTitle: "",
         }}
       />
       <Stack.Screen

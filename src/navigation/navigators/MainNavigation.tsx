@@ -44,7 +44,11 @@ const BottomTabNavigator = memo(
 
 const MainNavigation = () => {
   return (
-    <TopTab.Navigator tabBar={() => null} id="TopTab">
+    <TopTab.Navigator
+      tabBar={() => null}
+      id="TopTab"
+      style={{ backgroundColor: "black" }}
+    >
       <TopTab.Screen
         name="BottomTab"
         component={BottomTabNavigator}

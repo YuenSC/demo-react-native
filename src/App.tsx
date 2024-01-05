@@ -12,7 +12,7 @@ const App = () => {
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <ThemeProvider theme={theme}>
-          <StatusBar style="auto" />
+          <StatusBar style="inverted" />
           <Navigation />
         </ThemeProvider>
       </GestureHandlerRootView>

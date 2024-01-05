@@ -5,10 +5,11 @@ import { SharedElement } from "react-navigation-shared-element";
 
 import AppSuggestionDisplay from "@/components/appSuggestion/AppSuggestionDisplay";
 import { appSuggestions } from "@/data/appSuggestions";
+import { IBottomTabScreenProps } from "@/types/navigation";
 
-const AppSuggestionListScreen = () => {
-  const navigation = useNavigation();
-
+const AppSuggestionListScreen = ({
+  navigation,
+}: IBottomTabScreenProps<"AppSuggestions">) => {
   return (
     <>
       <StatusBar style="dark" />
@@ -26,8 +27,11 @@ const AppSuggestionListScreen = () => {
             <AppSuggestionDisplay
               appSuggestion={appSuggestion}
               onPress={() =>
-                navigation.navigate("AppSuggestionDetail", {
-                  id: appSuggestion.id,
+                navigation.navigate("Main", {
+                  screen: "AppSuggestionDetail",
+                  params: {
+                    id: appSuggestion.id,
+                  },
                 })
               }
             />

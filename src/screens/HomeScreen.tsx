@@ -1,7 +1,15 @@
+import { Entypo, Ionicons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/core";
 import { makeStyles } from "@rneui/themed";
-import { useEffect, useMemo, useRef } from "react";
-import { FlatList, Image, Pressable, ScrollView, View } from "react-native";
+import { ReactNode, forwardRef, useEffect, useMemo, useRef } from "react";
+import {
+  FlatList,
+  Image,
+  Pressable,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Animated from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -54,16 +62,30 @@ const HomeScreen = ({ navigation }: IStackScreenProps<"Home">) => {
         contentContainerStyle={styles.contentContainer}
         stickyHeaderIndices={[0]}
         stickyHeaderHiddenOnScroll
-        StickyHeaderComponent={({ children }) => (
-          <Animated.View style={animatedHeaderStyle}>{children}</Animated.View>
-        )}
+        StickyHeaderComponent={forwardRef<
+          Animated.View,
+          { children: ReactNode }
+        >(({ children }, ref) => (
+          <Animated.View ref={ref} style={animatedHeaderStyle}>
+            {children}
+          </Animated.View>
+        ))}
         ListHeaderComponent={() => {
           return (
-            <Animated.View style={[styles.appBarHeader]}>
+            <View style={styles.appBarHeader}>
               <StyledText h3 style={styles.whiteColor}>
                 Calvin
               </StyledText>
-            </Animated.View>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("ChatDetail", { id: "" })}
+              >
+                <Ionicons
+                  name="chatbox-ellipses-outline"
+                  size={24}
+                  color="white"
+                />
+              </TouchableOpacity>
+            </View>
           );
         }}
         renderItem={({ item, index }) => {
@@ -129,7 +151,9 @@ const useStyles = makeStyles((theme) => {
       borderColor: theme.colors.grey0,
       height: HEADER_HEIGHT,
       width: "100%",
-      justifyContent: "center",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
       paddingHorizontal: 16,
     },
     scrollView: {
