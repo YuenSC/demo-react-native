@@ -1,5 +1,4 @@
-import { ButtonProps, Colors } from "@rneui/base";
-import { Theme } from "@rneui/themed";
+import { ButtonProps, Colors, Theme } from "@rneui/themed";
 
 const Button: (
   props: Partial<ButtonProps>,

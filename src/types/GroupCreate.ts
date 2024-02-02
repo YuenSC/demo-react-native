@@ -1,4 +1,5 @@
 export type ICreateGroupPayload = {
+  id?: string;
   name: string;
   description: string;
   members: {

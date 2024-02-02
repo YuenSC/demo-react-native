@@ -1,31 +1,29 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button, makeStyles } from "@rneui/themed";
 import AnimatedLottieView from "lottie-react-native";
-import { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import StyledText from "@/components/common/StyledText";
 import { IStackScreenProps } from "@/types/navigation";
-import { log } from "@/utils/log";
 
 const WelcomeScreen = ({ navigation }: IStackScreenProps<"Welcome">) => {
   const styles = useStyles();
 
-  useEffect(() => {
-    const showAsyncStorageData = async () => {
-      try {
-        const keys = await AsyncStorage.getAllKeys();
-        const result = await AsyncStorage.multiGet(keys);
+  // useEffect(() => {
+  //   const showAsyncStorageData = async () => {
+  //     try {
+  //       const keys = await AsyncStorage.getAllKeys();
+  //       const result = await AsyncStorage.multiGet(keys);
 
-        return result.forEach(([key, value]) => {
-          log(`key: ${key}, value: ${value}`);
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    showAsyncStorageData();
-  }, []);
+  //       return result.forEach(([key, value]) => {
+  //         log(`key: ${key}, value: ${value}`);
+  //       });
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   showAsyncStorageData();
+  // }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -41,9 +39,16 @@ const WelcomeScreen = ({ navigation }: IStackScreenProps<"Welcome">) => {
       </StyledText>
 
       <Button
-        title="Create your first group"
+        title="Get Started"
         containerStyle={styles.buttonContainer}
-        onPress={() => navigation.navigate("CreateGroup")}
+        onPress={() => navigation.replace("Onboarding", { step: 0 })}
+      />
+
+      <Button
+        title="Reset"
+        containerStyle={{ margin: 16 }}
+        type="outline"
+        onPress={() => AsyncStorage.clear()}
       />
     </SafeAreaView>
   );

@@ -4,12 +4,13 @@ import { v4 as uuidv4 } from "uuid";
 
 import { ICreateGroupPayload } from "@/types/GroupCreate";
 
-export interface GroupState {
+export interface GroupsState {
   groups: {
     id: string;
     name: string;
     description?: string;
     members: {
+      id: string;
       name: string;
       imageUrl?: string;
     }[];
@@ -17,19 +18,19 @@ export interface GroupState {
   }[];
 }
 
-const initialState: GroupState = {
+const initialState: GroupsState = {
   groups: [],
 };
 
-export const groupSlice = createSlice({
-  name: "group",
+export const groupsSlice = createSlice({
+  name: "groups",
   initialState,
   reducers: {
     addGroup: (state, action: PayloadAction<ICreateGroupPayload>) => {
       state.groups.push({
         id: uuidv4(),
-        ...action.payload,
         paymentRecord: [],
+        ...action.payload,
       });
     },
     deleteGroup: (state, action: PayloadAction<{ id: string }>) => {
@@ -59,6 +60,6 @@ export const {
   updateGroup,
   updateMember,
   updatePaymentRecord,
-} = groupSlice.actions;
+} = groupsSlice.actions;
 
-export default groupSlice.reducer;
+export default groupsSlice.reducer;

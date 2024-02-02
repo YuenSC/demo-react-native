@@ -1,6 +1,4 @@
-import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { DrawerScreenProps } from "@react-navigation/drawer";
-import { MaterialTopTabScreenProps } from "@react-navigation/material-top-tabs";
 import {
   CompositeScreenProps,
   NavigatorScreenParams,
@@ -20,7 +18,7 @@ declare global {
 
 export type IStackParamList = {
   Welcome: undefined;
-  CreateGroup: undefined;
+  Onboarding: { step: number; groupId?: string };
   Drawer: NavigatorScreenParams<IDrawerParamList> | undefined;
 };
 

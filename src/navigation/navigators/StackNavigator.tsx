@@ -2,7 +2,7 @@ import { memo } from "react";
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 
 import Device from "@/constants/Device";
-import CreateGroupScreen from "@/screens/CreateGroupScreen";
+import OnboardingScreen from "@/screens/OnboardingScreen";
 import SampleScreen from "@/screens/SampleScreen";
 import WelcomeScreen from "@/screens/WelcomeScreen";
 import { IStackParamList } from "@/types/navigation";
@@ -24,12 +24,10 @@ const StackNavigator = memo(() => {
         }}
       />
       <Stack.Screen
-        component={CreateGroupScreen}
-        name="CreateGroup"
+        component={OnboardingScreen}
+        name="Onboarding"
         options={{
-          presentation: "modal",
-          headerLeft: () => null,
-          headerTitle: "Create Group",
+          headerShown: false,
         }}
       />
       <Stack.Screen component={SampleScreen} name="Drawer" />

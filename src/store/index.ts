@@ -11,7 +11,8 @@ import {
   REGISTER,
 } from "redux-persist";
 
-import groupReducer from "./reducers/groupReducer";
+import groupsReducer from "./reducers/groups";
+import profileReducer from "./reducers/profile";
 
 const persistConfig = {
   key: "root",
@@ -19,7 +20,8 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
-  group: groupReducer,
+  groups: groupsReducer,
+  profile: profileReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
