@@ -1,4 +1,5 @@
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import { DrawerScreenProps } from "@react-navigation/drawer";
 import { MaterialTopTabScreenProps } from "@react-navigation/material-top-tabs";
 import {
   CompositeScreenProps,
@@ -13,42 +14,61 @@ import { StackScreenProps } from "@react-navigation/stack";
 
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends ITopTabParamList {}
+    interface RootParamList extends IStackParamList {}
   }
 }
 
-export type ITopTabParamList = {
-  BottomTab: NavigatorScreenParams<IBottomTabParamList> | undefined;
-  Chat: undefined;
-};
-
-export type ITopTabScreenProps<Screen extends keyof ITopTabParamList> =
-  MaterialTopTabScreenProps<ITopTabParamList, Screen>;
-
-export type IBottomTabParamList = {
-  Main: NavigatorScreenParams<IStackParamList> | undefined;
-  Settings: undefined;
-  AppSuggestions: undefined;
-};
-
-export type IBottomTabScreenProps<Screen extends keyof IBottomTabParamList> =
-  CompositeScreenProps<
-    BottomTabScreenProps<IBottomTabParamList, Screen>,
-    MaterialTopTabScreenProps<ITopTabParamList>
-  >;
-
 export type IStackParamList = {
-  Home: undefined;
-  Profile: { userId: string };
-  AppSuggestionDetail: { id: string };
-  ChatDetail: { id: string };
+  Welcome: undefined;
+  CreateGroup: undefined;
+  Drawer: NavigatorScreenParams<IDrawerParamList> | undefined;
 };
 
 export type IStackScreenProps<Screen extends keyof IStackParamList> =
+  StackScreenProps<IStackParamList, Screen>;
+
+export type IDrawerParamList = {
+  GroupDetail: { id: string };
+};
+
+export type IDrawerScreenProps<Screen extends keyof IDrawerParamList> =
   CompositeScreenProps<
-    StackScreenProps<IStackParamList, Screen>,
-    CompositeScreenProps<
-      BottomTabScreenProps<IBottomTabParamList>,
-      MaterialTopTabScreenProps<ITopTabParamList>
-    >
+    DrawerScreenProps<IDrawerParamList, Screen>,
+    StackScreenProps<IStackParamList>
   >;
+
+// export type ITopTabParamList = {
+//   BottomTab: NavigatorScreenParams<IBottomTabParamList> | undefined;
+//   Chat: undefined;
+// };
+
+// export type ITopTabScreenProps<Screen extends keyof ITopTabParamList> =
+//   MaterialTopTabScreenProps<ITopTabParamList, Screen>;
+
+// export type IBottomTabParamList = {
+//   Main: NavigatorScreenParams<IStackParamList> | undefined;
+//   Settings: undefined;
+//   AppSuggestions: undefined;
+// };
+
+// export type IBottomTabScreenProps<Screen extends keyof IBottomTabParamList> =
+//   CompositeScreenProps<
+//     BottomTabScreenProps<IBottomTabParamList, Screen>,
+//     MaterialTopTabScreenProps<ITopTabParamList>
+//   >;
+
+// export type IStackParamList = {
+//   Home: undefined;
+//   Profile: { userId: string };
+//   AppSuggestionDetail: { id: string };
+//   ChatDetail: { id: string };
+// };
+
+// export type IStackScreenProps<Screen extends keyof IStackParamList> =
+//   CompositeScreenProps<
+//     StackScreenProps<IStackParamList, Screen>,
+//     CompositeScreenProps<
+//       BottomTabScreenProps<IBottomTabParamList>,
+//       MaterialTopTabScreenProps<ITopTabParamList>
+//     >
+//   >;

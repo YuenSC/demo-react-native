@@ -1,11 +1,11 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { memo } from "react";
 
-import MainNavigation from "./navigators/MainNavigation";
+import StackNavigator from "./navigators/StackNavigator";
 
 const Navigation = memo(() => (
   <NavigationContainer>
-    <MainNavigation />
+    <StackNavigator />
   </NavigationContainer>
 ));
 
