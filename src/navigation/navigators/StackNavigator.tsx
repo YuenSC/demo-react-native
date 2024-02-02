@@ -23,7 +23,15 @@ const StackNavigator = memo(() => {
           headerShown: false,
         }}
       />
-      <Stack.Screen component={CreateGroupScreen} name="CreateGroup" />
+      <Stack.Screen
+        component={CreateGroupScreen}
+        name="CreateGroup"
+        options={{
+          presentation: "modal",
+          headerLeft: () => null,
+          headerTitle: "Create Group",
+        }}
+      />
       <Stack.Screen component={SampleScreen} name="Drawer" />
     </Stack.Navigator>
   );

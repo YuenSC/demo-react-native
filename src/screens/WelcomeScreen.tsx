@@ -1,13 +1,31 @@
-import { makeStyles } from "@rneui/themed";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Button, makeStyles } from "@rneui/themed";
 import AnimatedLottieView from "lottie-react-native";
-import { Pressable, Text, TouchableOpacity } from "react-native";
+import { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import StyledText from "@/components/common/StyledText";
 import { IStackScreenProps } from "@/types/navigation";
+import { log } from "@/utils/log";
 
 const WelcomeScreen = ({ navigation }: IStackScreenProps<"Welcome">) => {
   const styles = useStyles();
+
+  useEffect(() => {
+    const showAsyncStorageData = async () => {
+      try {
+        const keys = await AsyncStorage.getAllKeys();
+        const result = await AsyncStorage.multiGet(keys);
+
+        return result.forEach(([key, value]) => {
+          log(`key: ${key}, value: ${value}`);
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    showAsyncStorageData();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -22,14 +40,11 @@ const WelcomeScreen = ({ navigation }: IStackScreenProps<"Welcome">) => {
         {"Start summarizing your group expenses \n with your friends"}
       </StyledText>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.replace("CreateGroup")}
-      >
-        <StyledText style={styles.buttonText}>
-          Create your first group
-        </StyledText>
-      </TouchableOpacity>
+      <Button
+        title="Create your first group"
+        containerStyle={styles.buttonContainer}
+        onPress={() => navigation.navigate("CreateGroup")}
+      />
     </SafeAreaView>
   );
 };
@@ -52,19 +67,11 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 16,
     color: theme.colors.grey1,
   },
-  button: {
-    backgroundColor: theme.colors.primary,
-    padding: 16,
-    borderRadius: 8,
-    margin: 16,
-    alignItems: "center",
+
+  buttonContainer: {
     marginTop: "auto",
+    marginHorizontal: 16,
     marginBottom: 32,
-  },
-  buttonText: {
-    color: theme.colors.white,
-    fontWeight: "bold",
-    fontSize: 16,
   },
 }));
 
