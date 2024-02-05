@@ -16,7 +16,9 @@ const ProfileForm = memo<IProfileFormProps>(({ isEdit, onSubmit }) => {
   const styles = useStyles();
   const { name } = useAppSelector((state) => state.profile);
   const { control, handleSubmit } = useForm<IProfileCreatePayload>({
-    defaultValues: { name },
+    defaultValues: {
+      name: name || "Calvin", // TODO: remove default value after testing
+    },
   });
   const dispatch = useAppDispatch();
 
@@ -44,7 +46,7 @@ const ProfileForm = memo<IProfileFormProps>(({ isEdit, onSubmit }) => {
         title="Next"
         containerStyle={styles.button}
         onPress={handleSubmit((values) => {
-          dispatch(updateProfile(values));
+          dispatch(updateProfile({ ...values, name: values.name.trim() }));
           onSubmit();
         })}
       />

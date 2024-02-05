@@ -24,6 +24,7 @@ const GroupForm = memo<IGroupFormProps>(({ groupId, onSubmit }) => {
   const profile = useAppSelector((state) => state.profile);
   const { control, handleSubmit } = useForm<ICreateGroupPayload>({
     defaultValues: {
+      name: "Calvin Group", // TODO: remove default value after testing,
       members: [{ id: profile.id, name: profile.name }],
     },
   });
@@ -54,7 +55,13 @@ const GroupForm = memo<IGroupFormProps>(({ groupId, onSubmit }) => {
         containerStyle={styles.button}
         onPress={handleSubmit((values) => {
           const createdGroupId = uuidv4();
-          dispatch(addGroup({ id: createdGroupId, ...values }));
+          dispatch(
+            addGroup({
+              id: createdGroupId,
+              ...values,
+              name: values.name.trim(),
+            })
+          );
           onSubmit(createdGroupId);
         })}
       />

@@ -1,20 +1,17 @@
-import { AntDesign, Entypo, Feather } from "@expo/vector-icons";
+import { Entypo, Feather } from "@expo/vector-icons";
 import { Button, Input, Text, makeStyles } from "@rneui/themed";
 import { memo, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
 import { TouchableOpacity, View } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-import { v4 as uuidv4 } from "uuid";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
-import { addGroup, addMember } from "@/store/reducers/groups";
-import { ICreateGroupPayload } from "@/types/GroupCreate";
-
+import { addMember } from "@/store/reducers/groups";
+import { log } from "@/utils/log";
 import "react-native-get-random-values";
 
 type IAddMemberFormProps = {
-  groupId?: string;
-  onSubmit: (groupId: string) => void;
+  groupId: string;
+  onSubmit: () => void;
 };
 
 const AddMemberForm = memo<IAddMemberFormProps>(({ groupId, onSubmit }) => {
@@ -26,6 +23,8 @@ const AddMemberForm = memo<IAddMemberFormProps>(({ groupId, onSubmit }) => {
   const dispatch = useAppDispatch();
   const [username, setUserName] = useState("");
   const [isFocused, setIsFocused] = useState(false);
+
+  log(group);
 
   return (
     <View style={styles.container}>
@@ -67,9 +66,16 @@ const AddMemberForm = memo<IAddMemberFormProps>(({ groupId, onSubmit }) => {
                 paddingHorizontal: 0,
               }}
               onEndEditing={() => {
+                console.log("username", username);
                 if (username) {
-                  // dispatch(addMember())
+                  dispatch(
+                    addMember({
+                      groupId,
+                      name: username,
+                    })
+                  );
                 }
+                setUserName("");
                 setIsFocused(false);
               }}
             />
@@ -90,7 +96,7 @@ const AddMemberForm = memo<IAddMemberFormProps>(({ groupId, onSubmit }) => {
         )}
       </View>
 
-      <Button title="Next" containerStyle={styles.button} />
+      <Button title="Next" containerStyle={styles.button} onPress={onSubmit} />
     </View>
   );
 });

@@ -20,13 +20,14 @@ export type IStackParamList = {
   Welcome: undefined;
   Onboarding: { step: number; groupId?: string };
   Drawer: NavigatorScreenParams<IDrawerParamList> | undefined;
+  SignUpSuccessBottomSheetModal: undefined;
 };
 
 export type IStackScreenProps<Screen extends keyof IStackParamList> =
   StackScreenProps<IStackParamList, Screen>;
 
 export type IDrawerParamList = {
-  GroupDetail: { id: string };
+  GroupDetail: { id?: string };
 };
 
 export type IDrawerScreenProps<Screen extends keyof IDrawerParamList> =

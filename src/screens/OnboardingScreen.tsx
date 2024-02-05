@@ -36,11 +36,7 @@ const OnboardingScreen = ({
         <AddMemberForm
           groupId={groupId || ""}
           onSubmit={() => {
-            if (!groupId) return;
-            navigation.replace("Drawer", {
-              screen: "GroupDetail",
-              params: { id: groupId || "" },
-            });
+            navigation.navigate("SignUpSuccessBottomSheetModal");
           }}
         />
       )}

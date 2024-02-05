@@ -43,13 +43,6 @@ const WelcomeScreen = ({ navigation }: IStackScreenProps<"Welcome">) => {
         containerStyle={styles.buttonContainer}
         onPress={() => navigation.replace("Onboarding", { step: 0 })}
       />
-
-      <Button
-        title="Reset"
-        containerStyle={{ margin: 16 }}
-        type="outline"
-        onPress={() => AsyncStorage.clear()}
-      />
     </SafeAreaView>
   );
 };

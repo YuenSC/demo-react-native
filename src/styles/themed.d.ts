@@ -1,6 +1,10 @@
 import "@rneui/themed";
 
 declare module "@rneui/themed" {
+  export interface Colors {
+    backdrop: string;
+  }
+
   export interface TextProps {
     // bold: boolean;
   }

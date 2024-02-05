@@ -44,7 +44,23 @@ export const groupsSlice = createSlice({
     deletePaymentRecord: () => {},
     updatePaymentRecord: () => {},
 
-    addMember: () => {},
+    addMember: (
+      state,
+      action: PayloadAction<{ groupId: string; name: string }>
+    ) => {
+      console.log("addMember");
+      const group = state.groups.find(
+        (group) => group.id === action.payload.groupId
+      );
+
+      console.log(group);
+      if (group) {
+        group.members.push({
+          id: uuidv4(),
+          name: action.payload.name,
+        });
+      }
+    },
     deleteMember: () => {},
     updateMember: () => {},
   },
