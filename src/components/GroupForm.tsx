@@ -18,6 +18,8 @@ type IGroupFormProps = {
 
 const GroupForm = memo<IGroupFormProps>(({ groupId, onSubmit }) => {
   const styles = useStyles();
+  const dispatch = useAppDispatch();
+
   const group = useAppSelector((state) =>
     state.groups.groups.find((group) => group.id === groupId)
   );
@@ -28,7 +30,6 @@ const GroupForm = memo<IGroupFormProps>(({ groupId, onSubmit }) => {
       members: [{ id: profile.id, name: profile.name }],
     },
   });
-  const dispatch = useAppDispatch();
 
   return (
     <View style={styles.container}>

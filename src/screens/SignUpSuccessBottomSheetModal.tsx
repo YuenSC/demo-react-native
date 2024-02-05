@@ -23,7 +23,6 @@ const SignUpSuccessBottomSheetModal = ({
     <View style={styles.container}>
       <BottomSheet
         ref={bottomSheetRef}
-        index={1}
         snapPoints={snapPoints}
         onClose={handleClose}
         enablePanDownToClose

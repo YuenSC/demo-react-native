@@ -1,12 +1,17 @@
-import { Entypo, Feather } from "@expo/vector-icons";
-import { Button, Input, Text, makeStyles } from "@rneui/themed";
+import { AntDesign, Entypo, Feather } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { Button, Input, Text, makeStyles, useTheme } from "@rneui/themed";
 import { memo, useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { KeyboardAvoidingView, TouchableOpacity, View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
+import HStack from "./common/HStack";
+
+import Device from "@/constants/Device";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
-import { addMember } from "@/store/reducers/groups";
-import { log } from "@/utils/log";
+import { addMember, deleteMember } from "@/store/reducers/groups";
+
 import "react-native-get-random-values";
 
 type IAddMemberFormProps = {
@@ -16,6 +21,7 @@ type IAddMemberFormProps = {
 
 const AddMemberForm = memo<IAddMemberFormProps>(({ groupId, onSubmit }) => {
   const styles = useStyles();
+  const { theme } = useTheme();
   const group = useAppSelector((state) =>
     state.groups.groups.find((group) => group.id === groupId)
   );
@@ -24,10 +30,13 @@ const AddMemberForm = memo<IAddMemberFormProps>(({ groupId, onSubmit }) => {
   const [username, setUserName] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
-  log(group);
+  const navigation = useNavigation();
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      keyboardDismissMode="on-drag"
+    >
       <Text h1 style={styles.title}>
         Members
       </Text>
@@ -41,9 +50,33 @@ const AddMemberForm = memo<IAddMemberFormProps>(({ groupId, onSubmit }) => {
               {isOwner ? (
                 <Text>(Owner)</Text>
               ) : (
-                <TouchableOpacity>
-                  <Feather name="edit" size={24} color="black" />
-                </TouchableOpacity>
+                <HStack gap={8}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("EditMember", {
+                        id: member.id,
+                        groupId,
+                      })
+                    }
+                  >
+                    <Feather
+                      name="edit"
+                      size={24}
+                      color={theme.colors.primary}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() =>
+                      dispatch(deleteMember({ groupId, memberId: member.id }))
+                    }
+                  >
+                    <AntDesign
+                      name="delete"
+                      size={24}
+                      color={theme.colors.error}
+                    />
+                  </TouchableOpacity>
+                </HStack>
               )}
             </View>
           );
@@ -60,7 +93,7 @@ const AddMemberForm = memo<IAddMemberFormProps>(({ groupId, onSubmit }) => {
               value={username}
               placeholder="Type participant name"
               renderErrorMessage={false}
-              containerStyle={{ padding: 12, paddingHorizontal: 12 }}
+              containerStyle={styles.inputContainer}
               inputContainerStyle={{
                 borderBottomWidth: 0,
                 paddingHorizontal: 0,
@@ -97,7 +130,7 @@ const AddMemberForm = memo<IAddMemberFormProps>(({ groupId, onSubmit }) => {
       </View>
 
       <Button title="Next" containerStyle={styles.button} onPress={onSubmit} />
-    </View>
+    </ScrollView>
   );
 });
 
@@ -115,7 +148,8 @@ const useStyles = makeStyles((theme) => ({
   },
 
   memberContainer: {
-    padding: 12,
+    padding: 16,
+    paddingVertical: 20,
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.grey4,
     flexDirection: "row",
@@ -130,6 +164,10 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     height: 64,
     paddingHorizontal: 8,
+  },
+  inputContainer: {
+    padding: 12,
+    paddingHorizontal: 16,
   },
 }));
 

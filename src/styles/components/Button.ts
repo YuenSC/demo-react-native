@@ -18,17 +18,32 @@ const Button: (
       paddingHorizontal = 16;
       break;
   }
+
+  let color = theme.colors.primary;
+  switch (props.type) {
+    case "outline":
+    case "clear":
+      color = theme.colors[
+        (props.color || "primary") as keyof Colors
+      ] as string;
+      break;
+
+    default:
+      color = theme.colors.white;
+      break;
+  }
+
   return {
-    containerStyle: {
-      borderRadius: 8,
-    },
     buttonStyle: {
       padding,
       paddingHorizontal,
+      borderRadius: 8,
+      borderColor: color,
     },
     titleStyle: {
       fontWeight: "bold",
       fontSize: 16,
+      color,
     },
   };
 };

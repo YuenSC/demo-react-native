@@ -48,12 +48,10 @@ export const groupsSlice = createSlice({
       state,
       action: PayloadAction<{ groupId: string; name: string }>
     ) => {
-      console.log("addMember");
       const group = state.groups.find(
         (group) => group.id === action.payload.groupId
       );
 
-      console.log(group);
       if (group) {
         group.members.push({
           id: uuidv4(),
@@ -61,8 +59,42 @@ export const groupsSlice = createSlice({
         });
       }
     },
-    deleteMember: () => {},
-    updateMember: () => {},
+    deleteMember: (
+      state,
+      action: PayloadAction<{ groupId: string; memberId: string }>
+    ) => {
+      const group = state.groups.find(
+        (group) => group.id === action.payload.groupId
+      );
+
+      if (group) {
+        group.members = group.members.filter(
+          (member) => member.id !== action.payload.memberId
+        );
+      }
+    },
+
+    updateMember: (
+      state,
+      action: PayloadAction<{
+        groupId: string;
+        memberId: string;
+        name: string;
+      }>
+    ) => {
+      const group = state.groups.find(
+        (group) => group.id === action.payload.groupId
+      );
+      if (group) {
+        const member = group.members.find(
+          (member) => member.id === action.payload.memberId
+        );
+        console.log("member", member);
+        if (member) {
+          member.name = action.payload.name;
+        }
+      }
+    },
   },
 });
 

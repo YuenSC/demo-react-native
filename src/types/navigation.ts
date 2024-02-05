@@ -21,6 +21,7 @@ export type IStackParamList = {
   Onboarding: { step: number; groupId?: string };
   Drawer: NavigatorScreenParams<IDrawerParamList> | undefined;
   SignUpSuccessBottomSheetModal: undefined;
+  EditMember: { id: string; groupId: string };
 };
 
 export type IStackScreenProps<Screen extends keyof IStackParamList> =

@@ -5,6 +5,7 @@ import DrawerNavigator from "./DrawerNavigator";
 
 import Device from "@/constants/Device";
 import { useAppSelector } from "@/hooks/reduxHook";
+import EditMemberScreen from "@/screens/EditMemberScreen";
 import OnboardingScreen from "@/screens/OnboardingScreen";
 import SignUpSuccessBottomSheetModal from "@/screens/SignUpSuccessBottomSheetModal";
 import WelcomeScreen from "@/screens/WelcomeScreen";
@@ -36,6 +37,14 @@ const StackNavigator = memo(() => {
         name="Onboarding"
         options={{
           headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        component={EditMemberScreen}
+        name="EditMember"
+        options={{
+          headerShown: false,
+          presentation: "modal",
         }}
       />
       <Stack.Screen
