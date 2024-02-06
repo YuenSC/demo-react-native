@@ -7,6 +7,7 @@ import Device from "@/constants/Device";
 import { useAppSelector } from "@/hooks/reduxHook";
 import EditMemberScreen from "@/screens/EditMemberScreen";
 import OnboardingScreen from "@/screens/OnboardingScreen";
+import SampleScreen from "@/screens/SampleScreen";
 import SignUpSuccessBottomSheetModal from "@/screens/SignUpSuccessBottomSheetModal";
 import WelcomeScreen from "@/screens/WelcomeScreen";
 import { IStackParamList } from "@/types/navigation";
@@ -42,6 +43,14 @@ const StackNavigator = memo(() => {
       <Stack.Screen
         component={EditMemberScreen}
         name="EditMember"
+        options={{
+          headerShown: false,
+          presentation: "modal",
+        }}
+      />
+      <Stack.Screen
+        component={SampleScreen}
+        name="AddPayment"
         options={{
           headerShown: false,
           presentation: "modal",

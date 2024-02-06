@@ -4,6 +4,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { makeStyles, useTheme } from "@rneui/themed";
 import { TouchableOpacity, View } from "react-native";
 
+import BottomTabNavigator from "./BottomTabNavigator";
 import DrawerContent from "../DrawerContent";
 
 import { useAppSelector } from "@/hooks/reduxHook";
@@ -20,8 +21,8 @@ const DrawerNavigator = () => {
   return (
     <Drawer.Navigator drawerContent={(props) => <DrawerContent {...props} />}>
       <Drawer.Screen
-        name="GroupDetail"
-        component={GroupDetailScreen}
+        name="BottomTab"
+        component={BottomTabNavigator}
         initialParams={{ id: firstGroupId }}
         options={{
           headerRight: () => {

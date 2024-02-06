@@ -1,3 +1,4 @@
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { DrawerScreenProps } from "@react-navigation/drawer";
 import {
   CompositeScreenProps,
@@ -22,19 +23,36 @@ export type IStackParamList = {
   Drawer: NavigatorScreenParams<IDrawerParamList> | undefined;
   SignUpSuccessBottomSheetModal: undefined;
   EditMember: { id: string; groupId: string };
+  AddPayment: { groupId: string };
 };
 
 export type IStackScreenProps<Screen extends keyof IStackParamList> =
   StackScreenProps<IStackParamList, Screen>;
 
 export type IDrawerParamList = {
-  GroupDetail: { id?: string };
+  BottomTab: { id?: string };
 };
 
 export type IDrawerScreenProps<Screen extends keyof IDrawerParamList> =
   CompositeScreenProps<
     DrawerScreenProps<IDrawerParamList, Screen>,
     StackScreenProps<IStackParamList>
+  >;
+
+export type IBottomTabParamList = {
+  GroupDetail: { id: string };
+  PaymentRecord: undefined; // TODO: Update params
+  Statistic: undefined; // TODO: Update params
+  Option: undefined; // TODO: Update params
+};
+
+export type IBottomTabScreenProps<Screen extends keyof IBottomTabParamList> =
+  CompositeScreenProps<
+    BottomTabScreenProps<IBottomTabParamList, Screen>,
+    CompositeScreenProps<
+      DrawerScreenProps<IDrawerParamList>,
+      StackScreenProps<IStackParamList>
+    >
   >;
 
 // export type ITopTabParamList = {
