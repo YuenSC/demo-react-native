@@ -2,7 +2,6 @@ import { FontAwesome } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { makeStyles, useTheme } from "@rneui/themed";
-import { useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 
 import DrawerContent from "../DrawerContent";
@@ -38,6 +37,7 @@ const DrawerNavigator = () => {
               </View>
             );
           },
+          headerTitle: "",
         }}
       />
     </Drawer.Navigator>
