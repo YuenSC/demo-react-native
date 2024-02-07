@@ -1,5 +1,4 @@
-import { makeStyles } from "@rneui/themed";
-import { Text } from "react-native";
+import { Text, makeStyles } from "@rneui/themed";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const SampleScreen = () => {

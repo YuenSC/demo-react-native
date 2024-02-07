@@ -2,14 +2,14 @@ import { Text, makeStyles } from "@rneui/themed";
 import { memo } from "react";
 import { View } from "react-native";
 
-type ISampleComponentProps = object;
+type IAddBillFormProps = object;
 
-const SampleComponent = memo<ISampleComponentProps>(() => {
+const AddBillForm = memo<IAddBillFormProps>(() => {
   const styles = useStyles();
 
   return (
     <View style={styles.container}>
-      <Text>SampleComponent</Text>
+      <Text>AddBillForm</Text>
     </View>
   );
 });
@@ -21,6 +21,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-SampleComponent.displayName = "SampleComponent";
+AddBillForm.displayName = "AddBillForm";
 
-export default SampleComponent;
+export default AddBillForm;

@@ -19,7 +19,7 @@ const BottomTabNavigator = () => {
   return (
     <BottomTab.Navigator
       screenOptions={{ headerShown: false }}
-      tabBar={(props) => <BottomTabBar {...props} />}
+      tabBar={(props) => <BottomTabBar groupId={firstGroupId} {...props} />}
     >
       <BottomTab.Screen
         name="GroupDetail"
