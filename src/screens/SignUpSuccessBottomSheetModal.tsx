@@ -1,68 +1,80 @@
-import BottomSheet from "@gorhom/bottom-sheet";
-import { Button, makeStyles } from "@rneui/themed";
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import { Button, Text, makeStyles } from "@rneui/themed";
 import AnimatedLottieView from "lottie-react-native";
-import { useCallback, useMemo, useRef } from "react";
-import { Text, View } from "react-native";
+import { useCallback, useRef } from "react";
+import { View } from "react-native";
+import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { useAppSelector } from "@/hooks/reduxHook";
 import { IStackScreenProps } from "@/types/navigation";
-
-const snapPoints = ["50%"];
 
 const SignUpSuccessBottomSheetModal = ({
   navigation,
 }: IStackScreenProps<"SignUpSuccessBottomSheetModal">) => {
-  const styles = useStyles();
+  const insets = useSafeAreaInsets();
+  const styles = useStyles(insets);
 
   const bottomSheetRef = useRef<BottomSheet>(null);
 
+  const firstGroup = useAppSelector((state) => state.groups.groups[0]);
+
   const handleClose = useCallback(() => {
-    navigation.navigate("Drawer", { screen: "GroupDetail", params: {} });
-  }, [navigation]);
+    navigation.navigate("Drawer", {
+      screen: "BottomTab",
+      params: { id: firstGroup.id },
+    });
+  }, [firstGroup.id, navigation]);
 
   return (
     <View style={styles.container}>
       <BottomSheet
         ref={bottomSheetRef}
-        snapPoints={snapPoints}
         onClose={handleClose}
         enablePanDownToClose
+        enableDynamicSizing
       >
-        <AnimatedLottieView
-          autoPlay
-          loop={false}
-          style={styles.lottie}
-          source={require("@/assets/lottie/congrat.json")}
-        />
-        <View style={styles.contentContainer}>
-          <Text style={styles.title}>Congratulations!</Text>
-          <Text style={styles.subtitle}>
-            {"Let's create your first payment record \n with your friends!"}
-          </Text>
-          <Button
-            title="Get Started"
-            containerStyle={styles.buttonContainer}
-            onPress={handleClose}
+        <BottomSheetView style={styles.contentContainer}>
+          <AnimatedLottieView
+            autoPlay
+            loop={false}
+            style={styles.lottie}
+            source={require("@/assets/lottie/congrat.json")}
           />
-        </View>
+          <View style={styles.content}>
+            <Text style={styles.title}>Congratulations!</Text>
+            <Text style={styles.subtitle}>
+              {"Let's create your first payment record \n with your friends!"}
+            </Text>
+            <Button
+              title="Get Started"
+              containerStyle={styles.buttonContainer}
+              onPress={handleClose}
+            />
+          </View>
+        </BottomSheetView>
       </BottomSheet>
     </View>
   );
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme, inset: EdgeInsets) => ({
   container: {
     flex: 1,
     padding: 24,
     backgroundColor: theme.colors.backdrop,
   },
   contentContainer: {
-    flex: 1,
-    marginTop: -64,
+    flex: 0,
+    minHeight: 100,
     paddingHorizontal: 24,
+    paddingBottom: Math.max(inset.bottom, 16),
+  },
+  content: {
+    marginTop: -50,
   },
   lottie: {
-    width: "100%",
-    height: 300,
+    width: "60%",
+    aspectRatio: 1,
     alignSelf: "center",
     marginTop: -8,
   },

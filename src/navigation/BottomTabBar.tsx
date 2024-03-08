@@ -3,17 +3,18 @@ import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { Text, makeStyles, useTheme } from "@rneui/themed";
 import { Fragment, memo } from "react";
 import { TouchableOpacity, View } from "react-native";
+import { EdgeInsets } from "react-native-safe-area-context";
 
 const BottomTabBar = memo<
   BottomTabBarProps & {
     groupId: string;
   }
 >(({ state, descriptors, insets, navigation, groupId }) => {
-  const styles = useStyles();
+  const styles = useStyles(insets);
   const { theme } = useTheme();
 
   return (
-    <View style={[styles.container, { paddingBottom: insets.bottom }]}>
+    <View style={styles.container}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const isFocused = state.index === index;
@@ -68,12 +69,13 @@ const BottomTabBar = memo<
   );
 });
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme, insets: EdgeInsets) => ({
   container: {
     backgroundColor: theme.colors.background,
     flexDirection: "row",
     borderTopColor: theme.colors.grey5,
     borderTopWidth: 1,
+    paddingBottom: Math.max(16, insets.bottom),
   },
   tabItem: { flex: 1, alignItems: "center", paddingTop: 12 },
   iconContainer: { width: 24, height: 24, marginBottom: 4 },
