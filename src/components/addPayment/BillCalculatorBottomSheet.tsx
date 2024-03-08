@@ -232,9 +232,10 @@ const BillCalculatorBottomSheet = forwardRef<
                       onAllClear();
                     }
                   }}
-                  onPress={() => {
+                  onPressIn={() => {
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-
+                  }}
+                  onPress={() => {
                     switch (key) {
                       case CalculatorOperands.clearEntry:
                         onClearEntry();
