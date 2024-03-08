@@ -21,9 +21,7 @@ const StackNavigator = memo(() => {
 
   return (
     <Stack.Navigator
-      initialRouteName={
-        isInitialSetupDone ? "SignUpSuccessBottomSheetModal" : "Welcome"
-      }
+      initialRouteName={isInitialSetupDone ? "Drawer" : "Welcome"}
       screenOptions={{
         gestureResponseDistance: Device.screen.width,
       }}
