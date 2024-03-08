@@ -1,7 +1,9 @@
 import BottomSheet from "@gorhom/bottom-sheet";
+// eslint-disable-next-line no-restricted-imports
+import { Input as BaseInput } from "@rneui/base";
 import { Input, Text, makeStyles } from "@rneui/themed";
 import { memo, useRef, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import BillCalculatorBottomSheet from "./BillCalculatorBottomSheet";
@@ -14,6 +16,7 @@ const AddBillForm = memo<IAddBillFormProps>(() => {
 
   const [amount, setAmount] = useState(0);
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const inputRef = useRef<TextInput & BaseInput>(null);
 
   return (
     <View style={styles.container}>
@@ -24,8 +27,10 @@ const AddBillForm = memo<IAddBillFormProps>(() => {
       >
         {/* Bill */}
         <Input
+          ref={inputRef}
           placeholder="Bill amount"
           showSoftInputOnFocus={false}
+          value={amount === 0 ? undefined : amount.toLocaleString()}
           onFocus={() => bottomSheetRef.current?.snapToIndex(0)}
           onBlur={() => bottomSheetRef.current?.close()}
         />
@@ -42,6 +47,7 @@ const AddBillForm = memo<IAddBillFormProps>(() => {
         ref={bottomSheetRef}
         amount={amount}
         setAmount={setAmount}
+        onBlurInput={() => inputRef.current?.blur()}
       />
     </View>
   );
