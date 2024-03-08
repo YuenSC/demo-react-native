@@ -16,7 +16,7 @@ const AddBillForm = memo<IAddBillFormProps>(() => {
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <ScrollView
         style={styles.container}
         keyboardDismissMode="on-drag"
