@@ -1,3 +1,4 @@
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import {
   MaterialTopTabScreenProps,
   createMaterialTopTabNavigator,
@@ -48,26 +49,28 @@ const AddPaymentScreen = ({
     );
 
   return (
-    <View style={styles.container}>
-      <Tab.Navigator>
-        <Tab.Screen
-          name="Bill"
-          component={AddBillForm}
-          initialParams={{ groupId }}
-          options={{ title: "Bill" }}
-        />
-        <Tab.Screen
-          name="Who paid?"
-          component={SampleScreen}
-          options={{ title: "Who paid?" }}
-        />
-        <Tab.Screen
-          name="Settings"
-          component={SampleScreen}
-          options={{ title: "For who?" }}
-        />
-      </Tab.Navigator>
-    </View>
+    <BottomSheetModalProvider>
+      <View style={styles.container}>
+        <Tab.Navigator>
+          <Tab.Screen
+            name="Bill"
+            component={AddBillForm}
+            initialParams={{ groupId }}
+            options={{ title: "Bill" }}
+          />
+          <Tab.Screen
+            name="Who paid?"
+            component={SampleScreen}
+            options={{ title: "Who paid?" }}
+          />
+          <Tab.Screen
+            name="Settings"
+            component={SampleScreen}
+            options={{ title: "For who?" }}
+          />
+        </Tab.Navigator>
+      </View>
+    </BottomSheetModalProvider>
   );
 };
 

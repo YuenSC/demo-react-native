@@ -1,14 +1,15 @@
 import { AntDesign } from "@expo/vector-icons";
-import BottomSheet from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetModal } from "@gorhom/bottom-sheet";
 // eslint-disable-next-line no-restricted-imports
 import { Input as BaseInput } from "@rneui/base";
 import { Input, Text, makeStyles } from "@rneui/themed";
 import { memo, useImperativeHandle, useRef } from "react";
-import { useController, useForm, useWatch } from "react-hook-form";
+import { useController, useForm } from "react-hook-form";
 import { ScrollView, TextInput, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import BillCalculatorBottomSheet from "./BillCalculatorBottomSheet";
+import CurrencySelectBottomSheet from "./CurrencySelectBottomSheet";
 
 import { IAddPaymentTabScreenProps } from "@/screens/AddPaymentScreen";
 import { PaymentRecordCreate } from "@/types/PaymentRecord";
@@ -17,11 +18,13 @@ const AddBillForm = ({
   route: {
     params: { groupId },
   },
+  navigation,
 }: IAddPaymentTabScreenProps<"Bill">) => {
   const insets = useSafeAreaInsets();
   const styles = useStyles(insets);
-  const bottomSheetRef = useRef<BottomSheet>(null);
-  const inputRef = useRef<TextInput & BaseInput>(null);
+  const calculatorRef = useRef<BottomSheet>(null);
+  const currencyRef = useRef<BottomSheetModal>(null);
+  const amountInputRef = useRef<TextInput & BaseInput>(null);
 
   const { control, register } = useForm<PaymentRecordCreate>({
     defaultValues: {
@@ -32,39 +35,58 @@ const AddBillForm = ({
     },
   });
 
-  const currencyCodeWatch = useWatch({ control, name: "currencyCode" });
+  const { field: amount } = useController({ name: "amount", control });
+  const { field: currencyCode } = useController({
+    name: "currencyCode",
+    control,
+  });
+  useImperativeHandle(amount.ref, () => amountInputRef.current, []);
 
-  const {
-    field: { ref, onChange, onBlur, value },
-  } = useController({ name: "amount", control });
-  useImperativeHandle(ref, () => inputRef.current, []);
+  const openCalculator = () => {
+    calculatorRef.current?.snapToIndex(0);
+    currencyRef.current?.close();
+  };
+
+  const openCurrency = () => {
+    currencyRef.current?.present();
+    amountInputRef.current?.blur();
+    calculatorRef.current?.close();
+  };
 
   return (
     <View style={styles.container}>
       <ScrollView
         style={styles.container}
         keyboardDismissMode="on-drag"
-        onScrollBeginDrag={() => bottomSheetRef.current?.close()}
+        onScrollBeginDrag={() => {
+          calculatorRef.current?.close();
+          currencyRef.current?.close();
+        }}
       >
         {/* Bill */}
         <Input
-          ref={inputRef}
+          ref={amountInputRef}
           label="Bill Amount"
           placeholder="$XXX"
           style={styles.input}
           leftIcon={
-            <TouchableOpacity style={styles.currencyButton}>
-              <Text style={styles.currencyButtonText}>{currencyCodeWatch}</Text>
+            <TouchableOpacity
+              style={styles.currencyButton}
+              onPress={openCurrency}
+            >
+              <Text style={styles.currencyButtonText}>
+                {currencyCode.value}
+              </Text>
               <AntDesign name="caretdown" />
             </TouchableOpacity>
           }
           containerStyle={styles.inputContainer}
           showSoftInputOnFocus={false}
-          value={value === 0 ? undefined : value.toLocaleString()}
-          onFocus={() => bottomSheetRef.current?.snapToIndex(0)}
+          value={amount.value === 0 ? undefined : amount.value.toLocaleString()}
+          onFocus={openCalculator}
           onBlur={() => {
-            bottomSheetRef.current?.close();
-            onBlur();
+            calculatorRef.current?.close();
+            amount.onBlur();
           }}
         />
 
@@ -85,10 +107,16 @@ const AddBillForm = ({
       </ScrollView>
 
       <BillCalculatorBottomSheet
-        ref={bottomSheetRef}
-        amount={value}
-        setAmount={onChange}
-        onBlurInput={() => inputRef.current?.blur()}
+        ref={calculatorRef}
+        amount={amount.value}
+        setAmount={amount.onChange}
+        onBlurInput={() => amountInputRef.current?.blur()}
+      />
+
+      <CurrencySelectBottomSheet
+        ref={currencyRef}
+        currencyCode={currencyCode.value}
+        setCurrencyCode={currencyCode.onChange}
       />
     </View>
   );

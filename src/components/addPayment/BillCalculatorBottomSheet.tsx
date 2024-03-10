@@ -201,6 +201,7 @@ const BillCalculatorBottomSheet = forwardRef<
       ref={bottomSheetRef}
       animateOnMount={false}
       handleComponent={() => null}
+      index={-1}
     >
       <BottomSheetView style={styles.bottomSheetContainer}>
         <View style={styles.bottomSheetInnerContainer}>
