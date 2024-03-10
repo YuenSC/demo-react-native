@@ -4,7 +4,8 @@ import {
   BottomSheetModal,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import { Text, makeStyles } from "@rneui/themed";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { makeStyles } from "@rneui/themed";
 import {
   forwardRef,
   memo,
@@ -15,17 +16,16 @@ import {
 import { View } from "react-native";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { CurrencyCode } from "@/types/Currency";
-
-type ICurrencySelectBottomSheetProps = {
-  currencyCode: CurrencyCode;
-  setCurrencyCode: React.Dispatch<React.SetStateAction<CurrencyCode>>;
+type IDatePickerBottomSheetProps = {
+  date: string;
+  setDate: React.Dispatch<React.SetStateAction<string>>;
+  onBlurInput: () => void;
 };
 
-const CurrencySelectBottomSheet = forwardRef<
+const DatePickerBottomSheet = forwardRef<
   BottomSheetModal,
-  ICurrencySelectBottomSheetProps
->(({ currencyCode, setCurrencyCode }, outerRef) => {
+  IDatePickerBottomSheetProps
+>(({ date, setDate, onBlurInput }, outerRef) => {
   const insets = useSafeAreaInsets();
   const styles = useStyles(insets);
 
@@ -50,10 +50,16 @@ const CurrencySelectBottomSheet = forwardRef<
       ref={bottomSheetRef}
       handleComponent={() => null}
       backdropComponent={renderBackdrop}
+      onDismiss={onBlurInput}
     >
       <BottomSheetView style={styles.bottomSheetContainer}>
         <View style={styles.bottomSheetInnerContainer}>
-          <Text>1234</Text>
+          <DateTimePicker
+            value={new Date(date)}
+            mode="datetime"
+            display="spinner"
+            onChange={(event, date) => date && setDate(date.toISOString())}
+          />
         </View>
       </BottomSheetView>
     </BottomSheetModal>
@@ -80,6 +86,6 @@ const useStyles = makeStyles((theme, insets: EdgeInsets) => ({
   },
 }));
 
-CurrencySelectBottomSheet.displayName = "BillCalculator";
+DatePickerBottomSheet.displayName = "BillCalculator";
 
-export default memo(CurrencySelectBottomSheet);
+export default memo(DatePickerBottomSheet);

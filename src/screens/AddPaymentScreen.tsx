@@ -5,12 +5,14 @@ import {
 } from "@react-navigation/material-top-tabs";
 import { Text, makeStyles } from "@rneui/themed";
 import { useEffect } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 import { View } from "react-native";
 
 import SampleScreen from "./SampleScreen";
 
 import AddBillForm from "@/components/addPayment/AddBillForm";
 import { useAppSelector } from "@/hooks/reduxHook";
+import { PaymentRecordCreate } from "@/types/PaymentRecord";
 import { IStackScreenProps } from "@/types/navigation";
 
 type IAddPaymentTabParamList = {
@@ -33,6 +35,15 @@ const AddPaymentScreen = ({
 }: IStackScreenProps<"AddPayment">) => {
   const styles = useStyles();
 
+  const form = useForm<PaymentRecordCreate>({
+    defaultValues: {
+      amount: 0,
+      currencyCode: "HKD",
+      groupId,
+      date: new Date().toISOString(),
+    },
+  });
+
   const group = useAppSelector((state) =>
     state.groups.groups.find((group) => group.id === groupId)
   );
@@ -50,26 +61,28 @@ const AddPaymentScreen = ({
 
   return (
     <BottomSheetModalProvider>
-      <View style={styles.container}>
-        <Tab.Navigator>
-          <Tab.Screen
-            name="Bill"
-            component={AddBillForm}
-            initialParams={{ groupId }}
-            options={{ title: "Bill" }}
-          />
-          <Tab.Screen
-            name="Who paid?"
-            component={SampleScreen}
-            options={{ title: "Who paid?" }}
-          />
-          <Tab.Screen
-            name="Settings"
-            component={SampleScreen}
-            options={{ title: "For who?" }}
-          />
-        </Tab.Navigator>
-      </View>
+      <FormProvider {...form}>
+        <View style={styles.container}>
+          <Tab.Navigator>
+            <Tab.Screen
+              name="Bill"
+              component={AddBillForm}
+              initialParams={{ groupId }}
+              options={{ title: "Bill" }}
+            />
+            <Tab.Screen
+              name="Who paid?"
+              component={SampleScreen}
+              options={{ title: "Who paid?" }}
+            />
+            <Tab.Screen
+              name="Settings"
+              component={SampleScreen}
+              options={{ title: "For who?" }}
+            />
+          </Tab.Navigator>
+        </View>
+      </FormProvider>
     </BottomSheetModalProvider>
   );
 };

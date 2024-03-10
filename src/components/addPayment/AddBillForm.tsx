@@ -2,14 +2,15 @@ import { AntDesign } from "@expo/vector-icons";
 import BottomSheet, { BottomSheetModal } from "@gorhom/bottom-sheet";
 // eslint-disable-next-line no-restricted-imports
 import { Input as BaseInput } from "@rneui/base";
-import { Input, Text, makeStyles } from "@rneui/themed";
+import { Button, Input, Text, makeStyles } from "@rneui/themed";
 import { memo, useImperativeHandle, useRef } from "react";
-import { useController, useForm } from "react-hook-form";
+import { Controller, useController, useFormContext } from "react-hook-form";
 import { ScrollView, TextInput, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import BillCalculatorBottomSheet from "./BillCalculatorBottomSheet";
 import CurrencySelectBottomSheet from "./CurrencySelectBottomSheet";
+import DatePickerBottomSheet from "./DatePickerBottomSheet";
 
 import { IAddPaymentTabScreenProps } from "@/screens/AddPaymentScreen";
 import { PaymentRecordCreate } from "@/types/PaymentRecord";
@@ -24,33 +25,62 @@ const AddBillForm = ({
   const styles = useStyles(insets);
   const calculatorRef = useRef<BottomSheet>(null);
   const currencyRef = useRef<BottomSheetModal>(null);
+  const dateBottomSheetRef = useRef<BottomSheetModal>(null);
   const amountInputRef = useRef<TextInput & BaseInput>(null);
+  const dateInputRef = useRef<TextInput & BaseInput>(null);
 
-  const { control, register } = useForm<PaymentRecordCreate>({
-    defaultValues: {
-      amount: 0,
-      currencyCode: "HKD",
-      groupId,
-      date: new Date().toISOString(),
+  const { control, handleSubmit } = useFormContext<PaymentRecordCreate>();
+
+  const {
+    field: amount,
+    fieldState: { error: amountError },
+  } = useController({
+    name: "amount",
+    control,
+    rules: {
+      required: "Amount is required",
+      min: {
+        value: 1,
+        message: "Amount is required",
+      },
     },
   });
-
-  const { field: amount } = useController({ name: "amount", control });
   const { field: currencyCode } = useController({
     name: "currencyCode",
+    control,
+  });
+  const { field: date } = useController({
+    name: "date",
     control,
   });
   useImperativeHandle(amount.ref, () => amountInputRef.current, []);
 
   const openCalculator = () => {
     calculatorRef.current?.snapToIndex(0);
+
     currencyRef.current?.close();
+
+    dateInputRef.current?.blur();
+    dateBottomSheetRef.current?.close();
   };
 
   const openCurrency = () => {
     currencyRef.current?.present();
+
     amountInputRef.current?.blur();
     calculatorRef.current?.close();
+
+    dateInputRef.current?.blur();
+    dateBottomSheetRef.current?.close();
+  };
+
+  const openDateBottomSheet = () => {
+    dateBottomSheetRef.current?.present();
+
+    amountInputRef.current?.blur();
+    calculatorRef.current?.close();
+
+    currencyRef.current?.close();
   };
 
   return (
@@ -61,6 +91,7 @@ const AddBillForm = ({
         onScrollBeginDrag={() => {
           calculatorRef.current?.close();
           currencyRef.current?.close();
+          dateBottomSheetRef.current?.close();
         }}
       >
         {/* Bill */}
@@ -69,6 +100,7 @@ const AddBillForm = ({
           label="Bill Amount"
           placeholder="$XXX"
           style={styles.input}
+          errorMessage={amountError?.message}
           leftIcon={
             <TouchableOpacity
               style={styles.currencyButton}
@@ -91,20 +123,57 @@ const AddBillForm = ({
         />
 
         {/* Comment and Date */}
-        <Input
-          label="Comment"
-          placeholder="Describe this expense"
-          {...register("comment")}
+        <Controller
+          control={control}
+          rules={{ required: "Comment is required" }}
+          name="comment"
+          render={({
+            field: { value, onChange, ref },
+            fieldState: { error },
+          }) => {
+            return (
+              <Input
+                ref={ref}
+                errorMessage={error?.message}
+                value={value}
+                label="Comment"
+                placeholder="Describe this expense"
+                onChangeText={onChange}
+              />
+            );
+          }}
         />
+
         <Input
+          ref={dateInputRef}
           label="Date"
           placeholder="When do you do it?"
-          {...register("date")}
+          onFocus={openDateBottomSheet}
+          showSoftInputOnFocus={false}
+          value={
+            date.value
+              ? new Date(date.value).toLocaleDateString("en-US", {
+                  day: "2-digit",
+                  month: "long",
+                  year: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                })
+              : undefined
+          }
+          onBlur={() => {
+            dateBottomSheetRef.current?.close();
+            date.onBlur();
+          }}
         />
 
         {/* Category */}
         <Text>Category</Text>
       </ScrollView>
+
+      <View style={styles.footer}>
+        <Button title="Next" onPress={handleSubmit(() => {})} />
+      </View>
 
       <BillCalculatorBottomSheet
         ref={calculatorRef}
@@ -117,6 +186,13 @@ const AddBillForm = ({
         ref={currencyRef}
         currencyCode={currencyCode.value}
         setCurrencyCode={currencyCode.onChange}
+      />
+
+      <DatePickerBottomSheet
+        ref={dateBottomSheetRef}
+        date={date.value}
+        setDate={date.onChange}
+        onBlurInput={() => dateInputRef.current?.blur()}
       />
     </View>
   );
@@ -142,6 +218,14 @@ const useStyles = makeStyles((theme) => ({
   currencyButtonText: { fontSize: 24, fontWeight: "bold" },
   billInputContainer: {
     flexDirection: "row",
+  },
+
+  footer: {
+    position: "absolute",
+    width: "100%",
+    left: 8,
+    padding: 16,
+    bottom: 16,
   },
 }));
 
