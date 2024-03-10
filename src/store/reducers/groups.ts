@@ -3,6 +3,7 @@ import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 
 import { ICreateGroupPayload } from "@/types/GroupCreate";
+import { PaymentRecord, PaymentRecordCreate } from "@/types/PaymentRecord";
 
 export interface GroupsState {
   groups: {
@@ -14,7 +15,7 @@ export interface GroupsState {
       name: string;
       imageUrl?: string;
     }[];
-    paymentRecord: unknown[];
+    paymentRecords: PaymentRecord[];
   }[];
 }
 
@@ -29,7 +30,7 @@ export const groupsSlice = createSlice({
     addGroup: (state, action: PayloadAction<ICreateGroupPayload>) => {
       state.groups.push({
         id: uuidv4(),
-        paymentRecord: [],
+        paymentRecords: [],
         ...action.payload,
       });
     },
@@ -40,7 +41,17 @@ export const groupsSlice = createSlice({
     },
     updateGroup: () => {},
 
-    addPaymentRecord: () => {},
+    addPaymentRecord: (state, action: PayloadAction<PaymentRecordCreate>) => {
+      const currentGroup = state.groups.find(
+        (group) => group.id === action.payload.groupId
+      );
+      if (!currentGroup) return;
+
+      currentGroup.paymentRecords.push({
+        id: uuidv4(),
+        ...action.payload,
+      });
+    },
     deletePaymentRecord: () => {},
     updatePaymentRecord: () => {},
 

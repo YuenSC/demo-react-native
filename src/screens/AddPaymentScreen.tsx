@@ -1,8 +1,10 @@
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import {
+  MaterialTopTabScreenProps,
+  createMaterialTopTabNavigator,
+} from "@react-navigation/material-top-tabs";
 import { Text, makeStyles } from "@rneui/themed";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { View } from "react-native";
-import { useStep } from "usehooks-ts";
 
 import SampleScreen from "./SampleScreen";
 
@@ -10,7 +12,17 @@ import AddBillForm from "@/components/addPayment/AddBillForm";
 import { useAppSelector } from "@/hooks/reduxHook";
 import { IStackScreenProps } from "@/types/navigation";
 
-const Tab = createMaterialTopTabNavigator();
+type IAddPaymentTabParamList = {
+  Bill: { groupId: string };
+  "Who paid?": { groupId: string };
+  Settings: { groupId: string };
+};
+
+export type IAddPaymentTabScreenProps<
+  Screen extends keyof IAddPaymentTabParamList,
+> = MaterialTopTabScreenProps<IAddPaymentTabParamList, Screen>;
+
+const Tab = createMaterialTopTabNavigator<IAddPaymentTabParamList>();
 
 const AddPaymentScreen = ({
   navigation,
@@ -41,6 +53,7 @@ const AddPaymentScreen = ({
         <Tab.Screen
           name="Bill"
           component={AddBillForm}
+          initialParams={{ groupId }}
           options={{ title: "Bill" }}
         />
         <Tab.Screen

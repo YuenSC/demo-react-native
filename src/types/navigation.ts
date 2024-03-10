@@ -54,39 +54,3 @@ export type IBottomTabScreenProps<Screen extends keyof IBottomTabParamList> =
       StackScreenProps<IStackParamList>
     >
   >;
-
-// export type ITopTabParamList = {
-//   BottomTab: NavigatorScreenParams<IBottomTabParamList> | undefined;
-//   Chat: undefined;
-// };
-
-// export type ITopTabScreenProps<Screen extends keyof ITopTabParamList> =
-//   MaterialTopTabScreenProps<ITopTabParamList, Screen>;
-
-// export type IBottomTabParamList = {
-//   Main: NavigatorScreenParams<IStackParamList> | undefined;
-//   Settings: undefined;
-//   AppSuggestions: undefined;
-// };
-
-// export type IBottomTabScreenProps<Screen extends keyof IBottomTabParamList> =
-//   CompositeScreenProps<
-//     BottomTabScreenProps<IBottomTabParamList, Screen>,
-//     MaterialTopTabScreenProps<ITopTabParamList>
-//   >;
-
-// export type IStackParamList = {
-//   Home: undefined;
-//   Profile: { userId: string };
-//   AppSuggestionDetail: { id: string };
-//   ChatDetail: { id: string };
-// };
-
-// export type IStackScreenProps<Screen extends keyof IStackParamList> =
-//   CompositeScreenProps<
-//     StackScreenProps<IStackParamList, Screen>,
-//     CompositeScreenProps<
-//       BottomTabScreenProps<IBottomTabParamList>,
-//       MaterialTopTabScreenProps<ITopTabParamList>
-//     >
-//   >;
