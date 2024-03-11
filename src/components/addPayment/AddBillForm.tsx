@@ -146,29 +146,6 @@ const AddBillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
           }}
         />
 
-        <Input
-          ref={dateInputRef}
-          label="Date"
-          placeholder="When do you do it?"
-          onFocus={openDateBottomSheet}
-          showSoftInputOnFocus={false}
-          value={
-            date.value
-              ? new Date(date.value).toLocaleDateString("en-US", {
-                  day: "2-digit",
-                  month: "long",
-                  year: "numeric",
-                  hour: "numeric",
-                  minute: "numeric",
-                })
-              : undefined
-          }
-          onBlur={() => {
-            dateBottomSheetRef.current?.close();
-            date.onBlur();
-          }}
-        />
-
         {/* Category */}
         <Text style={styles.label}>Category</Text>
         <View style={styles.categoryGrid}>
@@ -195,10 +172,38 @@ const AddBillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
             );
           })}
         </View>
+
+        <Input
+          ref={dateInputRef}
+          label="Date"
+          placeholder="When do you do it?"
+          onFocus={openDateBottomSheet}
+          showSoftInputOnFocus={false}
+          value={
+            date.value
+              ? new Date(date.value).toLocaleDateString("en-US", {
+                  day: "2-digit",
+                  month: "long",
+                  year: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                })
+              : undefined
+          }
+          onBlur={() => {
+            dateBottomSheetRef.current?.close();
+            date.onBlur();
+          }}
+        />
       </ScrollView>
 
       <View style={styles.footer}>
-        <Button title="Next" onPress={handleSubmit(() => {})} />
+        <Button
+          title="Next"
+          onPress={handleSubmit(() => {
+            navigation.navigate("Who paid?");
+          })}
+        />
       </View>
 
       <BillCalculatorBottomSheet
@@ -246,7 +251,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "row",
   },
 
-  categoryGrid: { flexDirection: "row", flexWrap: "wrap" },
+  categoryGrid: { flexDirection: "row", flexWrap: "wrap", marginBottom: 16 },
   category: {
     width: "25%",
     justifyContent: "center",
