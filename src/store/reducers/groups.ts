@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 
+import { CurrencyCode } from "@/types/Currency";
 import { ICreateGroupPayload } from "@/types/GroupCreate";
 import { PaymentRecord, PaymentRecordCreate } from "@/types/PaymentRecord";
 
@@ -17,10 +18,12 @@ export interface GroupsState {
     }[];
     paymentRecords: PaymentRecord[];
   }[];
+  suggestedCurrencyCodes?: CurrencyCode[];
 }
 
 const initialState: GroupsState = {
   groups: [],
+  suggestedCurrencyCodes: ["HKD"],
 };
 
 export const groupsSlice = createSlice({
@@ -106,6 +109,23 @@ export const groupsSlice = createSlice({
         }
       }
     },
+
+    addCurrencyCodeSuggestion: (state, action: PayloadAction<CurrencyCode>) => {
+      if (!state.suggestedCurrencyCodes) {
+        state.suggestedCurrencyCodes = [action.payload];
+        return;
+      }
+
+      state.suggestedCurrencyCodes.push(action.payload);
+    },
+    deleteCurrencyCodeSuggestion: (
+      state,
+      action: PayloadAction<CurrencyCode>
+    ) => {
+      state.suggestedCurrencyCodes = (
+        state.suggestedCurrencyCodes ?? []
+      ).filter((item) => item !== action.payload);
+    },
   },
 });
 
@@ -119,6 +139,8 @@ export const {
   updateGroup,
   updateMember,
   updatePaymentRecord,
+  addCurrencyCodeSuggestion,
+  deleteCurrencyCodeSuggestion,
 } = groupsSlice.actions;
 
 export default groupsSlice.reducer;
