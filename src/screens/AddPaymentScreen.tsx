@@ -12,13 +12,14 @@ import SampleScreen from "./SampleScreen";
 
 import AddBillForm from "@/components/addPayment/AddBillForm";
 import { useAppSelector } from "@/hooks/reduxHook";
+import { BillCategoryEnum } from "@/types/BillCategories";
 import { PaymentRecordCreate } from "@/types/PaymentRecord";
 import { IStackScreenProps } from "@/types/navigation";
 
 type IAddPaymentTabParamList = {
-  Bill: { groupId: string };
-  "Who paid?": { groupId: string };
-  Settings: { groupId: string };
+  Bill: undefined;
+  "Who paid?": undefined;
+  Settings: undefined;
 };
 
 export type IAddPaymentTabScreenProps<
@@ -41,6 +42,7 @@ const AddPaymentScreen = ({
       currencyCode: "HKD",
       groupId,
       date: new Date().toISOString(),
+      category: BillCategoryEnum.Transportation,
     },
   });
 
@@ -67,7 +69,6 @@ const AddPaymentScreen = ({
             <Tab.Screen
               name="Bill"
               component={AddBillForm}
-              initialParams={{ groupId }}
               options={{ title: "Bill" }}
             />
             <Tab.Screen

@@ -11,16 +11,13 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import BillCalculatorBottomSheet from "./BillCalculatorBottomSheet";
 import CurrencySelectBottomSheet from "./CurrencySelectBottomSheet";
 import DatePickerBottomSheet from "./DatePickerBottomSheet";
+import BillCategoryIcon from "../BillCategoryIcon";
 
 import { IAddPaymentTabScreenProps } from "@/screens/AddPaymentScreen";
+import { BillCategoryEnum } from "@/types/BillCategories";
 import { PaymentRecordCreate } from "@/types/PaymentRecord";
 
-const AddBillForm = ({
-  route: {
-    params: { groupId },
-  },
-  navigation,
-}: IAddPaymentTabScreenProps<"Bill">) => {
+const AddBillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
   const insets = useSafeAreaInsets();
   const styles = useStyles(insets);
   const calculatorRef = useRef<BottomSheet>(null);
@@ -45,12 +42,17 @@ const AddBillForm = ({
       },
     },
   });
+
   const { field: currencyCode } = useController({
     name: "currencyCode",
     control,
   });
   const { field: date } = useController({
     name: "date",
+    control,
+  });
+  const { field: category } = useController({
+    name: "category",
     control,
   });
   useImperativeHandle(amount.ref, () => amountInputRef.current, []);
@@ -168,7 +170,31 @@ const AddBillForm = ({
         />
 
         {/* Category */}
-        <Text>Category</Text>
+        <Text style={styles.label}>Category</Text>
+        <View style={styles.categoryGrid}>
+          {Object.values(BillCategoryEnum).map((key) => {
+            const isActive = category.value === key;
+
+            return (
+              <View key={key} style={styles.category}>
+                <TouchableOpacity
+                  onPress={() => category.onChange(key)}
+                  activeOpacity={0.8}
+                  style={[
+                    styles.categoryButton,
+                    isActive && styles.categoryButtonActive,
+                  ]}
+                >
+                  <BillCategoryIcon
+                    category={key as BillCategoryEnum}
+                    color="white"
+                  />
+                </TouchableOpacity>
+                <Text style={styles.categoryText}>{key}</Text>
+              </View>
+            );
+          })}
+        </View>
       </ScrollView>
 
       <View style={styles.footer}>
@@ -220,6 +246,32 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "row",
   },
 
+  categoryGrid: { flexDirection: "row", flexWrap: "wrap" },
+  category: {
+    width: "25%",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 4,
+    gap: 2,
+  },
+  categoryButton: {
+    padding: 16,
+    backgroundColor: theme.colors.grey4,
+    borderRadius: 16,
+  },
+  categoryButtonActive: {
+    backgroundColor: theme.colors.primary,
+  },
+  categoryText: {
+    fontSize: 12,
+  },
+  label: {
+    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: "bold",
+    color: theme.colors.grey3,
+    marginBottom: 6,
+  },
   footer: {
     position: "absolute",
     width: "100%",
