@@ -27,7 +27,11 @@ const GroupForm = memo<IGroupFormProps>(({ groupId, onSubmit }) => {
   const { control, handleSubmit } = useForm<ICreateGroupPayload>({
     defaultValues: {
       name: "Calvin Group", // TODO: remove default value after testing,
-      members: [{ id: profile.id, name: profile.name }],
+      members: [
+        { id: profile.id, name: profile.name },
+        { id: "cyu", name: "Cyu" },
+        { id: "ching to", name: "Ching To" },
+      ],
     },
   });
 

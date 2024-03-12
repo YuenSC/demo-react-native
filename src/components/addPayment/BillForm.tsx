@@ -17,7 +17,7 @@ import { IAddPaymentTabScreenProps } from "@/screens/AddPaymentScreen";
 import { BillCategoryEnum } from "@/types/BillCategories";
 import { PaymentRecordCreate } from "@/types/PaymentRecord";
 
-const AddBillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
+const BillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
   const insets = useSafeAreaInsets();
   const styles = useStyles(insets);
   const calculatorRef = useRef<BottomSheet>(null);
@@ -201,7 +201,7 @@ const AddBillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
         <Button
           title="Next"
           onPress={handleSubmit(() => {
-            navigation.navigate("Who paid?");
+            navigation.navigate("PayerSelect");
           })}
         />
       </View>
@@ -286,6 +286,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-AddBillForm.displayName = "AddBillForm";
+BillForm.displayName = "AddBillForm";
 
-export default memo(AddBillForm);
+export default memo(BillForm);

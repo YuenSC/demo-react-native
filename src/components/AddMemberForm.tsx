@@ -2,13 +2,12 @@ import { AntDesign, Entypo, Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Button, Input, Text, makeStyles, useTheme } from "@rneui/themed";
 import { memo, useState } from "react";
-import { KeyboardAvoidingView, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 import HStack from "./common/HStack";
 
-import Device from "@/constants/Device";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import { addMember, deleteMember } from "@/store/reducers/groups";
 

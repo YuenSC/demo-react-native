@@ -10,7 +10,9 @@ import { View } from "react-native";
 
 import SampleScreen from "./SampleScreen";
 
-import AddBillForm from "@/components/addPayment/AddBillForm";
+import BillForm from "@/components/addPayment/BillForm";
+import PayeeSelectForm from "@/components/addPayment/PayeeSelectForm";
+import PayerSelectForm from "@/components/addPayment/PayerSelectForm";
 import { useAppSelector } from "@/hooks/reduxHook";
 import { BillCategoryEnum } from "@/types/BillCategories";
 import { PaymentRecordCreate } from "@/types/PaymentRecord";
@@ -18,8 +20,8 @@ import { IStackScreenProps } from "@/types/navigation";
 
 type IAddPaymentTabParamList = {
   Bill: undefined;
-  "Who paid?": undefined;
-  Settings: undefined;
+  PayeeSelect: undefined;
+  PayerSelect: undefined;
 };
 
 export type IAddPaymentTabScreenProps<
@@ -68,18 +70,18 @@ const AddPaymentScreen = ({
           <Tab.Navigator>
             <Tab.Screen
               name="Bill"
-              component={AddBillForm}
+              component={BillForm}
               options={{ title: "Bill" }}
             />
             <Tab.Screen
-              name="Who paid?"
-              component={SampleScreen}
-              options={{ title: "Who paid?" }}
+              name="PayerSelect"
+              component={PayerSelectForm}
+              options={{ title: "Payer" }}
             />
             <Tab.Screen
-              name="Settings"
-              component={SampleScreen}
-              options={{ title: "For who?" }}
+              name="PayeeSelect"
+              component={PayeeSelectForm}
+              options={{ title: "Payee" }}
             />
           </Tab.Navigator>
         </View>
