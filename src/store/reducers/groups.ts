@@ -19,11 +19,13 @@ export interface GroupsState {
     paymentRecords: PaymentRecord[];
   }[];
   suggestedCurrencyCodes?: CurrencyCode[];
+  lastUsedCurrency?: CurrencyCode;
 }
 
 const initialState: GroupsState = {
   groups: [],
-  suggestedCurrencyCodes: ["HKD"],
+  suggestedCurrencyCodes: [],
+  lastUsedCurrency: undefined,
 };
 
 export const groupsSlice = createSlice({
@@ -111,6 +113,8 @@ export const groupsSlice = createSlice({
     },
 
     addCurrencyCodeSuggestion: (state, action: PayloadAction<CurrencyCode>) => {
+      state.lastUsedCurrency = action.payload;
+
       if (!state.suggestedCurrencyCodes) {
         state.suggestedCurrencyCodes = [action.payload];
         return;

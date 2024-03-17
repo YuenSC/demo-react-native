@@ -134,6 +134,7 @@ const CurrencySelectBottomSheet = forwardRef<
               name={item.name}
               onPress={() => {
                 bottomSheetRef.current?.dismiss();
+                console.log("here");
                 dispatch(addCurrencyCodeSuggestion(item.code));
                 Keyboard.dismiss();
                 setCurrencyCode(item.code);

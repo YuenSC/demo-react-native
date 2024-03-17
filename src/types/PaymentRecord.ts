@@ -8,8 +8,8 @@ export type PaymentRecord = {
   comment: string;
   date: string;
   category: string;
-  payers: { id: string; amount: number }[];
-  payees: { id: string; amount: number }[];
+  payers: { id: string; amount: number | "auto" }[];
+  payees: { id: string; amount: number | "auto" }[];
 };
 
 export type PaymentRecordCreate = Omit<PaymentRecord, "id">;

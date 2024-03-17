@@ -8,8 +8,7 @@ import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { View } from "react-native";
 
-import SampleScreen from "./SampleScreen";
-
+import Config from "@/Config";
 import BillForm from "@/components/addPayment/BillForm";
 import PayeeSelectForm from "@/components/addPayment/PayeeSelectForm";
 import PayerSelectForm from "@/components/addPayment/PayerSelectForm";
@@ -38,19 +37,34 @@ const AddPaymentScreen = ({
 }: IStackScreenProps<"AddPayment">) => {
   const styles = useStyles();
 
-  const form = useForm<PaymentRecordCreate>({
-    defaultValues: {
-      amount: 0,
-      currencyCode: "HKD",
-      groupId,
-      date: new Date().toISOString(),
-      category: BillCategoryEnum.Transportation,
-    },
-  });
+  const lastUsedCurrency = useAppSelector(
+    (state) => state.groups.lastUsedCurrency ?? "HKD"
+  );
 
   const group = useAppSelector((state) =>
     state.groups.groups.find((group) => group.id === groupId)
   );
+
+  const form = useForm<PaymentRecordCreate>({
+    defaultValues: {
+      amount: Config.isDev ? 1000 : 0,
+      currencyCode: lastUsedCurrency,
+      groupId,
+      date: new Date().toISOString(),
+      category: BillCategoryEnum.Transportation,
+      comment: Config.isDev ? "Example Comment" : "",
+      payers:
+        group?.members.map((item, index) => ({
+          amount: index === 0 ? "auto" : 0,
+          userId: item.id,
+        })) ?? [],
+      payees:
+        group?.members.map((item, index) => ({
+          amount: "auto",
+          userId: item.id,
+        })) ?? [],
+    },
+  });
 
   useEffect(() => {
     navigation.setOptions({ title: group?.name, headerBackTitle: "" });
