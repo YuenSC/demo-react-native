@@ -1,4 +1,4 @@
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { makeStyles, useTheme } from "@rneui/themed";
@@ -8,7 +8,6 @@ import BottomTabNavigator from "./BottomTabNavigator";
 import DrawerContent from "../DrawerContent";
 
 import { useAppSelector } from "@/hooks/reduxHook";
-import GroupDetailScreen from "@/screens/GroupDetailScreen";
 import { IDrawerParamList } from "@/types/navigation";
 
 const Drawer = createDrawerNavigator<IDrawerParamList>();
@@ -24,7 +23,7 @@ const DrawerNavigator = () => {
         name="BottomTab"
         component={BottomTabNavigator}
         initialParams={{ id: firstGroupId }}
-        options={{
+        options={({ navigation }) => ({
           headerRight: () => {
             return (
               <View style={styles.headerRight}>
@@ -35,11 +34,24 @@ const DrawerNavigator = () => {
                     color={theme.colors.warning}
                   />
                 </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("GroupConfig", {
+                      groupId: firstGroupId,
+                    })
+                  }
+                >
+                  <AntDesign
+                    name="setting"
+                    size={24}
+                    color={theme.colors.secondary}
+                  />
+                </TouchableOpacity>
               </View>
             );
           },
           headerTitle: "",
-        }}
+        })}
       />
     </Drawer.Navigator>
   );
@@ -48,6 +60,8 @@ const DrawerNavigator = () => {
 const useStyles = makeStyles((theme) => ({
   headerRight: {
     marginRight: 16,
+    flexDirection: "row",
+    gap: 16,
   },
 }));
 

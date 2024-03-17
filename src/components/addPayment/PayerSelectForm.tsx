@@ -13,7 +13,6 @@ const PayerSelectForm = () => {
     state.groups.groups.find((group) => group.id === groupIdWatch)
   );
 
-  console.log("groupIdWatch", groupIdWatch);
   const [checked, setChecked] = useState([false, false]);
 
   return (

@@ -7,7 +7,9 @@ import Device from "@/constants/Device";
 import { useAppSelector } from "@/hooks/reduxHook";
 import AddPaymentScreen from "@/screens/AddPaymentScreen";
 import EditMemberScreen from "@/screens/EditMemberScreen";
+import GroupAddMemberScreen from "@/screens/GroupAddMemberScreen";
 import OnboardingScreen from "@/screens/OnboardingScreen";
+import SampleScreen from "@/screens/SampleScreen";
 import SignUpSuccessBottomSheetModal from "@/screens/SignUpSuccessBottomSheetModal";
 import WelcomeScreen from "@/screens/WelcomeScreen";
 import { IStackParamList } from "@/types/navigation";
@@ -24,6 +26,7 @@ const StackNavigator = memo(() => {
       initialRouteName={isInitialSetupDone ? "Drawer" : "Welcome"}
       screenOptions={{
         gestureResponseDistance: Device.screen.width,
+        headerBackTitle: "",
       }}
     >
       <Stack.Screen
@@ -41,6 +44,14 @@ const StackNavigator = memo(() => {
         }}
       />
       <Stack.Screen
+        component={GroupAddMemberScreen}
+        name="GroupAddMember"
+        options={{
+          title: "Configuration",
+          presentation: "modal",
+        }}
+      />
+      <Stack.Screen
         component={EditMemberScreen}
         name="EditMember"
         options={{
@@ -51,6 +62,13 @@ const StackNavigator = memo(() => {
       <Stack.Screen
         component={AddPaymentScreen}
         name="AddPayment"
+        options={{
+          presentation: "modal",
+        }}
+      />
+      <Stack.Screen
+        component={SampleScreen}
+        name="MemberList"
         options={{
           presentation: "modal",
         }}

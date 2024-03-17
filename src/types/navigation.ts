@@ -24,6 +24,8 @@ export type IStackParamList = {
   SignUpSuccessBottomSheetModal: undefined;
   EditMember: { id: string; groupId: string };
   AddPayment: { groupId: string };
+  MemberList: undefined;
+  GroupAddMember: { groupId: string };
 };
 
 export type IStackScreenProps<Screen extends keyof IStackParamList> =
