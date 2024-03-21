@@ -1,6 +1,6 @@
-import { makeStyles } from "@rneui/themed";
+import { Text, makeStyles } from "@rneui/themed";
 import { memo } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 type ISampleComponentProps = object;
 
@@ -17,7 +17,7 @@ const SampleComponent = memo<ISampleComponentProps>(() => {
 const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.black,
+    backgroundColor: theme.colors.background,
   },
 }));
 

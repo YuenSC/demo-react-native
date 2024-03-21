@@ -1,5 +1,5 @@
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import { MaterialTopTabScreenProps } from "@react-navigation/material-top-tabs";
+import { DrawerScreenProps } from "@react-navigation/drawer";
 import {
   CompositeScreenProps,
   NavigatorScreenParams,
@@ -13,42 +13,46 @@ import { StackScreenProps } from "@react-navigation/stack";
 
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends ITopTabParamList {}
+    interface RootParamList extends IStackParamList {}
   }
 }
 
-export type ITopTabParamList = {
-  BottomTab: NavigatorScreenParams<IBottomTabParamList> | undefined;
-  Chat: undefined;
+export type IStackParamList = {
+  Welcome: undefined;
+  Onboarding: { step: number; groupId?: string };
+  Drawer: NavigatorScreenParams<IDrawerParamList> | undefined;
+  SignUpSuccessBottomSheetModal: undefined;
+  EditMember: { id: string; groupId: string };
+  AddPayment: { groupId: string };
+  MemberList: undefined;
+  GroupAddMember: { groupId: string };
 };
 
-export type ITopTabScreenProps<Screen extends keyof ITopTabParamList> =
-  MaterialTopTabScreenProps<ITopTabParamList, Screen>;
+export type IStackScreenProps<Screen extends keyof IStackParamList> =
+  StackScreenProps<IStackParamList, Screen>;
+
+export type IDrawerParamList = {
+  BottomTab: { id?: string };
+};
+
+export type IDrawerScreenProps<Screen extends keyof IDrawerParamList> =
+  CompositeScreenProps<
+    DrawerScreenProps<IDrawerParamList, Screen>,
+    StackScreenProps<IStackParamList>
+  >;
 
 export type IBottomTabParamList = {
-  Main: NavigatorScreenParams<IStackParamList> | undefined;
-  Settings: undefined;
-  AppSuggestions: undefined;
+  GroupDetail: { id: string };
+  PaymentRecord: undefined; // TODO: Update params
+  Statistic: undefined; // TODO: Update params
+  Option: undefined; // TODO: Update params
 };
 
 export type IBottomTabScreenProps<Screen extends keyof IBottomTabParamList> =
   CompositeScreenProps<
     BottomTabScreenProps<IBottomTabParamList, Screen>,
-    MaterialTopTabScreenProps<ITopTabParamList>
-  >;
-
-export type IStackParamList = {
-  Home: undefined;
-  Profile: { userId: string };
-  AppSuggestionDetail: { id: string };
-  ChatDetail: { id: string };
-};
-
-export type IStackScreenProps<Screen extends keyof IStackParamList> =
-  CompositeScreenProps<
-    StackScreenProps<IStackParamList, Screen>,
     CompositeScreenProps<
-      BottomTabScreenProps<IBottomTabParamList>,
-      MaterialTopTabScreenProps<ITopTabParamList>
+      DrawerScreenProps<IDrawerParamList>,
+      StackScreenProps<IStackParamList>
     >
   >;
