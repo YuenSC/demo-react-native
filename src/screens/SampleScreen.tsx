@@ -10,6 +10,10 @@ const SampleScreen = () => {
       <AnimatedLottieView
         autoPlay
         source={require("@/assets/lottie/coming-soon.json")}
+        style={{
+          width: "100%",
+          aspectRatio: 1,
+        }}
       />
     </SafeAreaView>
   );
