@@ -25,7 +25,7 @@ const PaymentRecordScreen = ({
   const styles = useStyles();
   const currentGroup = useAppSelector(currentGroupSelector);
   const { theme } = useTheme();
-  const [sortDirection, setSortDirection] = useState(SortDirectionEnum.ASC);
+  const [sortDirection, setSortDirection] = useState(SortDirectionEnum.DESC);
   const [selectedCurrency, setSelectedCurrency] = useState<CurrencyCode | null>(
     null,
   );
@@ -111,17 +111,17 @@ const PaymentRecordScreen = ({
             })
           }
         >
-          <VStack gap={4}>
-            <HStack gap={4}>
+          <VStack gap={4} style={{ flex: 1 }}>
+            <HStack gap={4} justifyContent="flex-start">
               <BillCategoryIcon category={item.category as BillCategoryEnum} />
               <Text>{formatDate(item.date)}</Text>
             </HStack>
 
-            <Text>{item.comment}</Text>
+            <Text numberOfLines={1}>{item.comment}</Text>
           </VStack>
-          <Text
-            style={styles.amount}
-          >{`${item.currencyCode}${item.amount}`}</Text>
+          <Text style={styles.amount} numberOfLines={1}>
+            {`${item.currencyCode}${item.amount.toLocaleString()}`}
+          </Text>
         </TouchableOpacity>
       )}
     />
@@ -148,6 +148,7 @@ const useStyles = makeStyles((theme) => ({
   },
   amount: {
     fontWeight: "bold",
+    maxWidth: 100,
   },
 }));
 

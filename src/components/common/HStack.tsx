@@ -2,26 +2,38 @@ import { makeStyles } from "@rneui/themed";
 import { memo } from "react";
 import { View, ViewProps } from "react-native";
 
-type IHStackProps = ViewProps & {
+type CustomStyles = {
   gap?: number;
+  alignItems?: "center" | "flex-start" | "flex-end" | "stretch" | "baseline";
+  justifyContent?:
+    | "center"
+    | "flex-start"
+    | "flex-end"
+    | "space-between"
+    | "space-around"
+    | "space-evenly";
 };
 
-const HStack = memo<IHStackProps>(({ gap, children, ...props }) => {
-  const styles = useStyles(gap || 0);
+type IHStackProps = ViewProps & CustomStyles;
 
-  return (
-    <View {...props} style={[props.style, styles.container]}>
-      {children}
-    </View>
-  );
-});
+const HStack = memo<IHStackProps>(
+  ({ gap, alignItems, justifyContent, children, ...props }) => {
+    const styles = useStyles({ gap, alignItems, justifyContent });
 
-const useStyles = makeStyles((theme, gap: number) => ({
+    return (
+      <View {...props} style={[props.style, styles.container]}>
+        {children}
+      </View>
+    );
+  },
+);
+
+const useStyles = makeStyles((theme, style: CustomStyles) => ({
   container: {
-    gap,
+    gap: style.gap,
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    alignItems: style.alignItems || "center",
+    justifyContent: style.justifyContent || "space-between",
   },
 }));
 
