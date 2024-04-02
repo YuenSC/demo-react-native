@@ -13,7 +13,7 @@ import CurrencySelectBottomSheet from "./CurrencySelectBottomSheet";
 import DatePickerBottomSheet from "./DatePickerBottomSheet";
 import BillCategoryIcon from "../BillCategoryIcon";
 
-import { IAddPaymentTabScreenProps } from "@/screens/AddPaymentScreen";
+import { IAddPaymentTabScreenProps } from "@/screens/stack/AddPaymentScreen";
 import { BillCategoryEnum } from "@/types/BillCategories";
 import { PaymentRecordCreate } from "@/types/PaymentRecord";
 

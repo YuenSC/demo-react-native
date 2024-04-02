@@ -1,11 +1,11 @@
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
-import { useRoute } from "@react-navigation/native";
 import { makeStyles, Text } from "@rneui/themed";
 import { memo } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { useCurrentGroup } from "@/context/currentGroup";
 import { useAppSelector } from "@/hooks/reduxHook";
 
 type IDrawerContentProps = DrawerContentComponentProps;
@@ -13,23 +13,32 @@ type IDrawerContentProps = DrawerContentComponentProps;
 const DrawerContent = memo<IDrawerContentProps>(({ state }) => {
   const styles = useStyles();
   const groups = useAppSelector((state) => state.groups.groups);
-  const { params } = useRoute();
-  const groupId = (params as { id?: string })?.id;
+
+  const { currentGroup, setCurrentGroup } = useCurrentGroup();
 
   return (
     <SafeAreaView style={styles.container}>
       <Text h2 style={{ marginBottom: 16 }}>
-        Groups (TBC)
+        Groups
       </Text>
       <FlatList
         data={groups}
         bounces={false}
         renderItem={({ item }) => {
-          const isCurrentGroupSelected = item.id === groupId;
-          console.log("isCurrentGroupSelected", isCurrentGroupSelected);
+          const isCurrentGroupSelected = item.id === currentGroup?.id;
           return (
-            <TouchableOpacity style={styles.group}>
-              <Text>{item.name}</Text>
+            <TouchableOpacity
+              style={[
+                styles.group,
+                isCurrentGroupSelected && styles.groupSelected,
+              ]}
+              onPress={() => setCurrentGroup(item)}
+            >
+              <Text
+                style={[isCurrentGroupSelected && styles.groupNameSelected]}
+              >
+                {item.name}
+              </Text>
             </TouchableOpacity>
           );
         }}
@@ -54,6 +63,13 @@ const useStyles = makeStyles((theme) => ({
     padding: 16,
     borderRadius: 8,
     backgroundColor: theme.colors.grey5,
+  },
+  groupSelected: {
+    backgroundColor: theme.colors.primary,
+  },
+  groupNameSelected: {
+    color: theme.colors.white,
+    fontWeight: "bold",
   },
 }));
 

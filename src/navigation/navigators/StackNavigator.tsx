@@ -5,13 +5,13 @@ import DrawerNavigator from "./DrawerNavigator";
 
 import Device from "@/constants/Device";
 import { useAppSelector } from "@/hooks/reduxHook";
-import AddPaymentScreen from "@/screens/AddPaymentScreen";
-import EditMemberScreen from "@/screens/EditMemberScreen";
-import GroupAddMemberScreen from "@/screens/GroupAddMemberScreen";
-import OnboardingScreen from "@/screens/OnboardingScreen";
 import SampleScreen from "@/screens/SampleScreen";
-import SignUpSuccessBottomSheetModal from "@/screens/SignUpSuccessBottomSheetModal";
-import WelcomeScreen from "@/screens/WelcomeScreen";
+import AddPaymentScreen from "@/screens/stack/AddPaymentScreen";
+import EditMemberScreen from "@/screens/stack/EditMemberScreen";
+import GroupAddMemberScreen from "@/screens/stack/GroupAddMemberScreen";
+import OnboardingScreen from "@/screens/stack/OnboardingScreen";
+import SignUpSuccessBottomSheetModal from "@/screens/stack/SignUpSuccessBottomSheetModal";
+import WelcomeScreen from "@/screens/stack/WelcomeScreen";
 import { IStackParamList } from "@/types/navigation";
 
 const Stack = createSharedElementStackNavigator<IStackParamList>();

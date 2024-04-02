@@ -6,18 +6,20 @@ import { CurrencyCode } from "@/types/Currency";
 import { ICreateGroupPayload } from "@/types/GroupCreate";
 import { PaymentRecord, PaymentRecordCreate } from "@/types/PaymentRecord";
 
-export interface GroupsState {
-  groups: {
+export interface Group {
+  id: string;
+  name: string;
+  description?: string;
+  members: {
     id: string;
     name: string;
-    description?: string;
-    members: {
-      id: string;
-      name: string;
-      imageUrl?: string;
-    }[];
-    paymentRecords: PaymentRecord[];
+    imageUrl?: string;
   }[];
+  paymentRecords: PaymentRecord[];
+}
+
+export interface GroupsState {
+  groups: Group[];
   suggestedCurrencyCodes?: CurrencyCode[];
   lastUsedCurrency?: CurrencyCode;
 }

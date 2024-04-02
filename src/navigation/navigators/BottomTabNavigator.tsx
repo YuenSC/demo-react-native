@@ -1,19 +1,17 @@
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { makeStyles, useTheme } from "@rneui/themed";
 
 import BottomTabBar from "../BottomTabBar";
 
 import { useAppSelector } from "@/hooks/reduxHook";
-import GroupDetailScreen from "@/screens/GroupDetailScreen";
 import SampleScreen from "@/screens/SampleScreen";
+import GroupDetailScreen from "@/screens/bottomTab/GroupDetailScreen";
+import PaymentRecordScreen from "@/screens/bottomTab/PaymentRecordScreen";
 import { IBottomTabParamList } from "@/types/navigation";
 
 const BottomTab = createBottomTabNavigator<IBottomTabParamList>();
 
 const BottomTabNavigator = () => {
-  const styles = useStyles();
-  const { theme } = useTheme();
   const firstGroupId = useAppSelector((state) => state.groups?.groups?.[0]?.id);
 
   return (
@@ -24,7 +22,6 @@ const BottomTabNavigator = () => {
       <BottomTab.Screen
         name="GroupDetail"
         component={GroupDetailScreen}
-        initialParams={{ id: firstGroupId }}
         options={{
           tabBarIcon: ({ color }) => (
             <Ionicons name="home" size={24} color={color} />
@@ -34,7 +31,7 @@ const BottomTabNavigator = () => {
       />
       <BottomTab.Screen
         name="PaymentRecord"
-        component={SampleScreen}
+        component={PaymentRecordScreen}
         options={{
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="payment" size={24} color={color} />
@@ -66,10 +63,10 @@ const BottomTabNavigator = () => {
   );
 };
 
-const useStyles = makeStyles((theme) => ({
-  headerRight: {
-    marginRight: 16,
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   headerRight: {
+//     marginRight: 16,
+//   },
+// }));
 
 export default BottomTabNavigator;

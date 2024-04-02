@@ -20,6 +20,8 @@ const useStyles = makeStyles((theme, gap: number) => ({
   container: {
     gap,
     flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 }));
 

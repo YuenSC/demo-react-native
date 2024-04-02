@@ -1,37 +1,37 @@
+import { AntDesign } from "@expo/vector-icons";
 import { useHeaderHeight } from "@react-navigation/elements";
-import { Button, Image, Text, makeStyles } from "@rneui/themed";
+import { Button, Text, makeStyles, useTheme } from "@rneui/themed";
 import AnimatedLottieView from "lottie-react-native";
 import { useMemo } from "react";
-import { Pressable, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 
+import HStack from "@/components/common/HStack";
+import { useCurrentGroup } from "@/context/currentGroup";
 import { useAppSelector } from "@/hooks/reduxHook";
 import { IBottomTabScreenProps } from "@/types/navigation";
 
 const GroupDetailScreen = ({
   navigation,
-  route: {
-    params: { id },
-  },
 }: IBottomTabScreenProps<"GroupDetail">) => {
   const styles = useStyles();
   const headerHeight = useHeaderHeight();
-  const group = useAppSelector((state) =>
-    state.groups?.groups?.find((g) => g.id === id),
-  );
+  const { theme } = useTheme();
+  const { currentGroup } = useCurrentGroup();
+
   const profile = useAppSelector((state) => state.profile);
 
   const memberListText = useMemo(() => {
-    if (!group) return "";
-    const names = group.members
+    if (!currentGroup) return "";
+    const names = currentGroup.members
       .filter((item) => item.name !== profile.name)
       .map((item) => item.name);
 
     return names.length > 2
       ? `${names.slice(0, 2).join(", ")} and more ...`
       : names.join(" and ");
-  }, [group, profile.name]);
+  }, [currentGroup, profile.name]);
 
-  if (!group) {
+  if (!currentGroup) {
     return (
       <View style={[styles.emptyContainer, { paddingBottom: headerHeight }]}>
         <AnimatedLottieView
@@ -55,20 +55,41 @@ const GroupDetailScreen = ({
 
   return (
     <View style={styles.container}>
-      <Text h1>{group.name}</Text>
-      <Text style={styles.description}>
-        You owed/lent someone how much in total.
-      </Text>
+      <View>
+        <Text h1>{currentGroup.name}</Text>
+        <Text>You owed/lent someone how much in total.</Text>
+      </View>
 
       <View>
         <Text style={styles.label}>Member</Text>
         <TouchableOpacity
           style={styles.members}
-          onPress={() => navigation.navigate("GroupAddMember", { groupId: id })}
+          onPress={() =>
+            navigation.navigate("GroupAddMember", { groupId: currentGroup.id })
+          }
         >
           <Text>{`Current: ${profile.name}`}</Text>
           <Text>{memberListText}</Text>
         </TouchableOpacity>
+      </View>
+
+      <View>
+        <Text style={styles.label}>Payment</Text>
+        <HStack>
+          <Text>
+            You have {currentGroup.paymentRecords.length} records in this group
+          </Text>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate("PaymentRecord")}
+          >
+            <AntDesign
+              name="arrowright"
+              size={24}
+              color={theme.colors.primary}
+            />
+          </TouchableOpacity>
+        </HStack>
       </View>
     </View>
   );
@@ -79,7 +100,7 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     backgroundColor: theme.colors.background,
     padding: 16,
-    gap: 8,
+    gap: 16,
   },
   emptyContainer: {
     justifyContent: "center",
@@ -94,9 +115,6 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "500",
   },
 
-  description: {
-    marginBottom: 16,
-  },
   lottie: {
     height: 300,
     aspectRatio: 1,

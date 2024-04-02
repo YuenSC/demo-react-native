@@ -13,7 +13,7 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
-import { IAddPaymentTabScreenProps } from "@/screens/AddPaymentScreen";
+import { IAddPaymentTabScreenProps } from "@/screens/stack/AddPaymentScreen";
 import { addPaymentRecord } from "@/store/reducers/groups";
 import { PaymentRecordCreate } from "@/types/PaymentRecord";
 
