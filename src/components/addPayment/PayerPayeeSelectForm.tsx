@@ -1,4 +1,5 @@
 import { Entypo } from "@expo/vector-icons";
+import { DrawerActions, StackActions } from "@react-navigation/native";
 import {
   Button,
   Input,
@@ -11,15 +12,19 @@ import { useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 
-import { useAppSelector } from "@/hooks/reduxHook";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import { IAddPaymentTabScreenProps } from "@/screens/AddPaymentScreen";
+import { addPaymentRecord } from "@/store/reducers/groups";
 import { PaymentRecordCreate } from "@/types/PaymentRecord";
 
-const PayerSelectForm = ({
+const PayerPayeeSelectForm = ({
   navigation,
-}: IAddPaymentTabScreenProps<"PayerSelect">) => {
+  route,
+}: IAddPaymentTabScreenProps<"PayerSelect" | "PayeeSelect">) => {
   const styles = useStyles();
   const { theme } = useTheme();
+  const type = route.name === "PayerSelect" ? "payers" : "payees";
+  const dispatch = useAppDispatch();
 
   const groupIdWatch = useWatch({ name: "groupId" });
   const group = useAppSelector((state) =>
@@ -27,53 +32,43 @@ const PayerSelectForm = ({
   );
   const { control, handleSubmit, setValue } =
     useFormContext<PaymentRecordCreate>();
-  const amountWatch = useWatch({
-    name: "amount",
-    control,
-  });
+  const amountWatch = useWatch({ name: "amount", control });
+  const paymentPerUsers = useWatch({ name: type, control });
 
-  const paymentPerUsers = useWatch({
-    name: "payers",
-    control,
-  });
+  const { realAmountPerUsers, isEnoughToPaid } = useMemo(() => {
+    const autoSplitCount = paymentPerUsers.filter(
+      (i) => i.amount === "auto",
+    ).length;
 
-  const { realAmountPerUsers, remainingAmount, isEnoughToPaid } =
-    useMemo(() => {
-      const autoSplitCount = paymentPerUsers.filter(
-        (i) => i.amount === "auto",
-      ).length;
+    const amountPaid = paymentPerUsers
+      .filter((i) => i.amount !== "auto")
+      .reduce((prev, curr) => prev + (curr.amount as number), 0);
+    const autoSplitAmount =
+      autoSplitCount === 0
+        ? 0
+        : Math.max(0, (amountWatch - amountPaid) / autoSplitCount);
+    const realAmountPerUsers = paymentPerUsers.map((i) =>
+      i.amount === "auto"
+        ? parseFloat(autoSplitAmount.toFixed(2))
+        : i.amount ?? 0,
+    );
+    const realAmountSum = realAmountPerUsers.reduce(
+      (prev, curr) => prev + curr,
+      0,
+    );
 
-      const amountPaid = paymentPerUsers
-        .filter((i) => i.amount !== "auto")
-        .reduce((prev, curr) => prev + (curr.amount as number), 0);
-
-      const autoSplitAmount =
-        autoSplitCount === 0
-          ? 0
-          : Math.max(0, (amountWatch - amountPaid) / autoSplitCount);
-
-      const realAmountPerUsers = paymentPerUsers.map((i) =>
-        i.amount === "auto"
-          ? parseFloat(autoSplitAmount.toFixed(2))
-          : i.amount ?? 0,
-      );
-
-      const realAmountSum = realAmountPerUsers.reduce(
-        (prev, curr) => prev + curr,
-        0,
-      );
-
-      return {
-        realAmountPerUsers,
-        remainingAmount: amountWatch - amountPaid,
-        isEnoughToPaid: Math.round(realAmountSum) === amountWatch,
-      };
-    }, [amountWatch, paymentPerUsers]);
+    return {
+      realAmountPerUsers,
+      isEnoughToPaid: Math.round(realAmountSum) === amountWatch,
+    };
+  }, [amountWatch, paymentPerUsers]);
 
   return (
     <View style={styles.container}>
       <ScrollView keyboardDismissMode="on-drag">
-        <Text style={styles.label}>Payer</Text>
+        <Text style={styles.label}>
+          {type === "payers" ? "Who Paid?" : "Paid For?"}
+        </Text>
         {group?.members.map((member, index) => (
           <ListItem key={member.id} bottomDivider style={{ width: "100%" }}>
             <ListItem.CheckBox
@@ -87,7 +82,7 @@ const PayerSelectForm = ({
                   .amount
                   ? 0
                   : "auto";
-                setValue("payers", paymentPerUsersCopy);
+                setValue(type, paymentPerUsersCopy);
               }}
             />
             <ListItem.Content style={styles.itemContent}>
@@ -115,25 +110,27 @@ const PayerSelectForm = ({
                   }}
                   onChangeText={(text) => {
                     const paymentPerUsersCopy = [...paymentPerUsers];
-                    const temp = parseFloat(text);
+                    const textAsNumber = parseFloat(text);
 
-                    paymentPerUsersCopy[index].amount = Number.isNaN(temp)
+                    paymentPerUsersCopy[index].amount = Number.isNaN(
+                      textAsNumber,
+                    )
                       ? 0
                       : Math.min(
-                          temp,
+                          textAsNumber,
                           amountWatch -
                             realAmountPerUsers
                               .filter((_, i) => i !== index)
                               .reduce((prev, curr) => prev + curr, 0),
                         );
-                    setValue("payers", paymentPerUsersCopy);
+                    setValue(type, paymentPerUsersCopy);
                   }}
                   rightIcon={
                     <TouchableOpacity
                       onPress={() => {
                         const paymentPerUsersCopy = [...paymentPerUsers];
                         paymentPerUsersCopy[index].amount = 0;
-                        setValue("payers", paymentPerUsersCopy);
+                        setValue(type, paymentPerUsersCopy);
                       }}
                     >
                       <Entypo
@@ -153,10 +150,18 @@ const PayerSelectForm = ({
 
       <View style={styles.footer}>
         <Button
-          title="Next"
+          title={type === "payers" ? "Next" : "Done"}
           disabled={!isEnoughToPaid}
-          onPress={handleSubmit(() => {
-            navigation.navigate("PayeeSelect");
+          onPress={handleSubmit((values) => {
+            switch (type) {
+              case "payers":
+                navigation.navigate("PayeeSelect");
+                break;
+              case "payees":
+                dispatch(addPaymentRecord(values));
+                navigation.dispatch(StackActions.pop());
+                break;
+            }
           })}
         />
       </View>
@@ -206,4 +211,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default PayerSelectForm;
+export default PayerPayeeSelectForm;

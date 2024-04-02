@@ -10,8 +10,7 @@ import { View } from "react-native";
 
 import Config from "@/Config";
 import BillForm from "@/components/addPayment/BillForm";
-import PayeeSelectForm from "@/components/addPayment/PayeeSelectForm";
-import PayerSelectForm from "@/components/addPayment/PayerSelectForm";
+import PayerPayeeSelectForm from "@/components/addPayment/PayerPayeeSelectForm";
 import { useAppSelector } from "@/hooks/reduxHook";
 import { BillCategoryEnum } from "@/types/BillCategories";
 import { PaymentRecordCreate } from "@/types/PaymentRecord";
@@ -89,13 +88,15 @@ const AddPaymentScreen = ({
             />
             <Tab.Screen
               name="PayerSelect"
-              component={PayerSelectForm}
-              options={{ title: "Payer" }}
+              component={PayerPayeeSelectForm}
+              options={{ title: "Who Paid?" }}
             />
             <Tab.Screen
               name="PayeeSelect"
-              component={PayeeSelectForm}
-              options={{ title: "Payee" }}
+              component={PayerPayeeSelectForm}
+              options={{
+                title: "Paid For?",
+              }}
             />
           </Tab.Navigator>
         </View>
