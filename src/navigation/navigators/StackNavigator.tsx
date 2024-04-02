@@ -6,10 +6,10 @@ import DrawerNavigator from "./DrawerNavigator";
 import Device from "@/constants/Device";
 import { useAppSelector } from "@/hooks/reduxHook";
 import SampleScreen from "@/screens/SampleScreen";
-import AddPaymentScreen from "@/screens/stack/AddPaymentScreen";
 import EditMemberScreen from "@/screens/stack/EditMemberScreen";
 import GroupAddMemberScreen from "@/screens/stack/GroupAddMemberScreen";
 import OnboardingScreen from "@/screens/stack/OnboardingScreen";
+import PaymentFormScreen from "@/screens/stack/PaymentFormScreen";
 import SignUpSuccessBottomSheetModal from "@/screens/stack/SignUpSuccessBottomSheetModal";
 import WelcomeScreen from "@/screens/stack/WelcomeScreen";
 import { IStackParamList } from "@/types/navigation";
@@ -60,8 +60,15 @@ const StackNavigator = memo(() => {
         }}
       />
       <Stack.Screen
-        component={AddPaymentScreen}
+        component={PaymentFormScreen}
         name="AddPayment"
+        options={{
+          presentation: "modal",
+        }}
+      />
+      <Stack.Screen
+        component={PaymentFormScreen}
+        name="EditPayment"
         options={{
           presentation: "modal",
         }}

@@ -5,8 +5,11 @@ import { TouchableOpacity, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { useCurrentGroup } from "@/context/currentGroup";
-import { useAppSelector } from "@/hooks/reduxHook";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
+import {
+  currentGroupSelector,
+  setCurrentGroupId,
+} from "@/store/reducers/groups";
 
 type IDrawerContentProps = DrawerContentComponentProps;
 
@@ -14,7 +17,8 @@ const DrawerContent = memo<IDrawerContentProps>(({ state }) => {
   const styles = useStyles();
   const groups = useAppSelector((state) => state.groups.groups);
 
-  const { currentGroup, setCurrentGroup } = useCurrentGroup();
+  const currentGroup = useAppSelector(currentGroupSelector);
+  const dispatch = useAppDispatch();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -32,7 +36,7 @@ const DrawerContent = memo<IDrawerContentProps>(({ state }) => {
                 styles.group,
                 isCurrentGroupSelected && styles.groupSelected,
               ]}
-              onPress={() => setCurrentGroup(item)}
+              onPress={() => dispatch(setCurrentGroupId(item.id))}
             >
               <Text
                 style={[isCurrentGroupSelected && styles.groupNameSelected]}

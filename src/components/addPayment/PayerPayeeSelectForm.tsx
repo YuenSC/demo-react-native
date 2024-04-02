@@ -13,9 +13,9 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
-import { IAddPaymentTabScreenProps } from "@/screens/stack/AddPaymentScreen";
-import { addPaymentRecord } from "@/store/reducers/groups";
-import { PaymentRecordCreate } from "@/types/PaymentRecord";
+import { IAddPaymentTabScreenProps } from "@/screens/stack/PaymentFormScreen";
+import { addPaymentRecord, updatePaymentRecord } from "@/store/reducers/groups";
+import { PaymentRecord, PaymentRecordCreate } from "@/types/PaymentRecord";
 
 const PayerPayeeSelectForm = ({
   navigation,
@@ -30,12 +30,14 @@ const PayerPayeeSelectForm = ({
   const group = useAppSelector((state) =>
     state.groups.groups.find((group) => group.id === groupIdWatch),
   );
-  const { control, handleSubmit, setValue } =
-    useFormContext<PaymentRecordCreate>();
+  const { control, handleSubmit, setValue } = useFormContext<
+    PaymentRecordCreate & { id?: string }
+  >();
   const amountWatch = useWatch({ name: "amount", control });
   const paymentPerUsers = useWatch({ name: type, control });
+  const isEdit = Boolean(useWatch({ name: "id", control }));
 
-  const { realAmountPerUsers, isEnoughToPaid } = useMemo(() => {
+  const { realAmountPerUsers, isPaymentEqualExpense } = useMemo(() => {
     const autoSplitCount = paymentPerUsers.filter(
       (i) => i.amount === "auto",
     ).length;
@@ -59,7 +61,7 @@ const PayerPayeeSelectForm = ({
 
     return {
       realAmountPerUsers,
-      isEnoughToPaid: Math.round(realAmountSum) === amountWatch,
+      isPaymentEqualExpense: Math.round(realAmountSum) === amountWatch,
     };
   }, [amountWatch, paymentPerUsers]);
 
@@ -151,14 +153,18 @@ const PayerPayeeSelectForm = ({
       <View style={styles.footer}>
         <Button
           title={type === "payers" ? "Next" : "Done"}
-          disabled={!isEnoughToPaid}
+          disabled={!isPaymentEqualExpense}
           onPress={handleSubmit((values) => {
             switch (type) {
               case "payers":
                 navigation.navigate("PayeeSelect");
                 break;
               case "payees":
-                dispatch(addPaymentRecord(values));
+                if (isEdit) {
+                  dispatch(updatePaymentRecord(values as PaymentRecord));
+                } else {
+                  dispatch(addPaymentRecord(values));
+                }
                 navigation.dispatch(StackActions.pop());
                 break;
             }

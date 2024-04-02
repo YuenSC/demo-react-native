@@ -2,6 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 
+import { RootState } from "..";
+
 import { CurrencyCode } from "@/types/Currency";
 import { ICreateGroupPayload } from "@/types/GroupCreate";
 import { PaymentRecord, PaymentRecordCreate } from "@/types/PaymentRecord";
@@ -22,12 +24,14 @@ export interface GroupsState {
   groups: Group[];
   suggestedCurrencyCodes?: CurrencyCode[];
   lastUsedCurrency?: CurrencyCode;
+  currentGroupId?: string;
 }
 
 const initialState: GroupsState = {
   groups: [],
   suggestedCurrencyCodes: [],
   lastUsedCurrency: undefined,
+  currentGroupId: undefined,
 };
 
 export const groupsSlice = createSlice({
@@ -40,6 +44,10 @@ export const groupsSlice = createSlice({
         paymentRecords: [],
         ...action.payload,
       });
+
+      if (state.groups.length === 1) {
+        state.currentGroupId = state.groups[0].id;
+      }
     },
     deleteGroup: (state, action: PayloadAction<{ id: string }>) => {
       state.groups = state.groups.filter(
@@ -60,7 +68,26 @@ export const groupsSlice = createSlice({
       });
     },
     deletePaymentRecord: () => {},
-    updatePaymentRecord: () => {},
+    updatePaymentRecord: (state, action: PayloadAction<PaymentRecord>) => {
+      const group = state.groups.find(
+        (group) => group.id === action.payload.groupId,
+      );
+      if (group) {
+        const record = group.paymentRecords.find(
+          (record) => record.id === action.payload.id,
+        );
+
+        if (record) {
+          record.amount = action.payload.amount;
+          record.category = action.payload.category;
+          record.comment = action.payload.comment;
+          record.currencyCode = action.payload.currencyCode;
+          record.date = action.payload.date;
+          record.payees = action.payload.payees;
+          record.payers = action.payload.payers;
+        }
+      }
+    },
 
     addMember: (
       state,
@@ -132,6 +159,10 @@ export const groupsSlice = createSlice({
         state.suggestedCurrencyCodes ?? []
       ).filter((item) => item !== action.payload);
     },
+
+    setCurrentGroupId: (state, action: PayloadAction<string>) => {
+      state.currentGroupId = action.payload;
+    },
   },
 });
 
@@ -147,6 +178,10 @@ export const {
   updatePaymentRecord,
   addCurrencyCodeSuggestion,
   deleteCurrencyCodeSuggestion,
+  setCurrentGroupId,
 } = groupsSlice.actions;
 
 export default groupsSlice.reducer;
+
+export const currentGroupSelector = (state: RootState) =>
+  state.groups.groups.find((group) => group.id === state.groups.currentGroupId);

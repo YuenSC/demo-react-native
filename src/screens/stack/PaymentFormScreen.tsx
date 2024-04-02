@@ -28,12 +28,12 @@ export type IAddPaymentTabScreenProps<
 
 const Tab = createMaterialTopTabNavigator<IAddPaymentTabParamList>();
 
-const AddPaymentScreen = ({
+const PaymentFormScreen = ({
   navigation,
   route: {
-    params: { groupId },
+    params: { groupId, recordId },
   },
-}: IStackScreenProps<"AddPayment">) => {
+}: IStackScreenProps<"AddPayment" | "EditPayment">) => {
   const styles = useStyles();
 
   const lastUsedCurrency = useAppSelector(
@@ -43,8 +43,9 @@ const AddPaymentScreen = ({
   const group = useAppSelector((state) =>
     state.groups.groups.find((group) => group.id === groupId),
   );
+  const record = group?.paymentRecords.find((item) => item.id === recordId);
 
-  const form = useForm<PaymentRecordCreate>({
+  const form = useForm<PaymentRecordCreate & { id?: string }>({
     defaultValues: {
       amount: Config.isDev ? 1000 : 0,
       currencyCode: lastUsedCurrency,
@@ -64,10 +65,25 @@ const AddPaymentScreen = ({
         })) ?? [],
     },
   });
+  const { reset } = form;
 
   useEffect(() => {
     navigation.setOptions({ title: group?.name, headerBackTitle: "" });
-  }, [group?.name, navigation]);
+
+    if (record) {
+      reset({
+        id: record.id,
+        amount: record.amount,
+        currencyCode: record.currencyCode,
+        groupId: record.groupId,
+        date: record.date,
+        category: record.category,
+        comment: record.comment,
+        payers: record.payers,
+        payees: record.payees,
+      });
+    }
+  }, [group?.name, navigation, record, reset]);
 
   if (!group)
     return (
@@ -112,4 +128,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default AddPaymentScreen;
+export default PaymentFormScreen;

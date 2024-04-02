@@ -7,7 +7,6 @@ import { TouchableOpacity, View } from "react-native";
 import BottomTabNavigator from "./BottomTabNavigator";
 import DrawerContent from "../DrawerContent";
 
-import { CurrentGroupProvider } from "@/context/currentGroup";
 import { useAppSelector } from "@/hooks/reduxHook";
 import { IDrawerParamList } from "@/types/navigation";
 
@@ -19,43 +18,41 @@ const DrawerNavigator = () => {
   const firstGroupId = useAppSelector((state) => state.groups?.groups?.[0]?.id);
 
   return (
-    <CurrentGroupProvider>
-      <Drawer.Navigator drawerContent={(props) => <DrawerContent {...props} />}>
-        <Drawer.Screen
-          name="BottomTab"
-          component={BottomTabNavigator}
-          options={({ navigation }) => ({
-            headerRight: () => {
-              return (
-                <View style={styles.headerRight}>
-                  <TouchableOpacity onPress={() => AsyncStorage.clear()}>
-                    <FontAwesome
-                      name="undo"
-                      size={24}
-                      color={theme.colors.warning}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate("GroupConfig", {
-                        groupId: firstGroupId,
-                      })
-                    }
-                  >
-                    <AntDesign
-                      name="setting"
-                      size={24}
-                      color={theme.colors.secondary}
-                    />
-                  </TouchableOpacity>
-                </View>
-              );
-            },
-            headerTitle: "",
-          })}
-        />
-      </Drawer.Navigator>
-    </CurrentGroupProvider>
+    <Drawer.Navigator drawerContent={(props) => <DrawerContent {...props} />}>
+      <Drawer.Screen
+        name="BottomTab"
+        component={BottomTabNavigator}
+        options={({ navigation }) => ({
+          headerRight: () => {
+            return (
+              <View style={styles.headerRight}>
+                <TouchableOpacity onPress={() => AsyncStorage.clear()}>
+                  <FontAwesome
+                    name="undo"
+                    size={24}
+                    color={theme.colors.warning}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("GroupConfig", {
+                      groupId: firstGroupId,
+                    })
+                  }
+                >
+                  <AntDesign
+                    name="setting"
+                    size={24}
+                    color={theme.colors.secondary}
+                  />
+                </TouchableOpacity>
+              </View>
+            );
+          },
+          headerTitle: "",
+        })}
+      />
+    </Drawer.Navigator>
   );
 };
 

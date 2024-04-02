@@ -23,7 +23,8 @@ export type IStackParamList = {
   Drawer: NavigatorScreenParams<IDrawerParamList> | undefined;
   SignUpSuccessBottomSheetModal: undefined;
   EditMember: { id: string; groupId: string };
-  AddPayment: { groupId: string };
+  AddPayment: { groupId: string; recordId?: string };
+  EditPayment: { groupId: string; recordId: string };
   MemberList: undefined;
   GroupAddMember: { groupId: string };
 };

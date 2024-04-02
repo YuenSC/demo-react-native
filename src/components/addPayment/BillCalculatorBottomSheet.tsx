@@ -98,7 +98,7 @@ const BillCalculatorBottomSheet = forwardRef<
     const steps = records
       .map(({ num, sign }, index) => {
         const isLast = index === records.length - 1;
-        return sign ? `${num} ${sign}${isLast ? " 🌚" : ""}` : num;
+        return sign ? `${num} ${sign}${isLast ? " 💰" : ""}` : num;
       })
       .join(" ");
 
@@ -211,6 +211,12 @@ const BillCalculatorBottomSheet = forwardRef<
             </Text>
             <TouchableOpacity
               onPress={() => {
+                setRecords([
+                  {
+                    num: calculationResult.toString(),
+                    sign: undefined,
+                  },
+                ]);
                 bottomSheetRef.current?.close();
                 onBlurInput();
               }}

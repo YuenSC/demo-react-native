@@ -6,8 +6,8 @@ import { useMemo } from "react";
 import { TouchableOpacity, View } from "react-native";
 
 import HStack from "@/components/common/HStack";
-import { useCurrentGroup } from "@/context/currentGroup";
 import { useAppSelector } from "@/hooks/reduxHook";
+import { currentGroupSelector } from "@/store/reducers/groups";
 import { IBottomTabScreenProps } from "@/types/navigation";
 
 const GroupDetailScreen = ({
@@ -16,7 +16,7 @@ const GroupDetailScreen = ({
   const styles = useStyles();
   const headerHeight = useHeaderHeight();
   const { theme } = useTheme();
-  const { currentGroup } = useCurrentGroup();
+  const currentGroup = useAppSelector(currentGroupSelector);
 
   const profile = useAppSelector((state) => state.profile);
 
