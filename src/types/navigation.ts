@@ -6,6 +6,8 @@ import {
 } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
 
+import { CurrencyCode } from "./Currency";
+
 // Structure of the navigation params
 // Tab -> BottomTab -> Stack
 // Tab has Chat and BottomTab for switching
@@ -27,6 +29,12 @@ export type IStackParamList = {
   EditPayment: { groupId: string; recordId: string };
   MemberList: undefined;
   GroupAddMember: { groupId: string };
+  PaymentRecordFilter: {
+    selectedCurrency: CurrencyCode | null;
+    setSelectedCurrency: React.Dispatch<
+      React.SetStateAction<CurrencyCode | null>
+    >;
+  };
 };
 
 export type IStackScreenProps<Screen extends keyof IStackParamList> =

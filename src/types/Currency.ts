@@ -1072,17 +1072,6 @@ export const currencyCodes = {
     code: "ZWL",
     name_plural: "Zimbabwean Dollar",
   },
-} as Record<
-  string,
-  {
-    symbol: string;
-    name: string;
-    symbol_native: string;
-    decimal_digits: number;
-    rounding: number;
-    code: string;
-    name_plural: string;
-  }
->;
+} as const;
 
 export type CurrencyCode = keyof typeof currencyCodes;

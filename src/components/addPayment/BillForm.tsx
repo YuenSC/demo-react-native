@@ -16,6 +16,7 @@ import BillCategoryIcon from "../BillCategoryIcon";
 import { IAddPaymentTabScreenProps } from "@/screens/stack/PaymentFormScreen";
 import { BillCategoryEnum } from "@/types/BillCategories";
 import { PaymentRecordCreate } from "@/types/PaymentRecord";
+import { formatDate } from "@/utils/formatDate";
 
 const BillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
   const insets = useSafeAreaInsets();
@@ -179,17 +180,7 @@ const BillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
           placeholder="When do you do it?"
           onFocus={openDateBottomSheet}
           showSoftInputOnFocus={false}
-          value={
-            date.value
-              ? new Date(date.value).toLocaleDateString("en-US", {
-                  day: "2-digit",
-                  month: "long",
-                  year: "numeric",
-                  hour: "numeric",
-                  minute: "numeric",
-                })
-              : undefined
-          }
+          value={date.value ? formatDate(date.value) : undefined}
           onBlur={() => {
             dateBottomSheetRef.current?.close();
             date.onBlur();

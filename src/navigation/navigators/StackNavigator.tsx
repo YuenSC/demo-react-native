@@ -1,5 +1,5 @@
+import { createStackNavigator } from "@react-navigation/stack";
 import { memo } from "react";
-import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 
 import DrawerNavigator from "./DrawerNavigator";
 
@@ -10,11 +10,12 @@ import EditMemberScreen from "@/screens/stack/EditMemberScreen";
 import GroupAddMemberScreen from "@/screens/stack/GroupAddMemberScreen";
 import OnboardingScreen from "@/screens/stack/OnboardingScreen";
 import PaymentFormScreen from "@/screens/stack/PaymentFormScreen";
+import PaymentRecordFilterScreen from "@/screens/stack/PaymentRecordFilterScreen";
 import SignUpSuccessBottomSheetModal from "@/screens/stack/SignUpSuccessBottomSheetModal";
 import WelcomeScreen from "@/screens/stack/WelcomeScreen";
 import { IStackParamList } from "@/types/navigation";
 
-const Stack = createSharedElementStackNavigator<IStackParamList>();
+const Stack = createStackNavigator<IStackParamList>();
 
 const StackNavigator = memo(() => {
   const isInitialSetupDone = useAppSelector(
@@ -43,57 +44,47 @@ const StackNavigator = memo(() => {
           headerShown: false,
         }}
       />
-      <Stack.Screen
-        component={GroupAddMemberScreen}
-        name="GroupAddMember"
-        options={{
-          title: "Configuration",
-          presentation: "modal",
-        }}
-      />
-      <Stack.Screen
-        component={EditMemberScreen}
-        name="EditMember"
-        options={{
-          headerShown: false,
-          presentation: "modal",
-        }}
-      />
-      <Stack.Screen
-        component={PaymentFormScreen}
-        name="AddPayment"
-        options={{
-          presentation: "modal",
-        }}
-      />
-      <Stack.Screen
-        component={PaymentFormScreen}
-        name="EditPayment"
-        options={{
-          presentation: "modal",
-        }}
-      />
-      <Stack.Screen
-        component={SampleScreen}
-        name="MemberList"
-        options={{
-          presentation: "modal",
-        }}
-      />
+
       <Stack.Screen
         component={DrawerNavigator}
         name="Drawer"
         options={{ headerShown: false }}
       />
 
-      <Stack.Screen
-        component={SignUpSuccessBottomSheetModal}
-        name="SignUpSuccessBottomSheetModal"
-        options={{
+      <Stack.Group
+        screenOptions={{
           presentation: "transparentModal",
           headerShown: false,
         }}
-      />
+      >
+        <Stack.Screen
+          component={SignUpSuccessBottomSheetModal}
+          name="SignUpSuccessBottomSheetModal"
+        />
+        <Stack.Screen
+          component={PaymentRecordFilterScreen}
+          name="PaymentRecordFilter"
+        />
+      </Stack.Group>
+
+      {/* Modal */}
+      <Stack.Group screenOptions={{ presentation: "modal" }}>
+        <Stack.Screen
+          component={GroupAddMemberScreen}
+          name="GroupAddMember"
+          options={{ title: "Configuration" }}
+        />
+
+        <Stack.Screen
+          component={EditMemberScreen}
+          name="EditMember"
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen component={PaymentFormScreen} name="AddPayment" />
+        <Stack.Screen component={PaymentFormScreen} name="EditPayment" />
+        <Stack.Screen component={SampleScreen} name="MemberList" />
+      </Stack.Group>
     </Stack.Navigator>
   );
 });
