@@ -24,7 +24,7 @@ const AddMemberForm = memo<IAddMemberFormProps>(
     const styles = useStyles();
     const { theme } = useTheme();
     const group = useAppSelector((state) =>
-      state.groups.groups.find((group) => group.id === groupId)
+      state.groups.groups.find((group) => group.id === groupId),
     );
     const profile = useAppSelector((state) => state.profile);
     const dispatch = useAppDispatch();
@@ -106,7 +106,7 @@ const AddMemberForm = memo<IAddMemberFormProps>(
                       addMember({
                         groupId,
                         name: username,
-                      })
+                      }),
                     );
                   }
                   setUserName("");
@@ -137,7 +137,7 @@ const AddMemberForm = memo<IAddMemberFormProps>(
         />
       </ScrollView>
     );
-  }
+  },
 );
 
 const useStyles = makeStyles((theme) => ({

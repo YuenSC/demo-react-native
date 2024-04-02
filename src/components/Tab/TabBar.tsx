@@ -43,7 +43,7 @@ const TabBar = memo<ITabBarProps>(({ navigationState, onIndexChange }) => {
                 innerScrollY.value,
                 [0, tabHeaderHeight + (isTabBarSticky ? 0 : 1000)],
                 [tabHeaderHeight, 0 + (isTabBarSticky ? 0 : -1000)],
-                Extrapolation.CLAMP
+                Extrapolation.CLAMP,
               )
             : tabHeaderHeight,
         },
@@ -61,12 +61,12 @@ const TabBar = memo<ITabBarProps>(({ navigationState, onIndexChange }) => {
               ? interpolate(
                   scrollY.value,
                   [0, Device.screen.width * numberOfTabs],
-                  [0, Device.screen.width]
+                  [0, Device.screen.width],
                 )
               : 0,
           },
         ],
-      }) as AnimatedStyleProp<ViewStyle>
+      }) as AnimatedStyleProp<ViewStyle>,
   );
 
   return (

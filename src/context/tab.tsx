@@ -45,11 +45,11 @@ export const TabProvider = ({
   const scrollY = useSharedValue(0);
   const innerScrollY = useSharedValue(0);
   const listRefArr = useRef<{ key: string; value: Animated.FlatList<any> }[]>(
-    []
+    [],
   );
   const listOffset = useSharedValue<Record<string, number>>({});
   const [tabHeaderHeight, setTabHeaderHeight] = useState(
-    TabHeaderInitialHeight
+    TabHeaderInitialHeight,
   );
 
   const syncScrollOffset = useCallback(
@@ -83,13 +83,13 @@ export const TabProvider = ({
         }
       });
     },
-    [innerScrollY.value, listOffset.value, tabHeaderHeight]
+    [innerScrollY.value, listOffset.value, tabHeaderHeight],
   );
 
   const onScrollToTop = useCallback(
     (curRouteKey: string) => {
       const currentScrollViewRef = listRefArr.current.find(
-        (item) => item.key === curRouteKey
+        (item) => item.key === curRouteKey,
       );
 
       if (currentScrollViewRef?.value) {
@@ -100,7 +100,7 @@ export const TabProvider = ({
         listOffset.value[curRouteKey] = tabHeaderHeight;
       }
     },
-    [listOffset.value, tabHeaderHeight]
+    [listOffset.value, tabHeaderHeight],
   );
 
   return (
@@ -127,7 +127,7 @@ export const TabProvider = ({
           syncScrollOffset,
           tabHeaderHeight,
           activeRouteKey,
-        ]
+        ],
       )}
     >
       {children}

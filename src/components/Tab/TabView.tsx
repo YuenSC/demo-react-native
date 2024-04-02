@@ -74,10 +74,10 @@ const TabViewContent = memo<ITabViewProps>(
           onScroll={scrollHandler}
           overScrollMode="always"
           onMomentumScrollEnd={(
-            event: NativeSyntheticEvent<NativeScrollEvent>
+            event: NativeSyntheticEvent<NativeScrollEvent>,
           ) => {
             const currentIndex = Math.round(
-              event.nativeEvent.contentOffset.x / Device.screen.width
+              event.nativeEvent.contentOffset.x / Device.screen.width,
             );
             onIndexChange(currentIndex);
           }}
@@ -93,7 +93,7 @@ const TabViewContent = memo<ITabViewProps>(
         </AnimatedScrollView>
       </>
     );
-  }
+  },
 );
 
 const TabView = memo<ITabViewProps>((props) => {

@@ -40,7 +40,7 @@ const DatePickerBottomSheet = forwardRef<
         style={styles.bottomSheetBackdrop}
       />
     ),
-    [styles.bottomSheetBackdrop]
+    [styles.bottomSheetBackdrop],
   );
 
   return (

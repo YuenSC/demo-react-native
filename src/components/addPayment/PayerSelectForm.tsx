@@ -23,7 +23,7 @@ const PayerSelectForm = ({
 
   const groupIdWatch = useWatch({ name: "groupId" });
   const group = useAppSelector((state) =>
-    state.groups.groups.find((group) => group.id === groupIdWatch)
+    state.groups.groups.find((group) => group.id === groupIdWatch),
   );
   const { control, handleSubmit, setValue } =
     useFormContext<PaymentRecordCreate>();
@@ -40,7 +40,7 @@ const PayerSelectForm = ({
   const { realAmountPerUsers, remainingAmount, isEnoughToPaid } =
     useMemo(() => {
       const autoSplitCount = paymentPerUsers.filter(
-        (i) => i.amount === "auto"
+        (i) => i.amount === "auto",
       ).length;
 
       const amountPaid = paymentPerUsers
@@ -55,17 +55,18 @@ const PayerSelectForm = ({
       const realAmountPerUsers = paymentPerUsers.map((i) =>
         i.amount === "auto"
           ? parseFloat(autoSplitAmount.toFixed(2))
-          : i.amount ?? 0
+          : i.amount ?? 0,
       );
 
-      const isEnoughToPaid =
-        realAmountPerUsers.reduce((prev, curr) => prev + curr, 0) ===
-        amountWatch;
+      const realAmountSum = realAmountPerUsers.reduce(
+        (prev, curr) => prev + curr,
+        0,
+      );
 
       return {
         realAmountPerUsers,
         remainingAmount: amountWatch - amountPaid,
-        isEnoughToPaid,
+        isEnoughToPaid: Math.round(realAmountSum) === amountWatch,
       };
     }, [amountWatch, paymentPerUsers]);
 
@@ -96,12 +97,14 @@ const PayerSelectForm = ({
               <View style={{ flex: 1 }}>
                 <Input
                   renderErrorMessage={false}
-                  inputContainerStyle={{
-                    borderBottomWidth: 0,
-                    paddingHorizontal: 0,
-                  }}
+                  inputContainerStyle={styles.inputContainer}
                   inputStyle={{ textAlign: "right" }}
-                  value={realAmountPerUsers[index]?.toString()}
+                  placeholder="0"
+                  value={
+                    realAmountPerUsers[index] === 0
+                      ? ""
+                      : realAmountPerUsers[index]?.toString()
+                  }
                   keyboardType="numeric"
                   selection={{
                     start: realAmountPerUsers[index]?.toString().length,
@@ -124,7 +127,7 @@ const PayerSelectForm = ({
                           amountWatch -
                             realAmountPerUsers
                               .filter((_, i) => i !== index)
-                              .reduce((prev, curr) => prev + curr, 0)
+                              .reduce((prev, curr) => prev + curr, 0),
                         );
                     setValue("payers", paymentPerUsersCopy);
                   }}
@@ -188,6 +191,10 @@ const useStyles = makeStyles((theme) => ({
     left: 8,
     padding: 16,
     bottom: 16,
+  },
+  inputContainer: {
+    borderBottomWidth: 0,
+    paddingHorizontal: 0,
   },
 }));
 

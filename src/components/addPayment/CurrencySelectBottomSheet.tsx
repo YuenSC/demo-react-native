@@ -43,7 +43,7 @@ const CurrencySelectBottomSheet = forwardRef<
 
   const dispatch = useAppDispatch();
   const suggestedCurrencyCodes = useAppSelector(
-    (state) => state.groups.suggestedCurrencyCodes ?? []
+    (state) => state.groups.suggestedCurrencyCodes ?? [],
   );
 
   const bottomSheetRef = useRef<BottomSheetModal>(null);
@@ -58,11 +58,11 @@ const CurrencySelectBottomSheet = forwardRef<
       .filter(
         (item) =>
           item.code.toLowerCase().includes(formattedSearchText) ||
-          item.name.toLowerCase().includes(formattedSearchText)
+          item.name.toLowerCase().includes(formattedSearchText),
       );
 
     const suggestedCurrencyData = Object.values(currencyCodes).filter((i) =>
-      suggestedCurrencyCodes.includes(i.code)
+      suggestedCurrencyCodes.includes(i.code),
     );
 
     if (suggestedCurrencyData.length === 0) {
@@ -94,7 +94,7 @@ const CurrencySelectBottomSheet = forwardRef<
         style={styles.bottomSheetBackdrop}
       />
     ),
-    [styles.bottomSheetBackdrop]
+    [styles.bottomSheetBackdrop],
   );
 
   return (

@@ -28,7 +28,7 @@ const TabHeader = memo<ITabHeaderProps>(({ children }) => {
           innerScrollY?.value,
           [0, tabHeaderHeight],
           [0, -tabHeaderHeight],
-          Extrapolation.CLAMP
+          Extrapolation.CLAMP,
         )
       : 0;
 

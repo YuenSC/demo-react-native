@@ -4,7 +4,7 @@ const Button: (
   props: Partial<ButtonProps>,
   theme: Theme & {
     colors: Colors;
-  }
+  },
 ) => Partial<ButtonProps> = (props, theme) => {
   let padding = 12;
   let paddingHorizontal = 14;

@@ -18,7 +18,7 @@ const Stack = createSharedElementStackNavigator<IStackParamList>();
 
 const StackNavigator = memo(() => {
   const isInitialSetupDone = useAppSelector(
-    (state) => !!state.profile.id && !!state.groups?.groups?.[0]?.id
+    (state) => !!state.profile.id && !!state.groups?.groups?.[0]?.id,
   );
 
   return (

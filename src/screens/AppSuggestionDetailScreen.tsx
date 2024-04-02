@@ -11,7 +11,7 @@ const AppSuggestionDetailScreen = ({
 }: IStackScreenProps<"AppSuggestionDetail">) => {
   const styles = useStyles();
   const appSuggestion = appSuggestions.find(
-    (item) => item.id === route.params.id
+    (item) => item.id === route.params.id,
   );
 
   if (!appSuggestion) return null;

@@ -16,7 +16,7 @@ const GroupDetailScreen = ({
   const styles = useStyles();
   const headerHeight = useHeaderHeight();
   const group = useAppSelector((state) =>
-    state.groups?.groups?.find((g) => g.id === id)
+    state.groups?.groups?.find((g) => g.id === id),
   );
   const profile = useAppSelector((state) => state.profile);
 

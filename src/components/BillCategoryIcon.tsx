@@ -37,7 +37,7 @@ const BillCategoryIcon = memo<IBillCategoryIconProps>(
       case BillCategoryEnum.Transportation:
         return <FontAwesome name="car" size={size} {...props} />;
     }
-  }
+  },
 );
 
 // const useStyles = makeStyles((theme) => ({

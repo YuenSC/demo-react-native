@@ -59,7 +59,7 @@ const BillCalculatorBottomSheet = forwardRef<
   useImperativeHandle(outerRef, () => bottomSheetRef.current!, []);
 
   const [records, setRecords] = useState<CalculatorRecord[]>(
-    amount ? [{ num: amount.toString() }] : []
+    amount ? [{ num: amount.toString() }] : [],
   );
 
   const calculationResult = useMemo(() => {
@@ -158,7 +158,7 @@ const BillCalculatorBottomSheet = forwardRef<
       | CalculatorOperands.divide
       | CalculatorOperands.multiply
       | CalculatorOperands.minus
-      | CalculatorOperands.plus
+      | CalculatorOperands.plus,
   ) => {
     const recordCopy = [...records];
     const lastRecord = recordCopy[records.length - 1];

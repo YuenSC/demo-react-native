@@ -69,7 +69,7 @@ const UserStoryButton = memo<IUserStoryButtonProps>(
         )}
       </View>
     );
-  }
+  },
 );
 
 const useStyles = makeStyles(
@@ -105,7 +105,7 @@ const useStyles = makeStyles(
         maxWidth: 80,
       },
     };
-  }
+  },
 );
 
 UserStoryButton.displayName = "StoryButton";

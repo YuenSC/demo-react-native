@@ -40,7 +40,7 @@ const useCollapsibleHeader = ({
       const nextHeaderTranslateY = clamp(
         ctx.initialHeaderTranslateY,
         event.contentOffset.y - headerHeight,
-        event.contentOffset.y
+        event.contentOffset.y,
       );
 
       headerTranslateY.value = Number.isNaN(nextHeaderTranslateY)
@@ -55,7 +55,7 @@ const useCollapsibleHeader = ({
       const diff = event.contentOffset.y - ctx.startY;
       if (Math.abs(diff) > headerHeight) return;
       runOnJS(scrollToOffset)(
-        diff > 0 ? ctx.startY + headerHeight : ctx.startY - headerHeight
+        diff > 0 ? ctx.startY + headerHeight : ctx.startY - headerHeight,
       );
     },
   });
@@ -70,7 +70,7 @@ const useCollapsibleHeader = ({
   useFocusEffect(
     useCallback(() => {
       return onShowHeader;
-    }, [onShowHeader])
+    }, [onShowHeader]),
   );
 
   return {

@@ -38,11 +38,11 @@ const AddPaymentScreen = ({
   const styles = useStyles();
 
   const lastUsedCurrency = useAppSelector(
-    (state) => state.groups.lastUsedCurrency ?? "HKD"
+    (state) => state.groups.lastUsedCurrency ?? "HKD",
   );
 
   const group = useAppSelector((state) =>
-    state.groups.groups.find((group) => group.id === groupId)
+    state.groups.groups.find((group) => group.id === groupId),
   );
 
   const form = useForm<PaymentRecordCreate>({

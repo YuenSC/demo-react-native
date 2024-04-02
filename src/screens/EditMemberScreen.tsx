@@ -16,7 +16,7 @@ const EditMemberScreen = ({
   const dispatch = useAppDispatch();
 
   const group = useAppSelector((state) =>
-    state.groups.groups.find((group) => group.id === groupId)
+    state.groups.groups.find((group) => group.id === groupId),
   );
   const member = group?.members?.find((member) => member.id === id);
 
@@ -64,7 +64,7 @@ const EditMemberScreen = ({
               groupId,
               memberId: id,
               name: values.name.trim(),
-            })
+            }),
           );
           navigation.goBack();
         })}

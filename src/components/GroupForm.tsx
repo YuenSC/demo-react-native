@@ -21,7 +21,7 @@ const GroupForm = memo<IGroupFormProps>(({ groupId, onSubmit }) => {
   const dispatch = useAppDispatch();
 
   const group = useAppSelector((state) =>
-    state.groups.groups.find((group) => group.id === groupId)
+    state.groups.groups.find((group) => group.id === groupId),
   );
   const profile = useAppSelector((state) => state.profile);
   const { control, handleSubmit } = useForm<ICreateGroupPayload>({
@@ -65,7 +65,7 @@ const GroupForm = memo<IGroupFormProps>(({ groupId, onSubmit }) => {
               id: createdGroupId,
               ...values,
               name: values.name.trim(),
-            })
+            }),
           );
           onSubmit(createdGroupId);
         })}

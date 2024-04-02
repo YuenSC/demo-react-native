@@ -41,14 +41,14 @@ export const groupsSlice = createSlice({
     },
     deleteGroup: (state, action: PayloadAction<{ id: string }>) => {
       state.groups = state.groups.filter(
-        (group) => group.id !== action.payload.id
+        (group) => group.id !== action.payload.id,
       );
     },
     updateGroup: () => {},
 
     addPaymentRecord: (state, action: PayloadAction<PaymentRecordCreate>) => {
       const currentGroup = state.groups.find(
-        (group) => group.id === action.payload.groupId
+        (group) => group.id === action.payload.groupId,
       );
       if (!currentGroup) return;
 
@@ -62,10 +62,10 @@ export const groupsSlice = createSlice({
 
     addMember: (
       state,
-      action: PayloadAction<{ groupId: string; name: string }>
+      action: PayloadAction<{ groupId: string; name: string }>,
     ) => {
       const group = state.groups.find(
-        (group) => group.id === action.payload.groupId
+        (group) => group.id === action.payload.groupId,
       );
 
       if (group) {
@@ -77,15 +77,15 @@ export const groupsSlice = createSlice({
     },
     deleteMember: (
       state,
-      action: PayloadAction<{ groupId: string; memberId: string }>
+      action: PayloadAction<{ groupId: string; memberId: string }>,
     ) => {
       const group = state.groups.find(
-        (group) => group.id === action.payload.groupId
+        (group) => group.id === action.payload.groupId,
       );
 
       if (group) {
         group.members = group.members.filter(
-          (member) => member.id !== action.payload.memberId
+          (member) => member.id !== action.payload.memberId,
         );
       }
     },
@@ -96,14 +96,14 @@ export const groupsSlice = createSlice({
         groupId: string;
         memberId: string;
         name: string;
-      }>
+      }>,
     ) => {
       const group = state.groups.find(
-        (group) => group.id === action.payload.groupId
+        (group) => group.id === action.payload.groupId,
       );
       if (group) {
         const member = group.members.find(
-          (member) => member.id === action.payload.memberId
+          (member) => member.id === action.payload.memberId,
         );
         console.log("member", member);
         if (member) {
@@ -124,7 +124,7 @@ export const groupsSlice = createSlice({
     },
     deleteCurrencyCodeSuggestion: (
       state,
-      action: PayloadAction<CurrencyCode>
+      action: PayloadAction<CurrencyCode>,
     ) => {
       state.suggestedCurrencyCodes = (
         state.suggestedCurrencyCodes ?? []

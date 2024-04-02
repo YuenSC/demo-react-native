@@ -37,8 +37,8 @@ const HomeScreen = ({ navigation }: IStackScreenProps<"Home">) => {
           headerHeight: HEADER_HEIGHT,
           scrollViewRef: flatListRef,
         }),
-        []
-      )
+        [],
+      ),
     );
 
   useEffect(() => {
