@@ -90,15 +90,18 @@ const PayerSelectForm = ({
                 setValue("payers", paymentPerUsersCopy);
               }}
             />
-            <ListItem.Content
-              style={{ flexDirection: "row", alignItems: "center" }}
-            >
-              <ListItem.Title>{member.name}</ListItem.Title>
+            <ListItem.Content style={styles.itemContent}>
+              <View style={styles.name}>
+                <ListItem.Title numberOfLines={1}>{member.name}</ListItem.Title>
+                {paymentPerUsers[index].amount === "auto" && (
+                  <Text style={styles.autoTag}>(Auto)</Text>
+                )}
+              </View>
               <View style={{ flex: 1 }}>
                 <Input
                   renderErrorMessage={false}
                   inputContainerStyle={styles.inputContainer}
-                  inputStyle={{ textAlign: "right" }}
+                  inputStyle={styles.input}
                   placeholder="0"
                   value={
                     realAmountPerUsers[index] === 0
@@ -113,12 +116,6 @@ const PayerSelectForm = ({
                   onChangeText={(text) => {
                     const paymentPerUsersCopy = [...paymentPerUsers];
                     const temp = parseFloat(text);
-
-                    console.log({
-                      temp,
-                      remainingAmount,
-                      amountWatch,
-                    });
 
                     paymentPerUsersCopy[index].amount = Number.isNaN(temp)
                       ? 0
@@ -195,6 +192,17 @@ const useStyles = makeStyles((theme) => ({
   inputContainer: {
     borderBottomWidth: 0,
     paddingHorizontal: 0,
+  },
+  itemContent: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  input: { textAlign: "right" },
+  name: { flexDirection: "row", flex: 1, alignItems: "center" },
+  autoTag: {
+    fontSize: 12,
+    paddingLeft: 4,
+    color: theme.colors.grey3,
   },
 }));
 
