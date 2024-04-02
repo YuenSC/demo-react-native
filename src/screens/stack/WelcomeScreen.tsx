@@ -54,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
   },
   lottie: {
     width: "100%",
+    aspectRatio: 1,
   },
   title: {
     textAlign: "center",

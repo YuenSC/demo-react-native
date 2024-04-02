@@ -51,6 +51,7 @@ const StackNavigator = memo(() => {
         options={{ headerShown: false }}
       />
 
+      {/* Bottom Sheet */}
       <Stack.Group
         screenOptions={{
           presentation: "transparentModal",
