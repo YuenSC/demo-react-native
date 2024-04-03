@@ -71,83 +71,89 @@ const PayerPayeeSelectForm = ({
         <Text style={styles.label}>
           {type === "payers" ? "Who Paid?" : "Paid For?"}
         </Text>
-        {group?.members.map((member, index) => (
-          <ListItem key={member.id} bottomDivider style={{ width: "100%" }}>
-            <ListItem.CheckBox
-              iconType="material-community"
-              checkedIcon="checkbox-marked"
-              uncheckedIcon="checkbox-blank-outline"
-              checked={Boolean(paymentPerUsers[index].amount)}
-              onPress={() => {
-                const paymentPerUsersCopy = [...paymentPerUsers];
-                paymentPerUsersCopy[index].amount = paymentPerUsersCopy[index]
-                  .amount
-                  ? 0
-                  : "auto";
-                setValue(type, paymentPerUsersCopy);
-              }}
-            />
-            <ListItem.Content style={styles.itemContent}>
-              <View style={styles.name}>
-                <ListItem.Title numberOfLines={1}>{member.name}</ListItem.Title>
-                {paymentPerUsers[index].amount === "auto" && (
-                  <Text style={styles.autoTag}>(Auto)</Text>
-                )}
-              </View>
-              <View style={{ flex: 1 }}>
-                <Input
-                  renderErrorMessage={false}
-                  inputContainerStyle={styles.inputContainer}
-                  inputStyle={styles.input}
-                  placeholder="0"
-                  value={
-                    realAmountPerUsers[index] === 0
-                      ? ""
-                      : realAmountPerUsers[index]?.toString()
-                  }
-                  keyboardType="numeric"
-                  selection={{
-                    start: realAmountPerUsers[index]?.toString().length,
-                    end: realAmountPerUsers[index]?.toString().length,
-                  }}
-                  onChangeText={(text) => {
-                    const paymentPerUsersCopy = [...paymentPerUsers];
-                    const textAsNumber = parseFloat(text);
+        {group?.members.map((member) => {
+          const index = paymentPerUsers.findIndex((i) => i.id === member.id);
 
-                    paymentPerUsersCopy[index].amount = Number.isNaN(
-                      textAsNumber,
-                    )
-                      ? 0
-                      : Math.min(
-                          textAsNumber,
-                          amountWatch -
-                            realAmountPerUsers
-                              .filter((_, i) => i !== index)
-                              .reduce((prev, curr) => prev + curr, 0),
-                        );
-                    setValue(type, paymentPerUsersCopy);
-                  }}
-                  rightIcon={
-                    <TouchableOpacity
-                      onPress={() => {
-                        const paymentPerUsersCopy = [...paymentPerUsers];
-                        paymentPerUsersCopy[index].amount = 0;
-                        setValue(type, paymentPerUsersCopy);
-                      }}
-                    >
-                      <Entypo
-                        name="circle-with-cross"
-                        size={20}
-                        color={theme.colors.grey3}
-                        style={{ marginLeft: 4 }}
-                      />
-                    </TouchableOpacity>
-                  }
-                />
-              </View>
-            </ListItem.Content>
-          </ListItem>
-        ))}
+          return (
+            <ListItem key={member.id} bottomDivider style={{ width: "100%" }}>
+              <ListItem.CheckBox
+                iconType="material-community"
+                checkedIcon="checkbox-marked"
+                uncheckedIcon="checkbox-blank-outline"
+                checked={Boolean(paymentPerUsers[index].amount)}
+                onPress={() => {
+                  const paymentPerUsersCopy = [...paymentPerUsers];
+                  paymentPerUsersCopy[index].amount = paymentPerUsersCopy[index]
+                    .amount
+                    ? 0
+                    : "auto";
+                  setValue(type, paymentPerUsersCopy);
+                }}
+              />
+              <ListItem.Content style={styles.itemContent}>
+                <View style={styles.name}>
+                  <ListItem.Title numberOfLines={1}>
+                    {member.name}
+                  </ListItem.Title>
+                  {paymentPerUsers[index].amount === "auto" && (
+                    <Text style={styles.autoTag}>(Auto)</Text>
+                  )}
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Input
+                    renderErrorMessage={false}
+                    inputContainerStyle={styles.inputContainer}
+                    inputStyle={styles.input}
+                    placeholder="0"
+                    value={
+                      realAmountPerUsers[index] === 0
+                        ? ""
+                        : realAmountPerUsers[index]?.toString()
+                    }
+                    keyboardType="numeric"
+                    selection={{
+                      start: realAmountPerUsers[index]?.toString().length,
+                      end: realAmountPerUsers[index]?.toString().length,
+                    }}
+                    onChangeText={(text) => {
+                      const paymentPerUsersCopy = [...paymentPerUsers];
+                      const textAsNumber = parseFloat(text);
+
+                      paymentPerUsersCopy[index].amount = Number.isNaN(
+                        textAsNumber,
+                      )
+                        ? 0
+                        : Math.min(
+                            textAsNumber,
+                            amountWatch -
+                              realAmountPerUsers
+                                .filter((_, i) => i !== index)
+                                .reduce((prev, curr) => prev + curr, 0),
+                          );
+                      setValue(type, paymentPerUsersCopy);
+                    }}
+                    rightIcon={
+                      <TouchableOpacity
+                        onPress={() => {
+                          const paymentPerUsersCopy = [...paymentPerUsers];
+                          paymentPerUsersCopy[index].amount = 0;
+                          setValue(type, paymentPerUsersCopy);
+                        }}
+                      >
+                        <Entypo
+                          name="circle-with-cross"
+                          size={20}
+                          color={theme.colors.grey3}
+                          style={{ marginLeft: 4 }}
+                        />
+                      </TouchableOpacity>
+                    }
+                  />
+                </View>
+              </ListItem.Content>
+            </ListItem>
+          );
+        })}
       </ScrollView>
 
       <View style={styles.footer}>

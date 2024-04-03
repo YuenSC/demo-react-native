@@ -56,12 +56,12 @@ const PaymentFormScreen = ({
       payers:
         group?.members.map((item, index) => ({
           amount: index === 0 ? "auto" : 0,
-          userId: item.id,
+          id: item.id,
         })) ?? [],
       payees:
         group?.members.map((item, index) => ({
           amount: "auto",
-          userId: item.id,
+          id: item.id,
         })) ?? [],
     },
   });
@@ -79,11 +79,29 @@ const PaymentFormScreen = ({
         date: record.date,
         category: record.category,
         comment: record.comment,
-        payers: record.payers,
-        payees: record.payees,
+        payers:
+          group?.members.map((user, index) => {
+            const payer = record.payers.find((p) => p.id === user.id);
+            if (payer) return payer;
+
+            return {
+              amount: 0,
+              id: user.id,
+            };
+          }) ?? [],
+        payees:
+          group?.members.map((user) => {
+            const payee = record.payees.find((p) => p.id === user.id);
+            if (payee) return payee;
+
+            return {
+              amount: "auto",
+              id: user.id,
+            };
+          }) ?? [],
       });
     }
-  }, [group?.name, navigation, record, reset]);
+  }, [group?.members, group?.name, navigation, record, reset]);
 
   if (!group)
     return (

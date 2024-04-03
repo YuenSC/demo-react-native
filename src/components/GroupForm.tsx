@@ -2,14 +2,13 @@ import { Button, Input, Text, makeStyles } from "@rneui/themed";
 import { memo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { View } from "react-native";
+import { v4 as uuidv4 } from "uuid";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import { addGroup } from "@/store/reducers/groups";
-import { updateProfile } from "@/store/reducers/profile";
 import { ICreateGroupPayload } from "@/types/GroupCreate";
 
 import "react-native-get-random-values";
-import { v4 as uuidv4 } from "uuid";
 
 type IGroupFormProps = {
   groupId?: string;
@@ -29,8 +28,8 @@ const GroupForm = memo<IGroupFormProps>(({ groupId, onSubmit }) => {
       name: "Calvin Group", // TODO: remove default value after testing,
       members: [
         { id: profile.id, name: profile.name },
-        { id: "cyu", name: "Cyu" },
-        { id: "ching to", name: "Ching To" },
+        { id: uuidv4(), name: "Cyu" },
+        { id: uuidv4(), name: "Ching To" },
       ],
     },
   });
