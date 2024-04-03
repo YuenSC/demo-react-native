@@ -55,7 +55,6 @@ export const groupsSlice = createSlice({
       );
     },
     updateGroup: () => {},
-
     addPaymentRecord: (state, action: PayloadAction<PaymentRecordCreate>) => {
       const currentGroup = state.groups.find(
         (group) => group.id === action.payload.groupId,
@@ -67,7 +66,13 @@ export const groupsSlice = createSlice({
         ...action.payload,
       });
     },
-    deletePaymentRecord: () => {},
+    deletePaymentRecord: (state, action: PayloadAction<string>) => {
+      state.groups.forEach((group) => {
+        group.paymentRecords = group.paymentRecords.filter(
+          (record) => record.id !== action.payload,
+        );
+      });
+    },
     updatePaymentRecord: (state, action: PayloadAction<PaymentRecord>) => {
       const group = state.groups.find(
         (group) => group.id === action.payload.groupId,

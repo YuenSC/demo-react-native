@@ -35,7 +35,7 @@ const OnboardingScreen = ({
       {step === 2 && (
         <AddMemberForm
           groupId={groupId || ""}
-          onSubmit={() => {
+          onSubmitSuccess={() => {
             navigation.navigate("SignUpSuccessBottomSheetModal");
           }}
         />

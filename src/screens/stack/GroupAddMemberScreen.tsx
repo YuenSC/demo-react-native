@@ -17,7 +17,7 @@ const GroupAddMemberScreen = ({
       <AddMemberForm
         groupId={groupId}
         buttonText="Done"
-        onSubmit={() => {
+        onSubmitSuccess={() => {
           navigation.goBack();
         }}
       />

@@ -15,12 +15,12 @@ import "react-native-get-random-values";
 
 type IAddMemberFormProps = {
   groupId: string;
-  onSubmit: () => void;
+  onSubmitSuccess: () => void;
   buttonText?: string;
 };
 
 const AddMemberForm = memo<IAddMemberFormProps>(
-  ({ groupId, onSubmit, buttonText = "Next" }) => {
+  ({ groupId, onSubmitSuccess, buttonText = "Next" }) => {
     const styles = useStyles();
     const { theme } = useTheme();
     const group = useAppSelector((state) =>
@@ -100,7 +100,6 @@ const AddMemberForm = memo<IAddMemberFormProps>(
                   paddingHorizontal: 0,
                 }}
                 onEndEditing={() => {
-                  console.log("username", username);
                   if (username) {
                     dispatch(
                       addMember({
@@ -115,25 +114,20 @@ const AddMemberForm = memo<IAddMemberFormProps>(
               />
             </Animated.View>
           ) : (
-            <Animated.View
-              entering={FadeIn.duration(300)}
-              exiting={FadeOut.duration(300)}
+            <TouchableOpacity
+              onPress={() => setIsFocused(true)}
+              style={[styles.input]}
             >
-              <TouchableOpacity
-                onPress={() => setIsFocused(true)}
-                style={[styles.input]}
-              >
-                <Entypo name="plus" size={24} color="black" />
-                <Text style={styles.memberName}>Add participant</Text>
-              </TouchableOpacity>
-            </Animated.View>
+              <Entypo name="plus" size={24} color="black" />
+              <Text style={styles.memberName}>Add participant</Text>
+            </TouchableOpacity>
           )}
         </View>
 
         <Button
           title={buttonText}
           containerStyle={styles.button}
-          onPress={onSubmit}
+          onPress={onSubmitSuccess}
         />
       </ScrollView>
     );

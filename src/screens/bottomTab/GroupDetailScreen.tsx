@@ -91,6 +91,13 @@ const GroupDetailScreen = ({
           </TouchableOpacity>
         </HStack>
       </View>
+      <View>
+        <Text style={styles.label}>Complete your expense</Text>
+        <Text>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti,
+          facere?
+        </Text>
+      </View>
     </View>
   );
 };
