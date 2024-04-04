@@ -76,11 +76,7 @@ const StackNavigator = memo(() => {
           options={{ title: "Configuration" }}
         />
 
-        <Stack.Screen
-          component={EditMemberScreen}
-          name="EditMember"
-          options={{ headerShown: false }}
-        />
+        <Stack.Screen component={EditMemberScreen} name="EditMember" />
 
         <Stack.Screen component={PaymentFormScreen} name="AddPayment" />
         <Stack.Screen component={PaymentFormScreen} name="EditPayment" />

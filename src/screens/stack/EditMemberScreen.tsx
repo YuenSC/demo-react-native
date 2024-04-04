@@ -1,4 +1,5 @@
 import { Button, Input, Text, makeStyles } from "@rneui/themed";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { View } from "react-native";
 
@@ -25,6 +26,14 @@ const EditMemberScreen = ({
       name: member?.name, // TODO: remove default value after testing,
     },
   });
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: member?.name
+        ? `Edit ${member.name}'s information`
+        : "Edit Member",
+    });
+  }, [member.name, navigation]);
 
   if (!member) {
     return (
@@ -87,7 +96,6 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     backgroundColor: theme.colors.background,
     padding: 16,
-    marginTop: 24,
   },
   title: {
     marginBottom: 24,

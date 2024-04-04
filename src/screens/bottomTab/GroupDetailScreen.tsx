@@ -6,6 +6,7 @@ import { useMemo } from "react";
 import { TouchableOpacity, View } from "react-native";
 
 import { HStack, VStack } from "@/components/common/Stack";
+import GroupDetailSummaryCarousel from "@/components/groupDetail/GroupDetailSummaryCarousel";
 import { useAppSelector } from "@/hooks/reduxHook";
 import { currentGroupSelector } from "@/store/reducers/groups";
 import { CurrencyCode } from "@/types/Currency";
@@ -76,7 +77,7 @@ const GroupDetailScreen = ({
 
   return (
     <View style={styles.container}>
-      <View>
+      <View style={styles.sectionPadding}>
         <Text h1>{currentGroup.name}</Text>
         <Text style={styles.subtitle}>
           {hasUnresolvedExpenses
@@ -121,10 +122,11 @@ const GroupDetailScreen = ({
         </HStack>
       </View>
       <View>
-        <Text style={styles.label}>Summary</Text>
+        <Text style={[styles.label, styles.sectionPadding]}>Summary</Text>
+        <GroupDetailSummaryCarousel group={currentGroup} />
       </View>
 
-      <View>
+      <View style={styles.sectionPadding}>
         <Text style={styles.label}>Member</Text>
         <TouchableOpacity
           style={styles.members}
@@ -137,7 +139,7 @@ const GroupDetailScreen = ({
         </TouchableOpacity>
       </View>
 
-      <View>
+      <View style={styles.sectionPadding}>
         <Text style={styles.label}>Payment</Text>
         <HStack>
           <Text>
@@ -163,8 +165,11 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-    padding: 16,
+    paddingVertical: 16,
     gap: 16,
+  },
+  sectionPadding: {
+    paddingHorizontal: 16,
   },
   emptyContainer: {
     justifyContent: "center",
