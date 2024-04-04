@@ -80,7 +80,7 @@ const PaymentFormScreen = ({
         category: record.category,
         comment: record.comment,
         payers:
-          group?.members.map((user, index) => {
+          group?.members.map((user) => {
             const payer = record.payers.find((p) => p.id === user.id);
             if (payer) return payer;
 

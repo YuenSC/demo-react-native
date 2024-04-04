@@ -1,11 +1,11 @@
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
   BottomSheetModal,
   BottomSheetSectionList,
 } from "@gorhom/bottom-sheet";
-import { SearchBar, Text, makeStyles } from "@rneui/themed";
+import { SearchBar, Text, makeStyles, useTheme } from "@rneui/themed";
 import {
   forwardRef,
   memo,
@@ -38,6 +38,7 @@ const CurrencySelectBottomSheet = forwardRef<
 >(({ currencyCode, setCurrencyCode }, outerRef) => {
   const insets = useSafeAreaInsets();
   const styles = useStyles(insets);
+  const { theme } = useTheme();
 
   const [searchText, setSearchText] = useState("");
 
@@ -109,6 +110,15 @@ const CurrencySelectBottomSheet = forwardRef<
           platform="ios"
           value={searchText}
           onChangeText={(text) => setSearchText(text)}
+          placeholder="Search currency code or name"
+          searchIcon={
+            <Ionicons name="search" size={20} color={theme.colors.grey3} />
+          }
+          clearIcon={
+            <TouchableOpacity onPress={() => setSearchText("")}>
+              <Ionicons name="close" size={20} color={theme.colors.grey3} />
+            </TouchableOpacity>
+          }
         />
 
         <Text style={{ marginLeft: 8, fontSize: 20 }}>

@@ -1,5 +1,5 @@
 import { Entypo } from "@expo/vector-icons";
-import { DrawerActions, StackActions } from "@react-navigation/native";
+import { StackActions } from "@react-navigation/native";
 import {
   Button,
   Input,
@@ -16,6 +16,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import { IAddPaymentTabScreenProps } from "@/screens/stack/PaymentFormScreen";
 import { addPaymentRecord, updatePaymentRecord } from "@/store/reducers/groups";
 import { PaymentRecord, PaymentRecordCreate } from "@/types/PaymentRecord";
+import { getActualAmountPerUser } from "@/utils/payment";
 
 const PayerPayeeSelectForm = ({
   navigation,
@@ -34,36 +35,12 @@ const PayerPayeeSelectForm = ({
     PaymentRecordCreate & { id?: string }
   >();
   const amountWatch = useWatch({ name: "amount", control });
-  const paymentPerUsers = useWatch({ name: type, control });
+  const paymentRecords = useWatch({ name: type, control });
   const isEdit = Boolean(useWatch({ name: "id", control }));
 
-  const { realAmountPerUsers, isPaymentEqualExpense } = useMemo(() => {
-    const autoSplitCount = paymentPerUsers.filter(
-      (i) => i.amount === "auto",
-    ).length;
-
-    const amountPaid = paymentPerUsers
-      .filter((i) => i.amount !== "auto")
-      .reduce((prev, curr) => prev + (curr.amount as number), 0);
-    const autoSplitAmount =
-      autoSplitCount === 0
-        ? 0
-        : Math.max(0, (amountWatch - amountPaid) / autoSplitCount);
-    const realAmountPerUsers = paymentPerUsers.map((i) =>
-      i.amount === "auto"
-        ? parseFloat(autoSplitAmount.toFixed(2))
-        : i.amount ?? 0,
-    );
-    const realAmountSum = realAmountPerUsers.reduce(
-      (prev, curr) => prev + curr,
-      0,
-    );
-
-    return {
-      realAmountPerUsers,
-      isPaymentEqualExpense: Math.round(realAmountSum) === amountWatch,
-    };
-  }, [amountWatch, paymentPerUsers]);
+  const { actualAmountPerUser, isPaymentEqualExpense } = useMemo(() => {
+    return getActualAmountPerUser(amountWatch, paymentRecords);
+  }, [amountWatch, paymentRecords]);
 
   return (
     <View style={styles.container}>
@@ -72,7 +49,10 @@ const PayerPayeeSelectForm = ({
           {type === "payers" ? "Who Paid?" : "Paid For?"}
         </Text>
         {group?.members.map((member) => {
-          const index = paymentPerUsers.findIndex((i) => i.id === member.id);
+          const index = paymentRecords.findIndex((i) => i.id === member.id);
+          const actualAmount = actualAmountPerUser.find(
+            (i) => i.id === member.id,
+          )?.amount;
 
           return (
             <ListItem key={member.id} bottomDivider style={{ width: "100%" }}>
@@ -80,9 +60,9 @@ const PayerPayeeSelectForm = ({
                 iconType="material-community"
                 checkedIcon="checkbox-marked"
                 uncheckedIcon="checkbox-blank-outline"
-                checked={Boolean(paymentPerUsers[index].amount)}
+                checked={Boolean(paymentRecords[index].amount)}
                 onPress={() => {
-                  const paymentPerUsersCopy = [...paymentPerUsers];
+                  const paymentPerUsersCopy = [...paymentRecords];
                   paymentPerUsersCopy[index].amount = paymentPerUsersCopy[index]
                     .amount
                     ? 0
@@ -95,7 +75,7 @@ const PayerPayeeSelectForm = ({
                   <ListItem.Title numberOfLines={1}>
                     {member.name}
                   </ListItem.Title>
-                  {paymentPerUsers[index].amount === "auto" && (
+                  {paymentRecords[index].amount === "auto" && (
                     <Text style={styles.autoTag}>(Auto)</Text>
                   )}
                 </View>
@@ -105,18 +85,14 @@ const PayerPayeeSelectForm = ({
                     inputContainerStyle={styles.inputContainer}
                     inputStyle={styles.input}
                     placeholder="0"
-                    value={
-                      realAmountPerUsers[index] === 0
-                        ? ""
-                        : realAmountPerUsers[index]?.toString()
-                    }
+                    value={actualAmount === 0 ? "" : actualAmount?.toString()}
                     keyboardType="numeric"
                     selection={{
-                      start: realAmountPerUsers[index]?.toString().length,
-                      end: realAmountPerUsers[index]?.toString().length,
+                      start: (actualAmount ?? "")?.toString().length,
+                      end: (actualAmount ?? "")?.toString().length,
                     }}
                     onChangeText={(text) => {
-                      const paymentPerUsersCopy = [...paymentPerUsers];
+                      const paymentPerUsersCopy = [...paymentRecords];
                       const textAsNumber = parseFloat(text);
 
                       paymentPerUsersCopy[index].amount = Number.isNaN(
@@ -126,16 +102,16 @@ const PayerPayeeSelectForm = ({
                         : Math.min(
                             textAsNumber,
                             amountWatch -
-                              realAmountPerUsers
-                                .filter((_, i) => i !== index)
-                                .reduce((prev, curr) => prev + curr, 0),
+                              actualAmountPerUser
+                                .filter(({ id }) => id !== member.id)
+                                .reduce((prev, curr) => prev + curr.amount, 0),
                           );
                       setValue(type, paymentPerUsersCopy);
                     }}
                     rightIcon={
                       <TouchableOpacity
                         onPress={() => {
-                          const paymentPerUsersCopy = [...paymentPerUsers];
+                          const paymentPerUsersCopy = [...paymentRecords];
                           paymentPerUsersCopy[index].amount = 0;
                           setValue(type, paymentPerUsersCopy);
                         }}

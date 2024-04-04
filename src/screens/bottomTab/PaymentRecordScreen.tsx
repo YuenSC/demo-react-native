@@ -1,8 +1,4 @@
-import {
-  AntDesign,
-  FontAwesome,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
+import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Text, makeStyles, useTheme } from "@rneui/themed";
 import AnimatedLottieView from "lottie-react-native";
 import { useMemo, useState } from "react";
@@ -14,10 +10,11 @@ import VStack from "@/components/common/VStack";
 import { useAppSelector } from "@/hooks/reduxHook";
 import { currentGroupSelector } from "@/store/reducers/groups";
 import { BillCategoryEnum } from "@/types/BillCategories";
-import { CurrencyCode } from "@/types/Currency";
+import { CurrencyCode, currencyCodes } from "@/types/Currency";
 import { SortDirectionEnum } from "@/types/SortDirectionEnum";
 import { IBottomTabScreenProps } from "@/types/navigation";
 import { formatDate } from "@/utils/formatDate";
+import { getRelatedAmount } from "@/utils/payment";
 
 const PaymentRecordScreen = ({
   navigation,
@@ -135,6 +132,10 @@ const PaymentRecordScreen = ({
       keyExtractor={(item) => item.id}
       contentContainerStyle={styles.contentContainerStyle}
       renderItem={({ item }) => {
+        const record = getRelatedAmount(userId, item);
+        const netAmountSign = Math.sign(record?.netAmount ?? 0);
+        const sign = netAmountSign === -1 ? "-" : "";
+
         return (
           <TouchableOpacity
             style={styles.item}
@@ -155,8 +156,15 @@ const PaymentRecordScreen = ({
 
               <Text numberOfLines={1}>{item.comment}</Text>
             </VStack>
-            <Text style={styles.amount} numberOfLines={1}>
-              {`${item.currencyCode}${item.amount.toLocaleString()}`}
+            <Text
+              style={[
+                styles.amount,
+                netAmountSign === 1 && { color: theme.colors.success },
+                netAmountSign === -1 && { color: theme.colors.error },
+              ]}
+              numberOfLines={1}
+            >
+              {`${sign}${currencyCodes[item.currencyCode].symbol}${Math.abs(record?.netAmount ?? 0).toLocaleString()}`}
             </Text>
           </TouchableOpacity>
         );

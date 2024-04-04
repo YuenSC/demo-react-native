@@ -57,10 +57,18 @@ const DrawerNavigator = () => {
                       currentDate.setMinutes(Math.floor(Math.random() * 60));
                       currentDate.setHours(Math.floor(Math.random() * 24));
 
+                      const randomCategory =
+                        Object.values(BillCategoryEnum)[
+                          Math.floor(
+                            Math.random() *
+                              Object.values(BillCategoryEnum).length,
+                          )
+                        ];
+
                       const paymentRecord = {
                         groupId: currentGroup?.id,
                         amount: Math.floor(Math.random() * 1000),
-                        category: BillCategoryEnum.Accommodation,
+                        category: randomCategory,
                         comment: "Random Payment " + index,
                         date: currentDate.toISOString(),
                         currencyCode: index % 2 === 0 ? "JPY" : "HKD",
