@@ -5,8 +5,7 @@ import { useMemo, useState } from "react";
 import { FlatList, TouchableOpacity, View } from "react-native";
 
 import BillCategoryIcon from "@/components/BillCategoryIcon";
-import HStack from "@/components/common/HStack";
-import VStack from "@/components/common/VStack";
+import { HStack, VStack } from "@/components/common/Stack";
 import { useAppSelector } from "@/hooks/reduxHook";
 import { currentGroupSelector } from "@/store/reducers/groups";
 import { BillCategoryEnum } from "@/types/BillCategories";
@@ -14,7 +13,7 @@ import { CurrencyCode, currencyCodes } from "@/types/Currency";
 import { SortDirectionEnum } from "@/types/SortDirectionEnum";
 import { IBottomTabScreenProps } from "@/types/navigation";
 import { formatDate } from "@/utils/formatDate";
-import { getRelatedAmount } from "@/utils/payment";
+import { formatAmount, getRelatedAmount } from "@/utils/payment";
 
 const PaymentRecordScreen = ({
   navigation,
@@ -134,7 +133,8 @@ const PaymentRecordScreen = ({
       renderItem={({ item }) => {
         const record = getRelatedAmount(userId, item);
         const netAmountSign = Math.sign(record?.netAmount ?? 0);
-        const sign = netAmountSign === -1 ? "-" : "";
+
+        if (!record) return null;
 
         return (
           <TouchableOpacity
@@ -164,7 +164,7 @@ const PaymentRecordScreen = ({
               ]}
               numberOfLines={1}
             >
-              {`${sign}${currencyCodes[item.currencyCode].symbol}${Math.abs(record?.netAmount ?? 0).toLocaleString()}`}
+              {formatAmount(record.netAmount, record?.currencyCode)}
             </Text>
           </TouchableOpacity>
         );

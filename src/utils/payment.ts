@@ -1,4 +1,23 @@
+import { CurrencyCode, currencyCodes } from "@/types/Currency";
 import { PaymentDetail, PaymentRecord } from "@/types/PaymentRecord";
+
+export const getTotalNetAmount = (userId: string, records: PaymentRecord[]) => {
+  return records.reduce(
+    (prev, curr) => {
+      const { netAmount, currencyCode } = getRelatedAmount(userId, curr) ?? {
+        netAmount: 0,
+      };
+
+      if (!currencyCode) return prev;
+
+      return {
+        ...prev,
+        [currencyCode]: (prev[currencyCode] ?? 0) + netAmount,
+      };
+    },
+    {} as Record<CurrencyCode, number>,
+  );
+};
 
 export const getRelatedAmount = (userId?: string, record?: PaymentRecord) => {
   if (!userId || !record) return undefined;
@@ -30,6 +49,7 @@ export const getRelatedAmount = (userId?: string, record?: PaymentRecord) => {
     paidAmount,
     receivedAmount,
     netAmount: paidAmount - receivedAmount,
+    currencyCode: record.currencyCode,
   };
 };
 
@@ -51,7 +71,7 @@ export const getActualAmountPerUser = (
     id: i.id,
     amount:
       i.amount === "auto"
-        ? parseFloat(autoSplitAmount.toFixed(2))
+        ? roundAmountToTwoDecimal(autoSplitAmount)
         : i.amount ?? 0,
   }));
   const realAmountSum = actualAmountPerUser.reduce(
@@ -63,4 +83,26 @@ export const getActualAmountPerUser = (
     actualAmountPerUser,
     isPaymentEqualExpense: Math.round(realAmountSum) === amount,
   };
+};
+
+export const roundAmountToTwoDecimal = (amount: number) => {
+  return parseFloat(amount.toFixed(2));
+};
+
+export const formatAmount = (
+  amount: number,
+  currencyCode: CurrencyCode,
+  options?: {
+    currencySymbol?: "symbol" | "code";
+  },
+) => {
+  const sign = amount < 0 ? "-" : "";
+  const currencySymbol = options?.currencySymbol ?? "symbol";
+
+  return (
+    sign +
+    currencyCodes[currencyCode][currencySymbol] +
+    (currencySymbol === "code" ? " " : "") +
+    Math.abs(amount).toLocaleString()
+  );
 };

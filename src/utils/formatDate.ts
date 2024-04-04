@@ -6,9 +6,8 @@ export const formatDate = (date: string) => {
 
   return new Date(date).toLocaleDateString("en-US", {
     day: "2-digit",
-    month: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 };

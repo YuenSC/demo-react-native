@@ -1,7 +1,7 @@
-import { FontAwesome, AntDesign } from "@expo/vector-icons";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { Text, makeStyles, useTheme } from "@rneui/themed";
+import { makeStyles, useTheme } from "@rneui/themed";
 import { TouchableOpacity, View } from "react-native";
 
 import BottomTabNavigator from "./BottomTabNavigator";

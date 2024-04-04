@@ -5,10 +5,15 @@ import AnimatedLottieView from "lottie-react-native";
 import { useMemo } from "react";
 import { TouchableOpacity, View } from "react-native";
 
-import HStack from "@/components/common/HStack";
+import { HStack, VStack } from "@/components/common/Stack";
 import { useAppSelector } from "@/hooks/reduxHook";
 import { currentGroupSelector } from "@/store/reducers/groups";
+import { CurrencyCode } from "@/types/Currency";
 import { IBottomTabScreenProps } from "@/types/navigation";
+import {
+  formatAmount,
+  getTotalNetAmount as getTotalNetAmountByCurrency,
+} from "@/utils/payment";
 
 const GroupDetailScreen = ({
   navigation,
@@ -19,6 +24,22 @@ const GroupDetailScreen = ({
   const currentGroup = useAppSelector(currentGroupSelector);
 
   const profile = useAppSelector((state) => state.profile);
+
+  const { totalNetAmountByCurrency, hasUnresolvedExpenses } = useMemo(() => {
+    if (!currentGroup || !profile.id)
+      return { totalNetAmountByCurrency: {} as Record<CurrencyCode, number> };
+
+    const totalNetAmountByCurrency = getTotalNetAmountByCurrency(
+      profile.id,
+      currentGroup.paymentRecords,
+    );
+    return {
+      totalNetAmountByCurrency,
+      hasUnresolvedExpenses: Object.values(totalNetAmountByCurrency).some(
+        (amount) => amount !== 0,
+      ),
+    };
+  }, [currentGroup, profile.id]);
 
   const memberListText = useMemo(() => {
     if (!currentGroup) return "";
@@ -57,7 +78,50 @@ const GroupDetailScreen = ({
     <View style={styles.container}>
       <View>
         <Text h1>{currentGroup.name}</Text>
-        <Text>You owed/lent someone how much in total.</Text>
+        <Text style={styles.subtitle}>
+          {hasUnresolvedExpenses
+            ? "Your unresolved expenses are as below"
+            : "You have no unresolved expenses. Good job!"}
+        </Text>
+        <HStack gap={6} justifyContent="flex-start" flexWrap="wrap">
+          {Object.entries(totalNetAmountByCurrency).map(
+            ([currencyCode, totalNetAmount]) => {
+              if (totalNetAmount === 0) return null;
+
+              const amount = formatAmount(
+                totalNetAmount,
+                currencyCode as CurrencyCode,
+                { currencySymbol: "code" },
+              );
+              const sign = Math.sign(totalNetAmount);
+
+              return (
+                <TouchableOpacity style={styles.amountButton}>
+                  <HStack gap={4}>
+                    <Text
+                      key={currencyCode}
+                      style={[
+                        styles.amountText,
+                        sign > 0 && { color: theme.colors.success },
+                        sign < 0 && { color: theme.colors.error },
+                      ]}
+                    >
+                      {amount}
+                    </Text>
+                    <AntDesign
+                      name="checkcircleo"
+                      size={24}
+                      color={theme.colors.grey3}
+                    />
+                  </HStack>
+                </TouchableOpacity>
+              );
+            },
+          )}
+        </HStack>
+      </View>
+      <View>
+        <Text style={styles.label}>Summary</Text>
       </View>
 
       <View>
@@ -91,13 +155,6 @@ const GroupDetailScreen = ({
           </TouchableOpacity>
         </HStack>
       </View>
-      <View>
-        <Text style={styles.label}>Complete your expense</Text>
-        <Text>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti,
-          facere?
-        </Text>
-      </View>
     </View>
   );
 };
@@ -121,7 +178,24 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 16,
     fontWeight: "500",
   },
-
+  subtitle: {
+    fontSize: 14,
+    fontWeight: "bold",
+    marginBottom: 4,
+  },
+  amountButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: theme.colors.divider,
+    width: "auto",
+    flexGrow: 0,
+  },
+  amountText: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
   lottie: {
     height: 300,
     aspectRatio: 1,

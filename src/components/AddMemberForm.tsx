@@ -6,7 +6,7 @@ import { TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
-import HStack from "./common/HStack";
+import { HStack } from "./common/Stack";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import { addMember, deleteMember } from "@/store/reducers/groups";
