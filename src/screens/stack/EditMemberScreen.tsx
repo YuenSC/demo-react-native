@@ -33,7 +33,7 @@ const EditMemberScreen = ({
         ? `Edit ${member.name}'s information`
         : "Edit Member",
     });
-  }, [member.name, navigation]);
+  }, [member?.name, navigation]);
 
   if (!member) {
     return (

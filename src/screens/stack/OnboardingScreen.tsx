@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import AddMemberForm from "@/components/AddMemberForm";
 import GroupForm from "@/components/GroupForm";
-import ProfileForm from "@/components/ProfileForm";
+import ProfileForm from "@/components/profileForm/ProfileForm";
 import { IStackScreenProps } from "@/types/navigation";
 
 const OnboardingScreen = ({
