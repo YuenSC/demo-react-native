@@ -131,7 +131,7 @@ const GroupDetailScreen = ({
         <TouchableOpacity
           style={styles.members}
           onPress={() =>
-            navigation.navigate("GroupAddMember", { groupId: currentGroup.id })
+            navigation.navigate("GroupUserList", { groupId: currentGroup.id })
           }
         >
           <Text>{`Current: ${profile.name}`}</Text>

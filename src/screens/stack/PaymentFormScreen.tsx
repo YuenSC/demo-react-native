@@ -1,17 +1,19 @@
+import { AntDesign } from "@expo/vector-icons";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import {
   MaterialTopTabScreenProps,
   createMaterialTopTabNavigator,
 } from "@react-navigation/material-top-tabs";
-import { Text, makeStyles } from "@rneui/themed";
+import { Text, makeStyles, useTheme } from "@rneui/themed";
 import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 
 import Config from "@/Config";
 import BillForm from "@/components/addPayment/BillForm";
 import PayerPayeeSelectForm from "@/components/addPayment/PayerPayeeSelectForm";
-import { useAppSelector } from "@/hooks/reduxHook";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
+import { deletePaymentRecord } from "@/store/reducers/groups";
 import { BillCategoryEnum } from "@/types/BillCategories";
 import { PaymentRecordCreate } from "@/types/PaymentRecord";
 import { IStackScreenProps } from "@/types/navigation";
@@ -33,8 +35,10 @@ const PaymentFormScreen = ({
   route: {
     params: { groupId, recordId },
   },
-}: IStackScreenProps<"AddPayment" | "EditPayment">) => {
+}: IStackScreenProps<"AddPayment" | "EditPayment" | "EditPaymentModal">) => {
   const styles = useStyles();
+  const { theme } = useTheme();
+  const dispatch = useAppDispatch();
 
   const lastUsedCurrency = useAppSelector(
     (state) => state.groups.lastUsedCurrency ?? "HKD",
@@ -102,6 +106,28 @@ const PaymentFormScreen = ({
       });
     }
   }, [group?.members, group?.name, navigation, record, reset]);
+
+  useEffect(() => {
+    if (record) {
+      navigation.setOptions({
+        headerRight: () => {
+          return (
+            <TouchableOpacity
+              style={{ marginRight: 16 }}
+              onPress={() => {
+                navigation.navigate("GroupDeletePaymentRecordBottomSheet", {
+                  groupId,
+                  recordId: record.id,
+                });
+              }}
+            >
+              <AntDesign name="delete" size={24} color={theme.colors.error} />
+            </TouchableOpacity>
+          );
+        },
+      });
+    }
+  }, [dispatch, groupId, navigation, record, theme.colors.error]);
 
   if (!group)
     return (

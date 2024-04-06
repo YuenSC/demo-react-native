@@ -22,7 +22,11 @@ const ProfileFormAvatarSelect = ({
   const styles = useStyles();
 
   if (!userName) {
-    return <Text>Username is required for avatar generation</Text>;
+    return (
+      <Text style={styles.emptyText}>
+        Username is required for avatar generation
+      </Text>
+    );
   }
 
   return (
@@ -68,6 +72,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
+  },
+  emptyText: {
+    color: theme.colors.error,
+    fontSize: 12,
+    marginLeft: 16,
   },
 }));
 

@@ -1,9 +1,11 @@
 import { makeStyles } from "@rneui/themed";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import AddMemberForm from "@/components/AddMemberForm";
 import GroupForm from "@/components/GroupForm";
-import ProfileForm from "@/components/profileForm/ProfileForm";
+import UserList from "@/components/UserList";
+import UserForm from "@/components/userForm/UserForm";
+import { useAppDispatch } from "@/hooks/reduxHook";
+import { updateProfile } from "@/store/reducers/profile";
 import { IStackScreenProps } from "@/types/navigation";
 
 const OnboardingScreen = ({
@@ -13,13 +15,17 @@ const OnboardingScreen = ({
   },
 }: IStackScreenProps<"Onboarding">) => {
   const styles = useStyles();
+  const dispatch = useAppDispatch();
 
   return (
     <SafeAreaView style={styles.container}>
       {step === 0 && (
-        <ProfileForm
+        <UserForm
+          type="profile"
+          submitButtonText="Next"
           isEdit={false}
-          onSubmit={() => {
+          onSubmit={(values) => {
+            dispatch(updateProfile({ ...values, name: values.name.trim() }));
             navigation.replace("Onboarding", { step: 1 });
           }}
         />
@@ -33,10 +39,10 @@ const OnboardingScreen = ({
         />
       )}
       {step === 2 && (
-        <AddMemberForm
+        <UserList
           groupId={groupId || ""}
           onSubmitSuccess={() => {
-            navigation.navigate("SignUpSuccessBottomSheetModal");
+            navigation.navigate("SignUpSuccessBottomSheet");
           }}
         />
       )}

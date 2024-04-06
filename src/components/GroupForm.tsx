@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import { addGroup } from "@/store/reducers/groups";
+import { AvatarColor } from "@/types/AvatarColor";
 import { ICreateGroupPayload } from "@/types/GroupCreate";
 
 import "react-native-get-random-values";
@@ -27,9 +28,21 @@ const GroupForm = memo<IGroupFormProps>(({ groupId, onSubmit }) => {
     defaultValues: {
       name: "Calvin Group", // TODO: remove default value after testing,
       members: [
-        { id: profile.id, name: profile.name },
-        { id: uuidv4(), name: "Cyu" },
-        { id: uuidv4(), name: "Ching To" },
+        {
+          id: profile.id,
+          name: profile.name,
+          avatarColor: profile.avatarColor,
+        },
+        {
+          id: uuidv4(),
+          name: "Cyu",
+          avatarColor: AvatarColor.CoralPink,
+        },
+        {
+          id: uuidv4(),
+          name: "Ching To",
+          avatarColor: AvatarColor.GoldenrodYellow,
+        },
       ],
     },
   });

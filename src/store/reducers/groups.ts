@@ -4,19 +4,18 @@ import { v4 as uuidv4 } from "uuid";
 
 import { RootState } from "..";
 
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
+import { AvatarColor } from "@/types/AvatarColor";
 import { CurrencyCode } from "@/types/Currency";
 import { ICreateGroupPayload } from "@/types/GroupCreate";
 import { PaymentRecord, PaymentRecordCreate } from "@/types/PaymentRecord";
+import { User } from "@/types/User";
 
 export interface Group {
   id: string;
   name: string;
   description?: string;
-  members: {
-    id: string;
-    name: string;
-    imageUrl?: string;
-  }[];
+  members: User[];
   paymentRecords: PaymentRecord[];
 }
 
@@ -66,12 +65,23 @@ export const groupsSlice = createSlice({
         ...action.payload,
       });
     },
-    deletePaymentRecord: (state, action: PayloadAction<string>) => {
-      state.groups.forEach((group) => {
-        group.paymentRecords = group.paymentRecords.filter(
-          (record) => record.id !== action.payload,
-        );
-      });
+    deletePaymentRecord: (
+      state,
+      action: PayloadAction<{
+        groupId: string;
+        recordId: string;
+      }>,
+    ) => {
+      console.log("deletePaymentRecord");
+      const group = state.groups.find(
+        (group) => group.id === action.payload.groupId,
+      );
+
+      if (!group) return;
+
+      group.paymentRecords = group.paymentRecords.filter(
+        (record) => record.id !== action.payload.recordId,
+      );
     },
     updatePaymentRecord: (state, action: PayloadAction<PaymentRecord>) => {
       const group = state.groups.find(
@@ -96,7 +106,11 @@ export const groupsSlice = createSlice({
 
     addMember: (
       state,
-      action: PayloadAction<{ groupId: string; name: string }>,
+      action: PayloadAction<{
+        groupId: string;
+        name: string;
+        avatarColor: AvatarColor;
+      }>,
     ) => {
       const group = state.groups.find(
         (group) => group.id === action.payload.groupId,
@@ -106,29 +120,36 @@ export const groupsSlice = createSlice({
         group.members.push({
           id: uuidv4(),
           name: action.payload.name,
+          avatarColor: action.payload.avatarColor,
         });
       }
     },
     deleteMember: (
       state,
-      action: PayloadAction<{ groupId: string; memberId: string }>,
+      action: PayloadAction<{ groupId: string; userId: string }>,
     ) => {
       const group = state.groups.find(
         (group) => group.id === action.payload.groupId,
       );
+      const relatedPaymentRecords =
+        group?.paymentRecords.filter(
+          (record) =>
+            record.payees.find((payee) => payee.id === action.payload.userId) ||
+            record.payers.find((payer) => payer.id === action.payload.userId),
+        ) ?? [];
+      if (!group) return;
+      if (relatedPaymentRecords.length > 0) return;
 
-      if (group) {
-        group.members = group.members.filter(
-          (member) => member.id !== action.payload.memberId,
-        );
-      }
+      group.members = group.members.filter(
+        (member) => member.id !== action.payload.userId,
+      );
     },
 
     updateMember: (
       state,
       action: PayloadAction<{
         groupId: string;
-        memberId: string;
+        userId: string;
         name: string;
       }>,
     ) => {
@@ -137,7 +158,7 @@ export const groupsSlice = createSlice({
       );
       if (group) {
         const member = group.members.find(
-          (member) => member.id === action.payload.memberId,
+          (member) => member.id === action.payload.userId,
         );
         console.log("member", member);
         if (member) {
@@ -190,3 +211,27 @@ export default groupsSlice.reducer;
 
 export const currentGroupSelector = (state: RootState) =>
   state.groups.groups.find((group) => group.id === state.groups.currentGroupId);
+
+export const memberSelector = (
+  state: RootState,
+  groupId: string,
+  userId: string,
+) => {
+  const group = state.groups.groups.find((group) => group.id === groupId);
+  return group?.members.find((member) => member.id === userId);
+};
+
+export const relatedPaymentsSelector = (
+  state: RootState,
+  groupId: string,
+  userId: string,
+) => {
+  const group = state.groups.groups.find((group) => group.id === groupId);
+  const relatedPaymentRecords =
+    group?.paymentRecords.filter(
+      (record) =>
+        record.payees.find((payee) => payee.id === userId) ||
+        record.payers.find((payer) => payer.id === userId),
+    ) ?? [];
+  return relatedPaymentRecords;
+};

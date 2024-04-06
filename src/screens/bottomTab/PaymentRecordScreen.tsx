@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { FlatList, TouchableOpacity, View } from "react-native";
 
 import BillCategoryIcon from "@/components/BillCategoryIcon";
+import PaymentRecordDisplay from "@/components/PaymentRecordDisplay";
 import { HStack, VStack } from "@/components/common/Stack";
 import { useAppSelector } from "@/hooks/reduxHook";
 import { currentGroupSelector } from "@/store/reducers/groups";
@@ -131,41 +132,18 @@ const PaymentRecordScreen = ({
       keyExtractor={(item) => item.id}
       contentContainerStyle={styles.contentContainerStyle}
       renderItem={({ item }) => {
-        const record = getRelatedAmount(userId, item);
-        const netAmountSign = Math.sign(record?.netAmount ?? 0);
-
-        if (!record) return null;
+        if (!userId) return null;
 
         return (
           <TouchableOpacity
-            style={styles.item}
             onPress={() =>
-              navigation.navigate("EditPayment", {
+              navigation.navigate("EditPaymentModal", {
                 groupId: currentGroup.id,
                 recordId: item.id,
               })
             }
           >
-            <VStack gap={4} style={{ flex: 1 }}>
-              <HStack gap={4} justifyContent="flex-start">
-                <BillCategoryIcon
-                  category={item.category as BillCategoryEnum}
-                />
-                <Text>{formatDate(item.date)}</Text>
-              </HStack>
-
-              <Text numberOfLines={1}>{item.comment}</Text>
-            </VStack>
-            <Text
-              style={[
-                styles.amount,
-                netAmountSign === 1 && { color: theme.colors.success },
-                netAmountSign === -1 && { color: theme.colors.error },
-              ]}
-              numberOfLines={1}
-            >
-              {formatAmount(record.netAmount, record?.currencyCode)}
-            </Text>
+            <PaymentRecordDisplay record={item} userId={userId} />
           </TouchableOpacity>
         );
       }}
@@ -181,19 +159,6 @@ const useStyles = makeStyles((theme) => ({
   contentContainerStyle: {
     padding: 16,
     gap: 8,
-  },
-  item: {
-    padding: 16,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: theme.colors.divider,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  amount: {
-    fontWeight: "bold",
-    maxWidth: 100,
   },
   lottie: {
     width: "100%",

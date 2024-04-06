@@ -23,17 +23,26 @@ export type IStackParamList = {
   Welcome: undefined;
   Onboarding: { step: number; groupId?: string };
   Drawer: NavigatorScreenParams<IDrawerParamList> | undefined;
-  SignUpSuccessBottomSheetModal: undefined;
+  SignUpSuccessBottomSheet: undefined;
   EditMember: { id: string; groupId: string };
   AddPayment: { groupId: string; recordId?: string };
   EditPayment: { groupId: string; recordId: string };
+  EditPaymentModal: { groupId: string; recordId: string };
   MemberList: undefined;
-  GroupAddMember: { groupId: string };
+  GroupUserList: { groupId: string };
   PaymentRecordFilter: {
     selectedCurrency: CurrencyCode | null;
     setSelectedCurrency: React.Dispatch<
       React.SetStateAction<CurrencyCode | null>
     >;
+  };
+  GroupDeleteUserBottomSheet: {
+    groupId: string;
+    userId: string;
+  };
+  GroupDeletePaymentRecordBottomSheet: {
+    groupId: string;
+    recordId: string;
   };
 };
 

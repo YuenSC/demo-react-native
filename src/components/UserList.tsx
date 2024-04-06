@@ -6,20 +6,21 @@ import { TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
+import AvatarIcon from "./AvatarIcon";
 import { HStack } from "./common/Stack";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import { addMember, deleteMember } from "@/store/reducers/groups";
-
+import { AvatarColor } from "@/types/AvatarColor";
 import "react-native-get-random-values";
 
-type IAddMemberFormProps = {
+type IUserListProps = {
   groupId: string;
   onSubmitSuccess: () => void;
   buttonText?: string;
 };
 
-const AddMemberForm = memo<IAddMemberFormProps>(
+const UserList = memo<IUserListProps>(
   ({ groupId, onSubmitSuccess, buttonText = "Next" }) => {
     const styles = useStyles();
     const { theme } = useTheme();
@@ -45,9 +46,18 @@ const AddMemberForm = memo<IAddMemberFormProps>(
         <View>
           {group?.members?.map((member) => {
             const isOwner = member.id === profile.id;
+
             return (
               <View key={member.id} style={styles.memberContainer}>
-                <Text style={styles.memberName}>{member.name}</Text>
+                <HStack gap={4}>
+                  <AvatarIcon
+                    size="small"
+                    color={member.avatarColor}
+                    userName={member.name}
+                  />
+                  <Text style={styles.memberName}>{member.name}</Text>
+                </HStack>
+
                 {isOwner ? (
                   <Text>(Owner)</Text>
                 ) : (
@@ -67,9 +77,12 @@ const AddMemberForm = memo<IAddMemberFormProps>(
                       />
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={() =>
-                        dispatch(deleteMember({ groupId, memberId: member.id }))
-                      }
+                      onPress={() => {
+                        navigation.navigate("GroupDeleteUserBottomSheet", {
+                          groupId,
+                          userId: member.id,
+                        });
+                      }}
                     >
                       <AntDesign
                         name="delete"
@@ -105,6 +118,7 @@ const AddMemberForm = memo<IAddMemberFormProps>(
                       addMember({
                         groupId,
                         name: username,
+                        avatarColor: AvatarColor.AmethystPurple,
                       }),
                     );
                   }
@@ -171,6 +185,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-AddMemberForm.displayName = "AddMemberForm";
+UserList.displayName = "UserList";
 
-export default AddMemberForm;
+export default UserList;

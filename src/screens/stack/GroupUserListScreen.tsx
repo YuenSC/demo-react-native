@@ -1,20 +1,20 @@
 import { makeStyles } from "@rneui/themed";
 import { View } from "react-native";
 
-import AddMemberForm from "@/components/AddMemberForm";
+import UserList from "@/components/UserList";
 import { IStackScreenProps } from "@/types/navigation";
 
-const GroupAddMemberScreen = ({
+const GroupUserListScreen = ({
   navigation,
   route: {
     params: { groupId },
   },
-}: IStackScreenProps<"GroupAddMember">) => {
+}: IStackScreenProps<"GroupUserList">) => {
   const styles = useStyles();
 
   return (
     <View style={styles.container}>
-      <AddMemberForm
+      <UserList
         groupId={groupId}
         buttonText="Done"
         onSubmitSuccess={() => {
@@ -33,4 +33,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default GroupAddMemberScreen;
+export default GroupUserListScreen;

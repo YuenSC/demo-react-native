@@ -7,11 +7,13 @@ import Device from "@/constants/Device";
 import { useAppSelector } from "@/hooks/reduxHook";
 import SampleScreen from "@/screens/SampleScreen";
 import EditMemberScreen from "@/screens/stack/EditMemberScreen";
-import GroupAddMemberScreen from "@/screens/stack/GroupAddMemberScreen";
+import GroupDeletePaymentRecordBottomSheet from "@/screens/stack/GroupDeletePaymentRecordBottomSheet";
+import GroupDeleteUserBottomSheet from "@/screens/stack/GroupDeleteUserBottomSheet";
+import GroupUserListScreen from "@/screens/stack/GroupUserListScreen";
 import OnboardingScreen from "@/screens/stack/OnboardingScreen";
 import PaymentFormScreen from "@/screens/stack/PaymentFormScreen";
 import PaymentRecordFilterScreen from "@/screens/stack/PaymentRecordFilterScreen";
-import SignUpSuccessBottomSheetModal from "@/screens/stack/SignUpSuccessBottomSheetModal";
+import SignUpSuccessBottomSheet from "@/screens/stack/SignUpSuccessBottomSheet";
 import WelcomeScreen from "@/screens/stack/WelcomeScreen";
 import { IStackParamList } from "@/types/navigation";
 
@@ -51,6 +53,8 @@ const StackNavigator = memo(() => {
         options={{ headerShown: false }}
       />
 
+      <Stack.Screen component={PaymentFormScreen} name="EditPayment" />
+
       {/* Bottom Sheet */}
       <Stack.Group
         screenOptions={{
@@ -59,27 +63,35 @@ const StackNavigator = memo(() => {
         }}
       >
         <Stack.Screen
-          component={SignUpSuccessBottomSheetModal}
-          name="SignUpSuccessBottomSheetModal"
+          component={SignUpSuccessBottomSheet}
+          name="SignUpSuccessBottomSheet"
+        />
+        <Stack.Screen
+          component={GroupDeleteUserBottomSheet}
+          name="GroupDeleteUserBottomSheet"
         />
         <Stack.Screen
           component={PaymentRecordFilterScreen}
           name="PaymentRecordFilter"
+        />
+        <Stack.Screen
+          component={GroupDeletePaymentRecordBottomSheet}
+          name="GroupDeletePaymentRecordBottomSheet"
         />
       </Stack.Group>
 
       {/* Modal */}
       <Stack.Group screenOptions={{ presentation: "modal" }}>
         <Stack.Screen
-          component={GroupAddMemberScreen}
-          name="GroupAddMember"
-          options={{ title: "Configuration" }}
+          component={GroupUserListScreen}
+          name="GroupUserList"
+          options={{ title: "Users" }}
         />
 
         <Stack.Screen component={EditMemberScreen} name="EditMember" />
 
         <Stack.Screen component={PaymentFormScreen} name="AddPayment" />
-        <Stack.Screen component={PaymentFormScreen} name="EditPayment" />
+        <Stack.Screen component={PaymentFormScreen} name="EditPaymentModal" />
         <Stack.Screen component={SampleScreen} name="MemberList" />
       </Stack.Group>
     </Stack.Navigator>

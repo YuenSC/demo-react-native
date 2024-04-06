@@ -1,10 +1,10 @@
-import { Button, Input, Text, makeStyles } from "@rneui/themed";
+import { Text, makeStyles } from "@rneui/themed";
 import { useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
 import { View } from "react-native";
 
+import UserForm from "@/components/userForm/UserForm";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
-import { deleteMember, updateMember } from "@/store/reducers/groups";
+import { updateMember } from "@/store/reducers/groups";
 import { IStackScreenProps } from "@/types/navigation";
 
 const EditMemberScreen = ({
@@ -20,12 +20,6 @@ const EditMemberScreen = ({
     state.groups.groups.find((group) => group.id === groupId),
   );
   const member = group?.members?.find((member) => member.id === id);
-
-  const { control, handleSubmit } = useForm<{ name: string }>({
-    defaultValues: {
-      name: member?.name, // TODO: remove default value after testing,
-    },
-  });
 
   useEffect(() => {
     navigation.setOptions({
@@ -45,46 +39,27 @@ const EditMemberScreen = ({
 
   return (
     <View style={styles.container}>
-      <Text h1 style={styles.title}>
-        Edit Member
-      </Text>
-
-      <Controller
-        control={control}
-        name="name"
-        rules={{ required: "Member Name is required" }}
-        render={({ field: { onChange, value }, fieldState: { error } }) => (
-          <Input
-            autoFocus
-            onChangeText={onChange}
-            value={value}
-            placeholder={member.name}
-            label="Member Name"
-            errorMessage={error?.message}
-          />
-        )}
-      />
-      <Button
-        title="Save"
-        containerStyle={styles.button}
-        onPress={handleSubmit((values) => {
+      <UserForm
+        isEdit
+        groupId={groupId}
+        submitButtonText="Save"
+        userId={id}
+        type="groupUser"
+        onSubmit={(values) => {
           dispatch(
             updateMember({
               groupId,
-              memberId: id,
+              userId: id,
               name: values.name.trim(),
             }),
           );
           navigation.goBack();
-        })}
-      />
-      <Button
-        title="Delete"
-        type="outline"
-        color="error"
-        onPress={() => {
-          dispatch(deleteMember({ groupId, memberId: id }));
-          navigation.goBack();
+        }}
+        onDelete={() => {
+          navigation.navigate("GroupDeleteUserBottomSheet", {
+            groupId,
+            userId: id,
+          });
         }}
       />
     </View>
@@ -95,13 +70,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-    padding: 16,
-  },
-  title: {
-    marginBottom: 24,
-  },
-  button: {
-    marginBottom: 8,
+    paddingVertical: 16,
   },
 }));
 

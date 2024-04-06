@@ -6,24 +6,25 @@ import { View } from "react-native";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useAppSelector } from "@/hooks/reduxHook";
+import { currentGroupSelector } from "@/store/reducers/groups";
 import { IStackScreenProps } from "@/types/navigation";
 
-const SignUpSuccessBottomSheetModal = ({
+const SignUpSuccessBottomSheet = ({
   navigation,
-}: IStackScreenProps<"SignUpSuccessBottomSheetModal">) => {
+}: IStackScreenProps<"SignUpSuccessBottomSheet">) => {
   const insets = useSafeAreaInsets();
   const styles = useStyles(insets);
 
   const bottomSheetRef = useRef<BottomSheet>(null);
 
-  const firstGroup = useAppSelector((state) => state.groups.groups[0]);
+  const currentGroup = useAppSelector(currentGroupSelector);
 
   const handleClose = useCallback(() => {
     navigation.navigate("Drawer", {
       screen: "BottomTab",
-      params: { id: firstGroup.id },
+      params: { id: currentGroup?.id },
     });
-  }, [firstGroup.id, navigation]);
+  }, [currentGroup?.id, navigation]);
 
   return (
     <View style={styles.container}>
@@ -94,4 +95,4 @@ const useStyles = makeStyles((theme, inset: EdgeInsets) => ({
   },
 }));
 
-export default SignUpSuccessBottomSheetModal;
+export default SignUpSuccessBottomSheet;
