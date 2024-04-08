@@ -4,6 +4,7 @@ import {
   FontAwesome5,
   Ionicons,
 } from "@expo/vector-icons";
+import { useTheme } from "@rneui/themed";
 import { memo } from "react";
 
 import { BillCategoryEnum } from "@/types/BillCategories";
@@ -15,27 +16,31 @@ type IBillCategoryIconProps = {
 };
 
 const BillCategoryIcon = memo<IBillCategoryIconProps>(
-  ({ category, size = 20, ...props }) => {
+  ({ category, color, size }) => {
     // const styles = useStyles();
+    const { theme } = useTheme();
+    const props = {
+      color: color || theme.colors.black,
+      size: size || 20,
+    };
 
-    console.log("category", category);
     switch (category) {
       case BillCategoryEnum.Accommodation:
-        return <Ionicons name="bed" size={size} {...props} />;
+        return <Ionicons name="bed" {...props} />;
       case BillCategoryEnum.Entertainment:
-        return <FontAwesome name="money" size={size} {...props} />;
+        return <FontAwesome name="money" {...props} />;
       case BillCategoryEnum.FoodAndDining:
-        return <FontAwesome5 name="coffee" size={size} {...props} />;
+        return <FontAwesome5 name="coffee" {...props} />;
       case BillCategoryEnum.Insurance:
-        return <Entypo name="text-document" size={size} {...props} />;
+        return <Entypo name="text-document" {...props} />;
       case BillCategoryEnum.Miscellaneous:
-        return <FontAwesome5 name="comment-alt" size={size} {...props} />;
+        return <FontAwesome5 name="comment-alt" {...props} />;
       case BillCategoryEnum.Shopping:
-        return <Entypo name="shopping-cart" size={size} {...props} />;
+        return <Entypo name="shopping-cart" {...props} />;
       case BillCategoryEnum.SightseeingAndActivities:
-        return <Entypo name="flower" size={size} {...props} />;
+        return <Entypo name="flower" {...props} />;
       case BillCategoryEnum.Transportation:
-        return <FontAwesome name="car" size={size} {...props} />;
+        return <FontAwesome name="car" {...props} />;
     }
   },
 );

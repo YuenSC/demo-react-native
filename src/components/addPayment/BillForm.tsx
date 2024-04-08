@@ -1,33 +1,44 @@
 import { AntDesign } from "@expo/vector-icons";
-import BottomSheet, { BottomSheetModal } from "@gorhom/bottom-sheet";
+import BottomSheet from "@gorhom/bottom-sheet";
 // eslint-disable-next-line no-restricted-imports
 import { Input as BaseInput } from "@rneui/base";
 import { Button, Input, Text, makeStyles } from "@rneui/themed";
 import { memo, useImperativeHandle, useRef } from "react";
-import { Controller, useController, useFormContext } from "react-hook-form";
+import {
+  Controller,
+  useController,
+  useFormContext,
+  useWatch,
+} from "react-hook-form";
 import { ScrollView, TextInput, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import BillCalculatorBottomSheet from "./BillCalculatorBottomSheet";
-import CurrencySelectBottomSheet from "./CurrencySelectBottomSheet";
-import DatePickerBottomSheet from "./DatePickerBottomSheet";
 import BillCategoryIcon from "../BillCategoryIcon";
 
-import { IAddPaymentTabScreenProps } from "@/screens/stack/PaymentFormScreen";
+import { useAppSelector } from "@/hooks/reduxHook";
 import { BillCategoryEnum } from "@/types/BillCategories";
 import { PaymentRecordCreate } from "@/types/PaymentRecord";
+import { IAddPaymentTabScreenProps } from "@/types/navigation";
 import { formatDate } from "@/utils/formatDate";
 
 const BillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
   const insets = useSafeAreaInsets();
   const styles = useStyles(insets);
   const calculatorRef = useRef<BottomSheet>(null);
-  const currencyRef = useRef<BottomSheetModal>(null);
-  const dateBottomSheetRef = useRef<BottomSheetModal>(null);
   const amountInputRef = useRef<TextInput & BaseInput>(null);
   const dateInputRef = useRef<TextInput & BaseInput>(null);
 
   const { control, handleSubmit } = useFormContext<PaymentRecordCreate>();
+
+  const groupId = useWatch({ control, name: "groupId" });
+  const recordId = useWatch({ control, name: "id" });
+
+  const record = useAppSelector((state) =>
+    state.groups.groups
+      .find((group) => group.id === groupId)
+      ?.paymentRecords.find((item) => item.id === recordId),
+  );
 
   const {
     field: amount,
@@ -58,34 +69,6 @@ const BillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
   });
   useImperativeHandle(amount.ref, () => amountInputRef.current, []);
 
-  const openCalculator = () => {
-    calculatorRef.current?.snapToIndex(0);
-
-    currencyRef.current?.close();
-
-    dateInputRef.current?.blur();
-    dateBottomSheetRef.current?.close();
-  };
-
-  const openCurrency = () => {
-    currencyRef.current?.present();
-
-    amountInputRef.current?.blur();
-    calculatorRef.current?.close();
-
-    dateInputRef.current?.blur();
-    dateBottomSheetRef.current?.close();
-  };
-
-  const openDateBottomSheet = () => {
-    dateBottomSheetRef.current?.present();
-
-    amountInputRef.current?.blur();
-    calculatorRef.current?.close();
-
-    currencyRef.current?.close();
-  };
-
   return (
     <View style={styles.container}>
       <ScrollView
@@ -93,8 +76,6 @@ const BillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
         keyboardDismissMode="on-drag"
         onScrollBeginDrag={() => {
           calculatorRef.current?.close();
-          currencyRef.current?.close();
-          dateBottomSheetRef.current?.close();
         }}
       >
         {/* Bill */}
@@ -103,11 +84,20 @@ const BillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
           label="Bill Amount"
           placeholder="$XXX"
           style={styles.input}
+          selection={{
+            start: amount.value.toLocaleString().length,
+            end: amount.value.toLocaleString().length,
+          }}
           errorMessage={amountError?.message}
           leftIcon={
             <TouchableOpacity
               style={styles.currencyButton}
-              onPress={openCurrency}
+              onPress={() => {
+                navigation.navigate("PaymentFormCurrencySelectBottomSheet", {
+                  currencyCode: currencyCode.value,
+                  setCurrencyCode: currencyCode.onChange,
+                });
+              }}
             >
               <Text style={styles.currencyButtonText}>
                 {currencyCode.value}
@@ -118,7 +108,7 @@ const BillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
           containerStyle={styles.inputContainer}
           showSoftInputOnFocus={false}
           value={amount.value === 0 ? undefined : amount.value.toLocaleString()}
-          onFocus={openCalculator}
+          onFocus={() => calculatorRef.current?.snapToIndex(0)}
           onBlur={() => {
             calculatorRef.current?.close();
             amount.onBlur();
@@ -178,11 +168,15 @@ const BillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
           ref={dateInputRef}
           label="Date"
           placeholder="When do you do it?"
-          onFocus={openDateBottomSheet}
+          onFocus={() => {
+            navigation.navigate("PaymentFormDatePickerBottomSheet", {
+              date: date.value,
+              setDate: date.onChange,
+            });
+          }}
           showSoftInputOnFocus={false}
           value={date.value ? formatDate(date.value) : undefined}
           onBlur={() => {
-            dateBottomSheetRef.current?.close();
             date.onBlur();
           }}
         />
@@ -199,22 +193,10 @@ const BillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
 
       <BillCalculatorBottomSheet
         ref={calculatorRef}
-        amount={amount.value}
-        setAmount={amount.onChange}
+        value={amount.value}
+        onChange={amount.onChange}
         onBlurInput={() => amountInputRef.current?.blur()}
-      />
-
-      <CurrencySelectBottomSheet
-        ref={currencyRef}
-        currencyCode={currencyCode.value}
-        setCurrencyCode={currencyCode.onChange}
-      />
-
-      <DatePickerBottomSheet
-        ref={dateBottomSheetRef}
-        date={date.value}
-        setDate={date.onChange}
-        onBlurInput={() => dateInputRef.current?.blur()}
+        defaultValue={record?.amount}
       />
     </View>
   );
@@ -223,7 +205,7 @@ const BillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
 const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.modal,
     padding: 8,
     paddingTop: 16,
   },

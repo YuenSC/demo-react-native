@@ -26,7 +26,15 @@ const DrawerNavigator = () => {
   const dispatch = useAppDispatch();
 
   return (
-    <Drawer.Navigator drawerContent={(props) => <DrawerContent {...props} />}>
+    <Drawer.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: theme.colors.background,
+        },
+        headerTintColor: theme.colors.black,
+      }}
+      drawerContent={(props) => <DrawerContent {...props} />}
+    >
       <Drawer.Screen
         name="BottomTab"
         component={BottomTabNavigator}

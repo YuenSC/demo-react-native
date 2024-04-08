@@ -72,7 +72,7 @@ const useStyles = makeStyles(
       },
       text: {
         fontSize: fontSize[size],
-        color: theme.colors.white,
+        color: theme.colors.black,
         fontWeight: "bold",
       },
     };

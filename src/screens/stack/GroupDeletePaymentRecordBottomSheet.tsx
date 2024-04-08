@@ -3,6 +3,7 @@ import { Button, Text, makeStyles } from "@rneui/themed";
 import { View } from "react-native";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 
+import StyledBottomSheet from "@/components/common/StyledBottomSheet";
 import { useAppDispatch } from "@/hooks/reduxHook";
 import { deletePaymentRecord } from "@/store/reducers/groups";
 import { IStackScreenProps } from "@/types/navigation";
@@ -18,27 +19,25 @@ const GroupDeletePaymentRecordBottomSheet = ({
   const dispatch = useAppDispatch();
 
   return (
-    <View style={styles.container}>
-      <BottomSheet
-        onClose={() => navigation.goBack()}
-        enablePanDownToClose
-        enableDynamicSizing
-        snapPoints={["20%"]}
-      >
-        <BottomSheetView style={styles.content}>
-          <Text style={styles.title}>Are you sure to delete this record?</Text>
+    <StyledBottomSheet
+      onClose={() => navigation.goBack()}
+      enablePanDownToClose
+      enableDynamicSizing
+      snapPoints={["20%"]}
+    >
+      <BottomSheetView style={styles.content}>
+        <Text style={styles.title}>Are you sure to delete this record?</Text>
 
-          <Button
-            title="Delete"
-            color="error"
-            onPress={() => {
-              dispatch(deletePaymentRecord({ groupId, recordId }));
-              navigation.pop(2);
-            }}
-          />
-        </BottomSheetView>
-      </BottomSheet>
-    </View>
+        <Button
+          title="Delete"
+          color="error"
+          onPress={() => {
+            dispatch(deletePaymentRecord({ groupId, recordId }));
+            navigation.pop(2);
+          }}
+        />
+      </BottomSheetView>
+    </StyledBottomSheet>
   );
 };
 

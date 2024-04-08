@@ -53,9 +53,8 @@ const OnboardingScreen = ({
 const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.white,
+    backgroundColor: theme.colors.background,
     paddingTop: 32,
-    // paddingHorizontal: 16,
   },
   title: {
     fontWeight: "bold",

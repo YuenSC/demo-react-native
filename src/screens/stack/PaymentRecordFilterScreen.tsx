@@ -1,10 +1,10 @@
-import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import { BottomSheetView } from "@gorhom/bottom-sheet";
 import { Picker } from "@react-native-picker/picker";
-import { Button, makeStyles, useTheme } from "@rneui/themed";
+import { Button, Text, makeStyles, useTheme } from "@rneui/themed";
 import { useCallback, useMemo, useState } from "react";
-import { View } from "react-native";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 
+import StyledBottomSheet from "@/components/common/StyledBottomSheet";
 import { useAppSelector } from "@/hooks/reduxHook";
 import { currentGroupSelector } from "@/store/reducers/groups";
 import { CurrencyCode } from "@/types/Currency";
@@ -21,6 +21,7 @@ const PaymentRecordFilterScreen = ({
 }: IStackScreenProps<"PaymentRecordFilter">) => {
   const insets = useSafeAreaInsets();
   const styles = useStyles(insets);
+  const { theme } = useTheme();
   const currentGroup = useAppSelector(currentGroupSelector);
   const availableCurrencyCodes = useMemo(() => {
     const codes = currentGroup?.paymentRecords.map(
@@ -41,30 +42,37 @@ const PaymentRecordFilterScreen = ({
   if (!currentGroup) return null;
 
   return (
-    <View style={styles.container}>
-      <BottomSheet
-        onClose={handleClose}
-        enablePanDownToClose
-        enableDynamicSizing
-        snapPoints={["50%"]}
-      >
-        <BottomSheetView style={styles.contentContainer}>
-          <Picker
-            selectedValue={selectedCurrency}
-            onValueChange={(itemValue, itemIndex) => {
-              console.log("itemValue", itemValue);
-              setSelectedCurrency(itemValue);
-            }}
-          >
-            <Picker.Item label="All" value="" />
-            {availableCurrencyCodes.map((code) => (
-              <Picker.Item label={code} value={code} key={code} />
-            ))}
-          </Picker>
-          <Button title="Close" onPress={handleClose} />
-        </BottomSheetView>
-      </BottomSheet>
-    </View>
+    <StyledBottomSheet
+      onClose={handleClose}
+      enablePanDownToClose
+      enableDynamicSizing
+      snapPoints={["50%"]}
+    >
+      <BottomSheetView style={styles.contentContainer}>
+        <Text h2>Currency</Text>
+        <Picker
+          selectedValue={selectedCurrency}
+          onValueChange={(itemValue) => setSelectedCurrency(itemValue)}
+        >
+          <Picker.Item
+            label="All"
+            value=""
+            color={theme.colors.black}
+            style={styles.pickerItemText}
+          />
+          {availableCurrencyCodes.map((code) => (
+            <Picker.Item
+              label={code}
+              value={code}
+              key={code}
+              style={styles.pickerItemText}
+              color={theme.colors.black}
+            />
+          ))}
+        </Picker>
+        <Button title="Close" onPress={handleClose} />
+      </BottomSheetView>
+    </StyledBottomSheet>
   );
 };
 
@@ -83,6 +91,11 @@ const useStyles = makeStyles((theme, insets: EdgeInsets) => ({
   },
   itemText: {
     fontSize: 20,
+  },
+  pickerItemText: {
+    fontSize: 20,
+    color: theme.colors.black,
+    fontWeight: "bold",
   },
 }));
 

@@ -1,10 +1,11 @@
 import { Feather } from "@expo/vector-icons";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
-import { Text, makeStyles } from "@rneui/themed";
+import { Text, makeStyles, useTheme } from "@rneui/themed";
 import * as Haptics from "expo-haptics";
 import {
   forwardRef,
   memo,
+  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -12,87 +13,37 @@ import {
 } from "react";
 import { Pressable, TouchableOpacity, Vibration, View } from "react-native";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
-enum CalculatorOperands {
-  plus = "+",
-  minus = "-",
-  multiply = "×",
-  divide = "÷",
-  dot = ".",
-  clearEntry = "CE",
-}
 
-type CalculatorRecord = {
-  num: string;
-  sign?:
-    | CalculatorOperands.divide
-    | CalculatorOperands.multiply
-    | CalculatorOperands.minus
-    | CalculatorOperands.plus;
-};
+import StyledBottomSheet from "../common/StyledBottomSheet";
 
-const buttonValues = [
-  ["7", "8", "9", CalculatorOperands.divide],
-  ["4", "5", "6", CalculatorOperands.multiply],
-  ["1", "2", "3", CalculatorOperands.minus],
-  [
-    CalculatorOperands.dot,
-    "0",
-    CalculatorOperands.clearEntry,
-    CalculatorOperands.plus,
-  ],
-];
+import {
+  CalculatorButtons,
+  CalculatorOperands,
+  CalculatorRecord,
+  calculateResult,
+} from "@/utils/calculator";
 
 type IBillCalculatorBottomSheetProps = {
-  amount: number;
-  setAmount: React.Dispatch<React.SetStateAction<number>>;
+  value: number;
+  onChange: React.Dispatch<React.SetStateAction<number>>;
   onBlurInput: () => void;
+  defaultValue?: number;
 };
 
 const BillCalculatorBottomSheet = forwardRef<
   BottomSheet,
   IBillCalculatorBottomSheetProps
->(({ amount, setAmount, onBlurInput }, outerRef) => {
+>(({ value, onChange, onBlurInput, defaultValue }, outerRef) => {
   const insets = useSafeAreaInsets();
   const styles = useStyles(insets);
+  const { theme } = useTheme();
 
   const bottomSheetRef = useRef<BottomSheet>(null);
   useImperativeHandle(outerRef, () => bottomSheetRef.current!, []);
 
-  const [records, setRecords] = useState<CalculatorRecord[]>(
-    amount ? [{ num: amount.toString() }] : [],
-  );
+  const [records, setRecords] = useState<CalculatorRecord[]>([]);
 
-  const calculationResult = useMemo(() => {
-    const formattedRecords = [
-      { num: "0", sign: CalculatorOperands.plus },
-      ...records,
-    ];
-
-    const result = formattedRecords.reduce((prev, { sign }, index) => {
-      const nextRecord = formattedRecords[index + 1];
-      if (!nextRecord) return prev;
-
-      let temp = prev;
-      switch (sign) {
-        case CalculatorOperands.plus:
-          temp = temp + Number(nextRecord.num);
-          break;
-        case CalculatorOperands.minus:
-          temp = temp - Number(nextRecord.num);
-          break;
-        case CalculatorOperands.multiply:
-          temp = temp * Number(nextRecord.num);
-          break;
-        case CalculatorOperands.divide:
-          temp = temp / Number(nextRecord.num);
-          break;
-      }
-      return parseFloat(temp.toFixed(2));
-    }, 0);
-
-    setAmount(result);
-    return result;
-  }, [records, setAmount]);
+  const calculationResult = calculateResult(records);
 
   const calculationStepText = useMemo(() => {
     const steps = records
@@ -119,7 +70,8 @@ const BillCalculatorBottomSheet = forwardRef<
       if (key === "0") {
         return;
       }
-      setRecords([...recordCopy, { num: key, sign: undefined }]);
+      const newRecords = [...records, { num: key, sign: undefined }];
+      setRecords(newRecords);
       return;
     }
 
@@ -191,17 +143,28 @@ const BillCalculatorBottomSheet = forwardRef<
 
   const onAllClear = () => {
     setRecords([]);
-    setAmount(0);
+    onChange(0);
   };
 
+  useEffect(() => {
+    onChange(calculationResult);
+  }, [calculationResult, onChange]);
+
+  useEffect(() => {
+    if (defaultValue) {
+      setRecords([{ num: defaultValue.toString(), sign: undefined }]);
+    }
+  }, [defaultValue]);
+
   return (
-    <BottomSheet
+    <StyledBottomSheet
       enablePanDownToClose
       enableDynamicSizing
       ref={bottomSheetRef}
       animateOnMount={false}
       handleComponent={() => null}
       index={-1}
+      containerStyle={styles.container}
     >
       <BottomSheetView style={styles.bottomSheetContainer}>
         <View style={styles.bottomSheetInnerContainer}>
@@ -212,10 +175,7 @@ const BillCalculatorBottomSheet = forwardRef<
             <TouchableOpacity
               onPress={() => {
                 setRecords([
-                  {
-                    num: calculationResult.toString(),
-                    sign: undefined,
-                  },
+                  { num: calculateResult(records).toString(), sign: undefined },
                 ]);
                 bottomSheetRef.current?.close();
                 onBlurInput();
@@ -224,7 +184,7 @@ const BillCalculatorBottomSheet = forwardRef<
               <Text style={styles.calculatorResultDone}>Done</Text>
             </TouchableOpacity>
           </View>
-          {buttonValues.map((row, index) => (
+          {CalculatorButtons.map((row, index) => (
             <View key={index} style={styles.buttonRow}>
               {row.map((key) => (
                 <Pressable
@@ -262,7 +222,11 @@ const BillCalculatorBottomSheet = forwardRef<
                   }}
                 >
                   {key === CalculatorOperands.clearEntry ? (
-                    <Feather name="delete" color="white" size={25} />
+                    <Feather
+                      name="delete"
+                      color={theme.colors.white}
+                      size={25}
+                    />
                   ) : (
                     <Text style={styles.calculatorButtonText}>{key}</Text>
                   )}
@@ -272,11 +236,14 @@ const BillCalculatorBottomSheet = forwardRef<
           ))}
         </View>
       </BottomSheetView>
-    </BottomSheet>
+    </StyledBottomSheet>
   );
 });
 
 const useStyles = makeStyles((theme, insets: EdgeInsets) => ({
+  container: {
+    backgroundColor: "transparent",
+  },
   bottomSheetContainer: {
     flex: 0,
     minHeight: 100,
@@ -318,7 +285,7 @@ const useStyles = makeStyles((theme, insets: EdgeInsets) => ({
     borderRadius: 9999,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: theme.colors.secondary,
+    backgroundColor: theme.colors.primary,
   },
   calculatorButtonPressed: {
     backgroundColor: theme.colors.grey4,

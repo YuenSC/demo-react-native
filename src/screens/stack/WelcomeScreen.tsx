@@ -50,7 +50,7 @@ const WelcomeScreen = ({ navigation }: IStackScreenProps<"Welcome">) => {
 const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.white,
+    backgroundColor: theme.colors.background,
   },
   lottie: {
     width: "100%",

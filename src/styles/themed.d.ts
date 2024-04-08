@@ -3,6 +3,7 @@ import "@rneui/themed";
 declare module "@rneui/themed" {
   export interface Colors {
     backdrop: string;
+    modal: string;
   }
 
   export interface TextProps {

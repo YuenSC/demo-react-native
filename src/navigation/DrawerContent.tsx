@@ -61,7 +61,8 @@ const DrawerContent = memo<IDrawerContentProps>(({ state }) => {
 const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
-    margin: 16,
+    padding: 16,
+    backgroundColor: theme.colors.background,
   },
   group: {
     padding: 16,

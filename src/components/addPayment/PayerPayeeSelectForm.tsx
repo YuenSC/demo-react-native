@@ -13,9 +13,9 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
-import { IAddPaymentTabScreenProps } from "@/screens/stack/PaymentFormScreen";
 import { addPaymentRecord, updatePaymentRecord } from "@/store/reducers/groups";
 import { PaymentRecord, PaymentRecordCreate } from "@/types/PaymentRecord";
+import { IAddPaymentTabScreenProps } from "@/types/navigation";
 import { getActualAmountPerUser } from "@/utils/payment";
 
 const PayerPayeeSelectForm = ({
@@ -55,7 +55,12 @@ const PayerPayeeSelectForm = ({
           )?.amount;
 
           return (
-            <ListItem key={member.id} bottomDivider style={{ width: "100%" }}>
+            <ListItem
+              key={member.id}
+              bottomDivider
+              style={{ width: "100%" }}
+              containerStyle={styles.item}
+            >
               <ListItem.CheckBox
                 iconType="material-community"
                 checkedIcon="checkbox-marked"
@@ -160,7 +165,7 @@ const PayerPayeeSelectForm = ({
 const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.modal,
     padding: 8,
     paddingTop: 32,
   },
@@ -185,6 +190,9 @@ const useStyles = makeStyles((theme) => ({
   inputContainer: {
     borderBottomWidth: 0,
     paddingHorizontal: 0,
+  },
+  item: {
+    backgroundColor: theme.colors.modal,
   },
   itemContent: {
     flexDirection: "row",

@@ -5,6 +5,7 @@ import { useCallback, useRef } from "react";
 import { View } from "react-native";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 
+import StyledBottomSheet from "@/components/common/StyledBottomSheet";
 import { useAppSelector } from "@/hooks/reduxHook";
 import { currentGroupSelector } from "@/store/reducers/groups";
 import { IStackScreenProps } from "@/types/navigation";
@@ -27,34 +28,32 @@ const SignUpSuccessBottomSheet = ({
   }, [currentGroup?.id, navigation]);
 
   return (
-    <View style={styles.container}>
-      <BottomSheet
-        ref={bottomSheetRef}
-        onClose={handleClose}
-        enablePanDownToClose
-        enableDynamicSizing
-      >
-        <BottomSheetView style={styles.contentContainer}>
-          <AnimatedLottieView
-            autoPlay
-            loop={false}
-            style={styles.lottie}
-            source={require("@/assets/lottie/congrat.json")}
+    <StyledBottomSheet
+      ref={bottomSheetRef}
+      onClose={handleClose}
+      enablePanDownToClose
+      enableDynamicSizing
+    >
+      <BottomSheetView style={styles.contentContainer}>
+        <AnimatedLottieView
+          autoPlay
+          loop={false}
+          style={styles.lottie}
+          source={require("@/assets/lottie/congrat.json")}
+        />
+        <View style={styles.content}>
+          <Text style={styles.title}>Congratulations!</Text>
+          <Text style={styles.subtitle}>
+            {"Let's create your first payment record \n with your friends!"}
+          </Text>
+          <Button
+            title="Get Started"
+            containerStyle={styles.buttonContainer}
+            onPress={handleClose}
           />
-          <View style={styles.content}>
-            <Text style={styles.title}>Congratulations!</Text>
-            <Text style={styles.subtitle}>
-              {"Let's create your first payment record \n with your friends!"}
-            </Text>
-            <Button
-              title="Get Started"
-              containerStyle={styles.buttonContainer}
-              onPress={handleClose}
-            />
-          </View>
-        </BottomSheetView>
-      </BottomSheet>
-    </View>
+        </View>
+      </BottomSheetView>
+    </StyledBottomSheet>
   );
 };
 

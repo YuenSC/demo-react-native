@@ -17,4 +17,6 @@ export type PaymentRecord = {
   payees: PaymentDetail[];
 };
 
-export type PaymentRecordCreate = Omit<PaymentRecord, "id">;
+export type PaymentRecordCreate = PaymentRecord & {
+  id?: string;
+};

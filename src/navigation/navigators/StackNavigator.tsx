@@ -1,4 +1,5 @@
 import { createStackNavigator } from "@react-navigation/stack";
+import { useTheme } from "@rneui/themed";
 import { memo } from "react";
 
 import DrawerNavigator from "./DrawerNavigator";
@@ -11,6 +12,8 @@ import GroupDeletePaymentRecordBottomSheet from "@/screens/stack/GroupDeletePaym
 import GroupDeleteUserBottomSheet from "@/screens/stack/GroupDeleteUserBottomSheet";
 import GroupUserListScreen from "@/screens/stack/GroupUserListScreen";
 import OnboardingScreen from "@/screens/stack/OnboardingScreen";
+import PaymentFormCurrencySelectBottomSheet from "@/screens/stack/PaymentFormCurrencySelectBottomSheet";
+import PaymentFormDatePickerBottomSheet from "@/screens/stack/PaymentFormDatePickerBottomSheet";
 import PaymentFormScreen from "@/screens/stack/PaymentFormScreen";
 import PaymentRecordFilterScreen from "@/screens/stack/PaymentRecordFilterScreen";
 import SignUpSuccessBottomSheet from "@/screens/stack/SignUpSuccessBottomSheet";
@@ -20,6 +23,8 @@ import { IStackParamList } from "@/types/navigation";
 const Stack = createStackNavigator<IStackParamList>();
 
 const StackNavigator = memo(() => {
+  const { theme } = useTheme();
+
   const isInitialSetupDone = useAppSelector(
     (state) => !!state.profile.id && !!state.groups?.groups?.[0]?.id,
   );
@@ -30,6 +35,16 @@ const StackNavigator = memo(() => {
       screenOptions={{
         gestureResponseDistance: Device.screen.width,
         headerBackTitle: "",
+        headerStyle: {
+          backgroundColor: theme.colors.background,
+        },
+        headerTitleStyle: {
+          color: theme.colors.black,
+        },
+        headerBackTitleStyle: {
+          color: theme.colors.black,
+        },
+        headerTintColor: theme.colors.black,
       }}
     >
       <Stack.Screen
@@ -78,18 +93,31 @@ const StackNavigator = memo(() => {
           component={GroupDeletePaymentRecordBottomSheet}
           name="GroupDeletePaymentRecordBottomSheet"
         />
+        <Stack.Screen
+          component={PaymentFormDatePickerBottomSheet}
+          name="PaymentFormDatePickerBottomSheet"
+        />
+        <Stack.Screen
+          component={PaymentFormCurrencySelectBottomSheet}
+          name="PaymentFormCurrencySelectBottomSheet"
+        />
       </Stack.Group>
 
       {/* Modal */}
-      <Stack.Group screenOptions={{ presentation: "modal" }}>
+      <Stack.Group
+        screenOptions={{
+          presentation: "modal",
+          headerStyle: {
+            backgroundColor: theme.colors.modal,
+          },
+        }}
+      >
         <Stack.Screen
           component={GroupUserListScreen}
           name="GroupUserList"
           options={{ title: "Users" }}
         />
-
         <Stack.Screen component={EditMemberScreen} name="EditMember" />
-
         <Stack.Screen component={PaymentFormScreen} name="AddPayment" />
         <Stack.Screen component={PaymentFormScreen} name="EditPaymentModal" />
         <Stack.Screen component={SampleScreen} name="MemberList" />

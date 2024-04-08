@@ -1,20 +1,32 @@
-import { makeStyles } from "@rneui/themed";
+import { makeStyles, useTheme } from "@rneui/themed";
 import AnimatedLottieView from "lottie-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const SampleScreen = () => {
   const styles = useStyles();
+  const { theme } = useTheme();
 
   return (
     <SafeAreaView style={styles.container}>
-      <AnimatedLottieView
-        autoPlay
-        source={require("@/assets/lottie/coming-soon.json")}
-        style={{
-          width: "100%",
-          aspectRatio: 1,
-        }}
-      />
+      {theme.mode === "light" ? (
+        <AnimatedLottieView
+          autoPlay
+          source={require("@/assets/lottie/coming-soon.json")}
+          style={{
+            width: "100%",
+            aspectRatio: 1,
+          }}
+        />
+      ) : (
+        <AnimatedLottieView
+          autoPlay
+          source={require("@/assets/lottie/coming-soon-dark.json")}
+          style={{
+            width: "100%",
+            aspectRatio: 1,
+          }}
+        />
+      )}
     </SafeAreaView>
   );
 };

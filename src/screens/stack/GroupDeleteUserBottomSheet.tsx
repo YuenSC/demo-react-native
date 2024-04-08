@@ -1,12 +1,12 @@
 import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import { Button, Text, makeStyles } from "@rneui/themed";
 import { useRef } from "react";
-import { View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import PaymentRecordDisplay from "@/components/PaymentRecordDisplay";
 import { VStack } from "@/components/common/Stack";
+import StyledBottomSheet from "@/components/common/StyledBottomSheet";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import {
   deleteMember,
@@ -34,62 +34,60 @@ const GroupDeleteUserBottomSheet = ({
   );
 
   return (
-    <View style={styles.container}>
-      <BottomSheet
-        ref={bottomSheetRef}
-        onClose={navigation.goBack}
-        enablePanDownToClose
-        snapPoints={relatedPayments.length > 0 ? ["50%", "90%"] : []}
-        enableDynamicSizing={relatedPayments.length === 0}
-      >
-        <BottomSheetFlatList
-          data={relatedPayments}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.content}
-          ListHeaderComponent={
-            <VStack alignItems="flex-start" style={styles.header} gap={4}>
-              <Text style={styles.title}>
-                {`Are you sure to delete `}
-                <Text style={styles.titleHighlight}>{user?.name}</Text>?
+    <StyledBottomSheet
+      ref={bottomSheetRef}
+      onClose={navigation.goBack}
+      enablePanDownToClose
+      snapPoints={relatedPayments.length > 0 ? ["50%", "90%"] : []}
+      enableDynamicSizing={relatedPayments.length === 0}
+    >
+      <BottomSheetFlatList
+        data={relatedPayments}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.content}
+        ListHeaderComponent={
+          <VStack alignItems="flex-start" style={styles.header} gap={4}>
+            <Text style={styles.title}>
+              {`Are you sure to delete `}
+              <Text style={styles.titleHighlight}>{user?.name}</Text>?
+            </Text>
+            {relatedPayments.length > 0 && (
+              <Text style={styles.subtitle}>
+                You will have to remove {relatedPayments.length} related payment
+                before deleting this user.
               </Text>
-              {relatedPayments.length > 0 && (
-                <Text style={styles.subtitle}>
-                  You will have to remove {relatedPayments.length} related
-                  payment before deleting this user.
-                </Text>
-              )}
-            </VStack>
-          }
-          ListFooterComponent={
-            <Button
-              title="Delete"
-              onPress={() => {
-                dispatch(deleteMember({ groupId, userId }));
-                navigation.goBack();
-              }}
-              color="error"
-              disabled={relatedPayments.length > 0}
-            />
-          }
-          renderItem={({ item }) => {
-            if (!userId) return null;
+            )}
+          </VStack>
+        }
+        ListFooterComponent={
+          <Button
+            title="Delete"
+            onPress={() => {
+              dispatch(deleteMember({ groupId, userId }));
+              navigation.goBack();
+            }}
+            color="error"
+            disabled={relatedPayments.length > 0}
+          />
+        }
+        renderItem={({ item }) => {
+          if (!userId) return null;
 
-            return (
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("EditPayment", {
-                    groupId,
-                    recordId: item.id,
-                  })
-                }
-              >
-                <PaymentRecordDisplay record={item} userId={userId} />
-              </TouchableOpacity>
-            );
-          }}
-        />
-      </BottomSheet>
-    </View>
+          return (
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("EditPayment", {
+                  groupId,
+                  recordId: item.id,
+                })
+              }
+            >
+              <PaymentRecordDisplay record={item} userId={userId} />
+            </TouchableOpacity>
+          );
+        }}
+      />
+    </StyledBottomSheet>
   );
 };
 

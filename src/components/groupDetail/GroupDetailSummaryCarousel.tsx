@@ -1,4 +1,3 @@
-import { AntDesign } from "@expo/vector-icons";
 import { Text, makeStyles } from "@rneui/themed";
 import { memo } from "react";
 import {

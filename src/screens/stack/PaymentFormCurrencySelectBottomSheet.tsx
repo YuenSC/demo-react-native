@@ -1,41 +1,29 @@
-import { AntDesign, Ionicons } from "@expo/vector-icons";
-import {
-  BottomSheetBackdrop,
-  BottomSheetBackdropProps,
-  BottomSheetModal,
-  BottomSheetSectionList,
-} from "@gorhom/bottom-sheet";
+import { Ionicons } from "@expo/vector-icons";
+import BottomSheet, { BottomSheetSectionList } from "@gorhom/bottom-sheet";
 import { SearchBar, Text, makeStyles, useTheme } from "@rneui/themed";
-import {
-  forwardRef,
-  memo,
-  useCallback,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useMemo, useRef, useState } from "react";
 import { Keyboard, TouchableOpacity, View } from "react-native";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 
+import StyledBottomSheet from "../../components/common/StyledBottomSheet";
+
+import CurrencySelectTouchableOpacity from "@/components/addPayment/CurrencySelectTouchableOpacity";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import {
   addCurrencyCodeSuggestion,
   deleteCurrencyCodeSuggestion,
 } from "@/store/reducers/groups";
-import { CurrencyCode, currencyCodes } from "@/types/Currency";
+import { currencyCodes } from "@/types/Currency";
+import { IStackScreenProps } from "@/types/navigation";
 
-type ICurrencySelectBottomSheetProps = {
-  currencyCode: CurrencyCode;
-  setCurrencyCode: React.Dispatch<React.SetStateAction<CurrencyCode>>;
-};
+const snapPoints = ["70%"];
 
-const snapPoints = ["95%"];
-
-const CurrencySelectBottomSheet = forwardRef<
-  BottomSheetModal,
-  ICurrencySelectBottomSheetProps
->(({ currencyCode, setCurrencyCode }, outerRef) => {
+const PaymentFormCurrencySelectBottomSheet = ({
+  navigation,
+  route: {
+    params: { currencyCode, setCurrencyCode },
+  },
+}: IStackScreenProps<"PaymentFormCurrencySelectBottomSheet">) => {
   const insets = useSafeAreaInsets();
   const styles = useStyles(insets);
   const { theme } = useTheme();
@@ -47,8 +35,7 @@ const CurrencySelectBottomSheet = forwardRef<
     (state) => state.groups.suggestedCurrencyCodes ?? [],
   );
 
-  const bottomSheetRef = useRef<BottomSheetModal>(null);
-  useImperativeHandle(outerRef, () => bottomSheetRef.current!, []);
+  const bottomSheetRef = useRef<BottomSheet>(null);
 
   const sections = useMemo(() => {
     const formattedSearchText = searchText.trim().toLowerCase();
@@ -87,22 +74,12 @@ const CurrencySelectBottomSheet = forwardRef<
     ];
   }, [currencyCode, searchText, suggestedCurrencyCodes]);
 
-  const renderBackdrop = useCallback(
-    (props: BottomSheetBackdropProps) => (
-      <BottomSheetBackdrop
-        {...props}
-        disappearsOnIndex={-1}
-        style={styles.bottomSheetBackdrop}
-      />
-    ),
-    [styles.bottomSheetBackdrop],
-  );
-
   return (
-    <BottomSheetModal
+    <StyledBottomSheet
+      enablePanDownToClose
       snapPoints={snapPoints}
       ref={bottomSheetRef}
-      backdropComponent={renderBackdrop}
+      onClose={navigation.goBack}
     >
       <View style={styles.searchBarContainer}>
         <SearchBar
@@ -111,6 +88,7 @@ const CurrencySelectBottomSheet = forwardRef<
           value={searchText}
           onChangeText={(text) => setSearchText(text)}
           placeholder="Search currency code or name"
+          containerStyle={styles.searchBar}
           searchIcon={
             <Ionicons name="search" size={20} color={theme.colors.grey3} />
           }
@@ -119,6 +97,8 @@ const CurrencySelectBottomSheet = forwardRef<
               <Ionicons name="close" size={20} color={theme.colors.grey3} />
             </TouchableOpacity>
           }
+          inputStyle={styles.whiteColor}
+          cancelButtonProps={styles.whiteColor}
         />
 
         <Text style={{ marginLeft: 8, fontSize: 20 }}>
@@ -139,12 +119,11 @@ const CurrencySelectBottomSheet = forwardRef<
           const isInSuggestionList = suggestedCurrencyCodes.includes(item.code);
 
           return (
-            <CurrencyTouchableOpacity
+            <CurrencySelectTouchableOpacity
               code={item.code}
               name={item.name}
               onPress={() => {
-                bottomSheetRef.current?.dismiss();
-                console.log("here");
+                bottomSheetRef.current?.close();
                 dispatch(addCurrencyCodeSuggestion(item.code));
                 Keyboard.dismiss();
                 setCurrencyCode(item.code);
@@ -161,37 +140,14 @@ const CurrencySelectBottomSheet = forwardRef<
           );
         }}
       />
-    </BottomSheetModal>
-  );
-});
-
-const CurrencyTouchableOpacity = ({
-  onPress,
-  code,
-  name,
-  onDelete,
-}: {
-  onPress: () => void;
-  name: string;
-  code: string;
-  onDelete?: () => void;
-}) => {
-  const styles = useStyles();
-
-  return (
-    <TouchableOpacity style={styles.itemContainer} onPress={onPress}>
-      <Text style={styles.itemName}>{name}</Text>
-      <Text style={styles.itemCode}>{code}</Text>
-      {onDelete && (
-        <TouchableOpacity hitSlop={10} onPress={onDelete}>
-          <AntDesign name="delete" size={20} />
-        </TouchableOpacity>
-      )}
-    </TouchableOpacity>
+    </StyledBottomSheet>
   );
 };
 
 const useStyles = makeStyles((theme, insets: EdgeInsets) => ({
+  container: {
+    backgroundColor: "transparent",
+  },
   bottomSheetContainer: {
     flex: 0,
     minHeight: 100,
@@ -209,6 +165,9 @@ const useStyles = makeStyles((theme, insets: EdgeInsets) => ({
     width: "100%",
     height: "100%",
   },
+  searchBar: {
+    backgroundColor: theme.colors.modal,
+  },
   searchBarContainer: {
     marginHorizontal: 16,
     marginBottom: 16,
@@ -223,22 +182,8 @@ const useStyles = makeStyles((theme, insets: EdgeInsets) => ({
     paddingLeft: 8,
     paddingBottom: 8,
     marginBottom: 8,
-    backgroundColor: theme.colors.white,
+    backgroundColor: theme.colors.modal,
     flex: 1,
-  },
-  itemContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginHorizontal: 16,
-    gap: 12,
-  },
-  itemName: {
-    fontSize: 18,
-    flex: 1,
-  },
-  itemCode: {
-    fontSize: 18,
-    color: theme.colors.grey3,
   },
   itemTextHighLight: {
     color: "black",
@@ -249,8 +194,11 @@ const useStyles = makeStyles((theme, insets: EdgeInsets) => ({
     backgroundColor: theme.colors.divider,
     marginVertical: 12,
   },
+  whiteColor: {
+    color: theme.colors.black,
+  },
 }));
 
-CurrencySelectBottomSheet.displayName = "BillCalculator";
+PaymentFormCurrencySelectBottomSheet.displayName = "BillCalculator";
 
-export default memo(CurrencySelectBottomSheet);
+export default PaymentFormCurrencySelectBottomSheet;

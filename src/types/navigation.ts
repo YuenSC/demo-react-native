@@ -1,5 +1,6 @@
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { DrawerScreenProps } from "@react-navigation/drawer";
+import { MaterialTopTabScreenProps } from "@react-navigation/material-top-tabs";
 import {
   CompositeScreenProps,
   NavigatorScreenParams,
@@ -35,6 +36,14 @@ export type IStackParamList = {
     setSelectedCurrency: React.Dispatch<
       React.SetStateAction<CurrencyCode | null>
     >;
+  };
+  PaymentFormDatePickerBottomSheet: {
+    date: string;
+    setDate: React.Dispatch<React.SetStateAction<string>>;
+  };
+  PaymentFormCurrencySelectBottomSheet: {
+    currencyCode: CurrencyCode;
+    setCurrencyCode: React.Dispatch<React.SetStateAction<CurrencyCode>>;
   };
   GroupDeleteUserBottomSheet: {
     groupId: string;
@@ -74,3 +83,19 @@ export type IBottomTabScreenProps<Screen extends keyof IBottomTabParamList> =
       StackScreenProps<IStackParamList>
     >
   >;
+
+export type IAddPaymentTabParamList = {
+  Bill: undefined;
+  PayeeSelect: undefined;
+  PayerSelect: undefined;
+};
+
+export type IAddPaymentTabScreenProps<
+  Screen extends keyof IAddPaymentTabParamList,
+> = CompositeScreenProps<
+  MaterialTopTabScreenProps<IAddPaymentTabParamList, Screen>,
+  CompositeScreenProps<
+    DrawerScreenProps<IDrawerParamList>,
+    StackScreenProps<IStackParamList>
+  >
+>;

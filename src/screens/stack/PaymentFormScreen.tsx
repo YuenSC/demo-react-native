@@ -1,9 +1,6 @@
 import { AntDesign } from "@expo/vector-icons";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import {
-  MaterialTopTabScreenProps,
-  createMaterialTopTabNavigator,
-} from "@react-navigation/material-top-tabs";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Text, makeStyles, useTheme } from "@rneui/themed";
 import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -13,20 +10,9 @@ import Config from "@/Config";
 import BillForm from "@/components/addPayment/BillForm";
 import PayerPayeeSelectForm from "@/components/addPayment/PayerPayeeSelectForm";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
-import { deletePaymentRecord } from "@/store/reducers/groups";
 import { BillCategoryEnum } from "@/types/BillCategories";
 import { PaymentRecordCreate } from "@/types/PaymentRecord";
-import { IStackScreenProps } from "@/types/navigation";
-
-type IAddPaymentTabParamList = {
-  Bill: undefined;
-  PayeeSelect: undefined;
-  PayerSelect: undefined;
-};
-
-export type IAddPaymentTabScreenProps<
-  Screen extends keyof IAddPaymentTabParamList,
-> = MaterialTopTabScreenProps<IAddPaymentTabParamList, Screen>;
+import { IAddPaymentTabParamList, IStackScreenProps } from "@/types/navigation";
 
 const Tab = createMaterialTopTabNavigator<IAddPaymentTabParamList>();
 
@@ -49,7 +35,7 @@ const PaymentFormScreen = ({
   );
   const record = group?.paymentRecords.find((item) => item.id === recordId);
 
-  const form = useForm<PaymentRecordCreate & { id?: string }>({
+  const form = useForm<PaymentRecordCreate>({
     defaultValues: {
       amount: Config.isDev ? 1000 : 0,
       currencyCode: lastUsedCurrency,
@@ -140,7 +126,20 @@ const PaymentFormScreen = ({
     <BottomSheetModalProvider>
       <FormProvider {...form}>
         <View style={styles.container}>
-          <Tab.Navigator>
+          <Tab.Navigator
+            screenOptions={{
+              tabBarStyle: {
+                backgroundColor: theme.colors.modal,
+              },
+              tabBarLabelStyle: {
+                color: theme.colors.black,
+                fontWeight: "bold",
+              },
+              tabBarIndicatorStyle: {
+                backgroundColor: theme.colors.primary,
+              },
+            }}
+          >
             <Tab.Screen
               name="Bill"
               component={BillForm}
@@ -168,7 +167,7 @@ const PaymentFormScreen = ({
 const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.modal,
   },
 }));
 

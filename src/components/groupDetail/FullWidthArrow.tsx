@@ -7,7 +7,7 @@ type IFullWidthArrowProps = object;
 
 const FullWidthArrow = memo<IFullWidthArrowProps>(() => {
   const { theme } = useTheme();
-  const lineColor = theme.colors.grey3;
+  const lineColor = theme.colors.divider;
   const styles = useStyles(lineColor);
 
   return (
