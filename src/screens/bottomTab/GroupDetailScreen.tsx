@@ -97,7 +97,10 @@ const GroupDetailScreen = ({
               const sign = Math.sign(totalNetAmount);
 
               return (
-                <TouchableOpacity style={styles.amountButton}>
+                <TouchableOpacity
+                  key={currencyCode}
+                  style={styles.amountButton}
+                >
                   <HStack gap={4}>
                     <Text
                       key={currencyCode}
@@ -191,7 +194,7 @@ const useStyles = makeStyles((theme) => ({
   amountButton: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 24,
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: theme.colors.divider,
     width: "auto",

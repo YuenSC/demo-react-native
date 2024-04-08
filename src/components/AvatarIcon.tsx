@@ -2,16 +2,19 @@ import { Text, makeStyles } from "@rneui/themed";
 import { memo } from "react";
 import { View } from "react-native";
 
+import { VStack } from "./common/Stack";
+
 import { AvatarColor } from "@/types/AvatarColor";
 
 type IAvatarIconProps = {
   color: AvatarColor;
   userName: string;
   size?: "small" | "medium" | "large";
+  isShowName?: boolean;
 };
 
 const AvatarIcon = memo<IAvatarIconProps>(
-  ({ color, userName, size = "medium" }) => {
+  ({ color, userName, size = "medium", isShowName }) => {
     const styles = useStyles({ color, size });
     const extractFirstLetterInEveryWord = (str: string) =>
       str
@@ -20,11 +23,14 @@ const AvatarIcon = memo<IAvatarIconProps>(
         .join("");
 
     return (
-      <View style={styles.avatar}>
-        <Text style={styles.text}>
-          {extractFirstLetterInEveryWord(userName).slice(0, 2)}
-        </Text>
-      </View>
+      <VStack style={styles.avatarContainer}>
+        <View style={styles.avatar}>
+          <Text style={styles.text}>
+            {extractFirstLetterInEveryWord(userName).slice(0, 2)}
+          </Text>
+        </View>
+        {isShowName && <Text numberOfLines={1}>{userName}</Text>}
+      </VStack>
     );
   },
 );
@@ -53,6 +59,9 @@ const useStyles = makeStyles(
     };
 
     return {
+      avatarContainer: {
+        maxWidth: avatarSize[size] + 16,
+      },
       avatar: {
         backgroundColor: color,
         width: avatarSize[size],

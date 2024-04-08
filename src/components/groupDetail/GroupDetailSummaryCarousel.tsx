@@ -1,10 +1,21 @@
+import { AntDesign } from "@expo/vector-icons";
 import { Text, makeStyles } from "@rneui/themed";
 import { memo } from "react";
-import { ScrollView, View, useWindowDimensions } from "react-native";
+import {
+  ScrollView,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from "react-native";
 
-import { HStack } from "../common/Stack";
+import FullWidthArrow from "./FullWidthArrow";
+import AvatarIcon from "../AvatarIcon";
+import { HStack, VStack } from "../common/Stack";
 
 import { Group } from "@/store/reducers/groups";
+import { AvatarColor } from "@/types/AvatarColor";
+import { CurrencyCode } from "@/types/Currency";
+import { formatAmount } from "@/utils/payment";
 
 type IGroupDetailSummaryCarouselProps = {
   group: Group;
@@ -69,16 +80,49 @@ const GroupDetailSummaryCarousel = memo<IGroupDetailSummaryCarouselProps>(
         scrollEnabled={!isSingleCurrency}
       >
         {Object.entries(dataByCurrency).map(([currencyCode, items], index) => (
-          <View style={styles.scrollViewItem}>
+          <VStack
+            key={currencyCode}
+            gap={8}
+            alignItems="stretch"
+            style={styles.scrollViewItem}
+          >
             <Text h3>{currencyCode}</Text>
-            {items.map((item, index) => (
-              <HStack key={index}>
-                <Text>{item.payerName}</Text>
-                <Text>{item.amount}</Text>
-                <Text>{item.receiverName}</Text>
-              </HStack>
-            ))}
-          </View>
+            <VStack alignItems="stretch" gap={4}>
+              {items.map((item) => (
+                <TouchableOpacity key={currencyCode + item.payerName}>
+                  <HStack>
+                    <VStack>
+                      <AvatarIcon
+                        userName={item.payerName}
+                        color={AvatarColor.AmethystPurple}
+                        size="small"
+                        isShowName
+                      />
+                    </VStack>
+                    <View style={styles.amountContainer}>
+                      <FullWidthArrow />
+                      <VStack>
+                        <Text>
+                          {formatAmount(
+                            item.amount,
+                            currencyCode as CurrencyCode,
+                          )}
+                        </Text>
+                      </VStack>
+                    </View>
+                    <VStack>
+                      <AvatarIcon
+                        userName={item.receiverName}
+                        color={AvatarColor.AmethystPurple}
+                        size="small"
+                        isShowName
+                      />
+                    </VStack>
+                  </HStack>
+                </TouchableOpacity>
+              ))}
+            </VStack>
+          </VStack>
         ))}
       </ScrollView>
     );
@@ -90,9 +134,13 @@ const useStyles = makeStyles((theme, itemWidth: number) => ({
     width: itemWidth,
     backgroundColor: theme.colors.background,
     padding: 16,
-    borderRadius: 8,
+    borderRadius: 16,
     borderWidth: 1,
-    borderColor: theme.colors.grey3,
+    borderColor: theme.colors.divider,
+  },
+  amountContainer: {
+    flex: 1,
+    marginHorizontal: 12,
   },
 }));
 
