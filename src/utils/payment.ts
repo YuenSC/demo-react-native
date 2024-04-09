@@ -1,5 +1,81 @@
 import { CurrencyCode, currencyCodes } from "@/types/Currency";
 import { PaymentDetail, PaymentRecord } from "@/types/PaymentRecord";
+import { User } from "@/types/User";
+
+export const getPaymentRelationship = (
+  members: User[],
+  records = [] as PaymentRecord[],
+) => {
+  const memberById = Object.fromEntries(
+    members.map((member) => [member.id, member]),
+  );
+
+  return records.reduce(
+    (paymentRelationshipByCurrency, record) => {
+      paymentRelationshipByCurrency[record.currencyCode] =
+        paymentRelationshipByCurrency[record.currencyCode] ?? {};
+
+      const paymentRelationship =
+        paymentRelationshipByCurrency[record.currencyCode];
+
+      const { actualAmountPerUser: payerActualAmountPerUser } =
+        getActualAmountPerUser(record.amount, record.payers);
+      const { actualAmountPerUser: payeeActualAmountPerUser } =
+        getActualAmountPerUser(record.amount, record.payees);
+
+      let payerIndex = 0;
+      let receiverIndex = 0;
+
+      if (record.currencyCode === "HKD") {
+        console.log("here");
+      }
+      while (receiverIndex < payeeActualAmountPerUser.length) {
+        const payer = payerActualAmountPerUser[payerIndex];
+        const receiver = payeeActualAmountPerUser[receiverIndex];
+
+        if (!payer || !receiver) break;
+
+        // receiver need to paid back to payer
+        const amountToPaid = Math.min(receiver.amount, payer.amount);
+        const isMoneyLeftInReceiver = receiver.amount > payer.amount;
+
+        if (payer.id !== receiver.id) {
+          paymentRelationship[receiver.id] = {
+            payer: memberById[receiver.id],
+            receiverId: payer.id,
+            receiver: memberById[payer.id],
+            requiredAmount:
+              receiver.amount +
+              (paymentRelationship[receiver.id]?.requiredAmount ?? 0),
+          };
+        }
+
+        payer.amount -= amountToPaid;
+        receiver.amount -= amountToPaid;
+
+        if (isMoneyLeftInReceiver) {
+          payerIndex++;
+        } else {
+          receiverIndex++;
+        }
+      }
+
+      return paymentRelationshipByCurrency;
+    },
+    {} as Record<
+      CurrencyCode,
+      Record<
+        string, // payerId
+        {
+          payer: User;
+          receiver: User;
+          receiverId: string;
+          requiredAmount: number;
+        }
+      >
+    >,
+  );
+};
 
 export const getTotalNetAmount = (userId: string, records: PaymentRecord[]) => {
   return records.reduce(
@@ -69,10 +145,7 @@ export const getActualAmountPerUser = (
       : Math.max(0, (amount - amountPaid) / autoSplitCount);
   const actualAmountPerUser = payment.map((i) => ({
     id: i.id,
-    amount:
-      i.amount === "auto"
-        ? roundAmountToTwoDecimal(autoSplitAmount)
-        : i.amount ?? 0,
+    amount: i.amount === "auto" ? autoSplitAmount : i.amount ?? 0,
   }));
   const realAmountSum = actualAmountPerUser.reduce(
     (prev, curr) => prev + curr.amount,

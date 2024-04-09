@@ -85,7 +85,7 @@ const PaymentFormScreen = ({
             if (payee) return payee;
 
             return {
-              amount: "auto",
+              amount: 0,
               id: user.id,
             };
           }) ?? [],

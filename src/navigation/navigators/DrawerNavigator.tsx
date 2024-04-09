@@ -25,6 +25,46 @@ const DrawerNavigator = () => {
   const currentGroup = useAppSelector(currentGroupSelector);
   const dispatch = useAppDispatch();
 
+  const generateRandomPaymentRecord = (index: number) => {
+    const currentMembers = currentGroup?.members;
+    if (!currentMembers || currentMembers.length < 2) {
+      return;
+    }
+
+    const userIndexes = Array.from(Array(currentMembers.length).keys());
+    const payerIndex =
+      userIndexes[Math.floor(Math.random() * userIndexes.length)];
+
+    const currentDate = new Date();
+    currentDate.setDate(
+      currentDate.getDate() - Math.floor(Math.random() * 365),
+    );
+    currentDate.setMinutes(Math.floor(Math.random() * 60));
+    currentDate.setHours(Math.floor(Math.random() * 24));
+
+    const randomCategory =
+      Object.values(BillCategoryEnum)[
+        Math.floor(Math.random() * Object.values(BillCategoryEnum).length)
+      ];
+
+    const paymentRecord = {
+      id: undefined,
+      groupId: currentGroup?.id,
+      amount: Math.floor(Math.random() * 1000),
+      category: randomCategory,
+      comment: "Random Payment " + index,
+      date: currentDate.toISOString(),
+      currencyCode: Math.random() > 0.5 ? "JPY" : "HKD",
+      payers: [{ amount: "auto", id: currentMembers[payerIndex].id }],
+      payees: currentMembers.map((member) => ({
+        amount: "auto",
+        id: member.id,
+      })),
+    } satisfies PaymentRecordCreate;
+
+    dispatch(addPaymentRecord(paymentRecord));
+  };
+
   return (
     <Drawer.Navigator
       screenOptions={{
@@ -44,54 +84,11 @@ const DrawerNavigator = () => {
               <View style={styles.headerRight}>
                 <TouchableOpacity
                   onPress={() => {
-                    const currentMembers = currentGroup?.members;
-                    if (!currentMembers || currentMembers.length < 2) {
-                      return;
-                    }
-
-                    const generateRandomPaymentRecord = (index: number) => {
-                      const userIndexes = Array.from(
-                        Array(currentMembers.length).keys(),
-                      );
-                      const payerIndex =
-                        userIndexes[
-                          Math.floor(Math.random() * userIndexes.length)
-                        ];
-
-                      const currentDate = new Date();
-                      currentDate.setDate(
-                        currentDate.getDate() - Math.floor(Math.random() * 365),
-                      );
-                      currentDate.setMinutes(Math.floor(Math.random() * 60));
-                      currentDate.setHours(Math.floor(Math.random() * 24));
-
-                      const randomCategory =
-                        Object.values(BillCategoryEnum)[
-                          Math.floor(
-                            Math.random() *
-                              Object.values(BillCategoryEnum).length,
-                          )
-                        ];
-
-                      const paymentRecord = {
-                        groupId: currentGroup?.id,
-                        amount: Math.floor(Math.random() * 1000),
-                        category: randomCategory,
-                        comment: "Random Payment " + index,
-                        date: currentDate.toISOString(),
-                        currencyCode: index % 2 === 0 ? "JPY" : "HKD",
-                        payers: [
-                          { amount: "auto", id: currentMembers[payerIndex].id },
-                        ],
-                        payees: currentMembers.map((member) => ({
-                          amount: "auto",
-                          id: member.id,
-                        })),
-                      } satisfies PaymentRecordCreate;
-
-                      dispatch(addPaymentRecord(paymentRecord));
-                    };
-
+                    Array.from(Array(1).keys()).forEach((index) =>
+                      generateRandomPaymentRecord(index),
+                    );
+                  }}
+                  onLongPress={() => {
                     Array.from(Array(10).keys()).forEach((index) =>
                       generateRandomPaymentRecord(index),
                     );

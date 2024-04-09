@@ -21,7 +21,7 @@ const SignUpSuccessBottomSheet = ({
   const currentGroup = useAppSelector(currentGroupSelector);
 
   const handleClose = useCallback(() => {
-    navigation.navigate("Drawer", {
+    navigation.replace("Drawer", {
       screen: "BottomTab",
       params: { id: currentGroup?.id },
     });

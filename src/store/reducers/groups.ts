@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from "uuid";
 
 import { RootState } from "..";
 
-import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import { AvatarColor } from "@/types/AvatarColor";
 import { CurrencyCode } from "@/types/Currency";
 import { ICreateGroupPayload } from "@/types/GroupCreate";
@@ -61,8 +60,8 @@ export const groupsSlice = createSlice({
       if (!currentGroup) return;
 
       currentGroup.paymentRecords.push({
-        id: uuidv4(),
         ...action.payload,
+        id: uuidv4(),
       });
     },
     deletePaymentRecord: (

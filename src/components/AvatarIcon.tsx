@@ -29,7 +29,11 @@ const AvatarIcon = memo<IAvatarIconProps>(
             {extractFirstLetterInEveryWord(userName).slice(0, 2)}
           </Text>
         </View>
-        {isShowName && <Text numberOfLines={1}>{userName}</Text>}
+        {isShowName && (
+          <Text numberOfLines={1} style={styles.avatarName}>
+            {userName}
+          </Text>
+        )}
       </VStack>
     );
   },
@@ -60,7 +64,7 @@ const useStyles = makeStyles(
 
     return {
       avatarContainer: {
-        maxWidth: avatarSize[size] + 16,
+        width: avatarSize[size] + 32,
       },
       avatar: {
         backgroundColor: color,
@@ -74,6 +78,13 @@ const useStyles = makeStyles(
         fontSize: fontSize[size],
         color: theme.colors.black,
         fontWeight: "bold",
+      },
+      avatarName: {
+        fontSize: 14,
+        color: theme.colors.black,
+        textAlign: "center",
+        marginTop: 2,
+        overflow: "hidden",
       },
     };
   },

@@ -12,9 +12,12 @@ import AvatarIcon from "../AvatarIcon";
 import { HStack, VStack } from "../common/Stack";
 
 import { Group } from "@/store/reducers/groups";
-import { AvatarColor } from "@/types/AvatarColor";
 import { CurrencyCode } from "@/types/Currency";
-import { formatAmount } from "@/utils/payment";
+import {
+  formatAmount,
+  getPaymentRelationship,
+  roundAmountToTwoDecimal,
+} from "@/utils/payment";
 
 type IGroupDetailSummaryCarouselProps = {
   group: Group;
@@ -24,47 +27,21 @@ const GroupDetailSummaryCarousel = memo<IGroupDetailSummaryCarouselProps>(
   ({ group }) => {
     const windowDimensions = useWindowDimensions();
 
-    const dataByCurrency = {
-      HKD: [
-        {
-          payerName: "User 1",
-          receiverName: "User 2",
-          amount: 100,
-        },
-        {
-          payerName: "User 2",
-          receiverName: "User 3",
-          amount: 200,
-        },
-        {
-          payerName: "User 3",
-          receiverName: "User 1",
-          amount: 300,
-        },
-      ],
-      JPY: [
-        {
-          payerName: "User 1",
-          receiverName: "User 2",
-          amount: 100,
-        },
-        {
-          payerName: "User 2",
-          receiverName: "User 3",
-          amount: 200,
-        },
-        {
-          payerName: "User 3",
-          receiverName: "User 1",
-          amount: 300,
-        },
-      ],
-    };
+    const paymentRelationshipByCurrency = getPaymentRelationship(
+      group.members,
+      group.paymentRecords,
+    );
 
-    const isSingleCurrency = Object.keys(dataByCurrency).length === 1;
+    console.log(
+      "paymentRelationshipByCurrency",
+      JSON.stringify(paymentRelationshipByCurrency, null, 2),
+    );
+
+    const isSingleCurrency =
+      Object.keys(paymentRelationshipByCurrency).length === 1;
 
     const itemWidth = isSingleCurrency
-      ? windowDimensions.width
+      ? windowDimensions.width - 32
       : windowDimensions.width * 0.8;
     const styles = useStyles(itemWidth);
 
@@ -78,51 +55,54 @@ const GroupDetailSummaryCarousel = memo<IGroupDetailSummaryCarouselProps>(
         decelerationRate="fast"
         scrollEnabled={!isSingleCurrency}
       >
-        {Object.entries(dataByCurrency).map(([currencyCode, items], index) => (
-          <VStack
-            key={currencyCode}
-            gap={8}
-            alignItems="stretch"
-            style={styles.scrollViewItem}
-          >
-            <Text h3>{currencyCode}</Text>
-            <VStack alignItems="stretch" gap={4}>
-              {items.map((item) => (
-                <TouchableOpacity key={currencyCode + item.payerName}>
-                  <HStack>
-                    <VStack>
-                      <AvatarIcon
-                        userName={item.payerName}
-                        color={AvatarColor.AmethystPurple}
-                        size="small"
-                        isShowName
-                      />
-                    </VStack>
-                    <View style={styles.amountContainer}>
-                      <FullWidthArrow />
+        {Object.entries(paymentRelationshipByCurrency).map(
+          ([currencyCode, items]) => (
+            <VStack
+              key={currencyCode}
+              gap={8}
+              alignItems="stretch"
+              justifyContent="flex-start"
+              style={styles.scrollViewItem}
+            >
+              <Text h3>{currencyCode}</Text>
+              <VStack alignItems="stretch" gap={16}>
+                {Object.values(items).map((item) => (
+                  <TouchableOpacity key={currencyCode + item.payer.name}>
+                    <HStack>
                       <VStack>
-                        <Text>
-                          {formatAmount(
-                            item.amount,
-                            currencyCode as CurrencyCode,
-                          )}
-                        </Text>
+                        <AvatarIcon
+                          userName={item.payer.name}
+                          color={item.payer.avatarColor}
+                          size="small"
+                          isShowName
+                        />
                       </VStack>
-                    </View>
-                    <VStack>
-                      <AvatarIcon
-                        userName={item.receiverName}
-                        color={AvatarColor.AmethystPurple}
-                        size="small"
-                        isShowName
-                      />
-                    </VStack>
-                  </HStack>
-                </TouchableOpacity>
-              ))}
+                      <View style={styles.amountContainer}>
+                        <FullWidthArrow />
+                        <VStack>
+                          <Text>
+                            {formatAmount(
+                              roundAmountToTwoDecimal(item.requiredAmount),
+                              currencyCode as CurrencyCode,
+                            )}
+                          </Text>
+                        </VStack>
+                      </View>
+                      <VStack>
+                        <AvatarIcon
+                          userName={item.receiver.name}
+                          color={item.receiver.avatarColor}
+                          size="small"
+                          isShowName
+                        />
+                      </VStack>
+                    </HStack>
+                  </TouchableOpacity>
+                ))}
+              </VStack>
             </VStack>
-          </VStack>
-        ))}
+          ),
+        )}
       </ScrollView>
     );
   },
