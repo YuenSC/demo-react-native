@@ -3,9 +3,9 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { Button, Text, makeStyles, useTheme } from "@rneui/themed";
 import AnimatedLottieView from "lottie-react-native";
 import { useMemo } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 
-import { HStack, VStack } from "@/components/common/Stack";
+import { HStack } from "@/components/common/Stack";
 import GroupDetailSummaryCarousel from "@/components/groupDetail/GroupDetailSummaryCarousel";
 import { useAppSelector } from "@/hooks/reduxHook";
 import { currentGroupSelector } from "@/store/reducers/groups";
@@ -77,89 +77,92 @@ const GroupDetailScreen = ({
 
   return (
     <View style={styles.container}>
-      <View style={styles.sectionPadding}>
-        <Text h1>{currentGroup.name}</Text>
-        <Text style={styles.subtitle}>
-          {hasUnresolvedExpenses
-            ? "Your unresolved expenses are as below"
-            : "You have no unresolved expenses. Good job!"}
-        </Text>
-        <HStack gap={6} justifyContent="flex-start" flexWrap="wrap">
-          {Object.entries(totalNetAmountByCurrency).map(
-            ([currencyCode, totalNetAmount]) => {
-              if (totalNetAmount === 0) return null;
-
-              const amount = formatAmount(
-                totalNetAmount,
-                currencyCode as CurrencyCode,
-                { currencySymbol: "code" },
-              );
-              const sign = Math.sign(totalNetAmount);
-
-              return (
-                <TouchableOpacity
-                  key={currencyCode}
-                  style={styles.amountButton}
-                >
-                  <HStack gap={4}>
-                    <Text
-                      key={currencyCode}
-                      style={[
-                        styles.amountText,
-                        sign > 0 && { color: theme.colors.success },
-                        sign < 0 && { color: theme.colors.error },
-                      ]}
-                    >
-                      {amount}
-                    </Text>
-                    <AntDesign
-                      name="checkcircleo"
-                      size={24}
-                      color={theme.colors.grey3}
-                    />
-                  </HStack>
-                </TouchableOpacity>
-              );
-            },
-          )}
-        </HStack>
-      </View>
-      <View>
-        <Text style={[styles.label, styles.sectionPadding]}>Summary</Text>
-        <GroupDetailSummaryCarousel group={currentGroup} />
-      </View>
-
-      <View style={styles.sectionPadding}>
-        <Text style={styles.label}>Member</Text>
-        <TouchableOpacity
-          style={styles.members}
-          onPress={() =>
-            navigation.navigate("GroupUserList", { groupId: currentGroup.id })
-          }
-        >
-          <Text>{`Current: ${profile.name}`}</Text>
-          <Text>{memberListText}</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.sectionPadding}>
-        <Text style={styles.label}>Payment</Text>
-        <HStack>
-          <Text>
-            You have {currentGroup.paymentRecords.length} records in this group
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.sectionPadding}>
+          <Text h1>{currentGroup.name}</Text>
+          <Text style={styles.subtitle}>
+            {hasUnresolvedExpenses
+              ? "Your unresolved expenses are as below"
+              : "You have no unresolved expenses. Good job!"}
           </Text>
+          <HStack gap={6} justifyContent="flex-start" flexWrap="wrap">
+            {Object.entries(totalNetAmountByCurrency).map(
+              ([currencyCode, totalNetAmount]) => {
+                if (totalNetAmount === 0) return null;
 
+                const amount = formatAmount(
+                  totalNetAmount,
+                  currencyCode as CurrencyCode,
+                  { currencySymbol: "code" },
+                );
+                const sign = Math.sign(totalNetAmount);
+
+                return (
+                  <TouchableOpacity
+                    key={currencyCode}
+                    style={styles.amountButton}
+                  >
+                    <HStack gap={4}>
+                      <Text
+                        key={currencyCode}
+                        style={[
+                          styles.amountText,
+                          sign > 0 && { color: theme.colors.success },
+                          sign < 0 && { color: theme.colors.error },
+                        ]}
+                      >
+                        {amount}
+                      </Text>
+                      <AntDesign
+                        name="checkcircleo"
+                        size={24}
+                        color={theme.colors.grey3}
+                      />
+                    </HStack>
+                  </TouchableOpacity>
+                );
+              },
+            )}
+          </HStack>
+        </View>
+        <View>
+          <Text style={[styles.label, styles.sectionPadding]}>Summary</Text>
+          <GroupDetailSummaryCarousel group={currentGroup} />
+        </View>
+
+        <View style={styles.sectionPadding}>
+          <Text style={styles.label}>Member</Text>
           <TouchableOpacity
-            onPress={() => navigation.navigate("PaymentRecord")}
+            style={styles.members}
+            onPress={() =>
+              navigation.navigate("GroupUserList", { groupId: currentGroup.id })
+            }
           >
-            <AntDesign
-              name="arrowright"
-              size={24}
-              color={theme.colors.primary}
-            />
+            <Text>{`Current: ${profile.name}`}</Text>
+            <Text>{memberListText}</Text>
           </TouchableOpacity>
-        </HStack>
-      </View>
+        </View>
+
+        <View style={styles.sectionPadding}>
+          <Text style={styles.label}>Payment</Text>
+          <HStack>
+            <Text>
+              You have {currentGroup.paymentRecords.length} records in this
+              group
+            </Text>
+
+            <TouchableOpacity
+              onPress={() => navigation.navigate("PaymentRecord")}
+            >
+              <AntDesign
+                name="arrowright"
+                size={24}
+                color={theme.colors.primary}
+              />
+            </TouchableOpacity>
+          </HStack>
+        </View>
+      </ScrollView>
     </View>
   );
 };

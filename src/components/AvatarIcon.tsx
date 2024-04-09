@@ -30,7 +30,7 @@ const AvatarIcon = memo<IAvatarIconProps>(
           </Text>
         </View>
         {isShowName && (
-          <Text numberOfLines={1} style={styles.avatarName}>
+          <Text numberOfLines={2} style={styles.avatarName}>
             {userName}
           </Text>
         )}
@@ -64,7 +64,7 @@ const useStyles = makeStyles(
 
     return {
       avatarContainer: {
-        width: avatarSize[size] + 32,
+        width: avatarSize[size] + 24,
       },
       avatar: {
         backgroundColor: color,

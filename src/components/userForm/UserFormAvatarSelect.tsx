@@ -1,5 +1,5 @@
 import { AntDesign } from "@expo/vector-icons";
-import { Text, makeStyles } from "@rneui/themed";
+import { Text, makeStyles, useTheme } from "@rneui/themed";
 import { memo } from "react";
 import { TouchableOpacity, View } from "react-native";
 
@@ -20,6 +20,7 @@ const ProfileFormAvatarSelect = ({
   selectedColor,
 }: IProfileFormAvatarSelectProps) => {
   const styles = useStyles();
+  const { theme } = useTheme();
 
   if (!userName) {
     return (
@@ -42,7 +43,7 @@ const ProfileFormAvatarSelect = ({
             <AvatarIcon color={color} userName={userName} />
             {selectedColor === color && (
               <View style={styles.selectedTick}>
-                <AntDesign name="check" size={12} color="white" />
+                <AntDesign name="check" size={12} color={theme.colors.white} />
               </View>
             )}
           </View>
@@ -64,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
   selectedTick: {
     position: "absolute",
     bottom: 0,
-    right: 0,
+    right: 8,
     padding: 4,
     width: 20,
     height: 20,

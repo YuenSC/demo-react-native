@@ -2,7 +2,13 @@ import { CurrencyCode, currencyCodes } from "@/types/Currency";
 import { PaymentDetail, PaymentRecord } from "@/types/PaymentRecord";
 import { User } from "@/types/User";
 
-export const getPaymentRelationship = (
+export type PaymentRelationship = {
+  payer: User;
+  receiver: User;
+  requiredAmount: number;
+}[];
+
+export const getPaymentRelationshipByCurrency = (
   members: User[],
   records = [] as PaymentRecord[],
 ) => {
@@ -10,10 +16,10 @@ export const getPaymentRelationship = (
     members.map((member) => [member.id, member]),
   );
 
-  return records.reduce(
+  const paymentRelationshipByCurrency = records.reduce(
     (paymentRelationshipByCurrency, record) => {
       paymentRelationshipByCurrency[record.currencyCode] =
-        paymentRelationshipByCurrency[record.currencyCode] ?? {};
+        paymentRelationshipByCurrency[record.currencyCode] ?? [];
 
       const paymentRelationship =
         paymentRelationshipByCurrency[record.currencyCode];
@@ -26,9 +32,6 @@ export const getPaymentRelationship = (
       let payerIndex = 0;
       let receiverIndex = 0;
 
-      if (record.currencyCode === "HKD") {
-        console.log("here");
-      }
       while (receiverIndex < payeeActualAmountPerUser.length) {
         const payer = payerActualAmountPerUser[payerIndex];
         const receiver = payeeActualAmountPerUser[receiverIndex];
@@ -40,14 +43,34 @@ export const getPaymentRelationship = (
         const isMoneyLeftInReceiver = receiver.amount > payer.amount;
 
         if (payer.id !== receiver.id) {
-          paymentRelationship[receiver.id] = {
-            payer: memberById[receiver.id],
-            receiverId: payer.id,
-            receiver: memberById[payer.id],
-            requiredAmount:
-              receiver.amount +
-              (paymentRelationship[receiver.id]?.requiredAmount ?? 0),
-          };
+          const currentPaymentRelationship = paymentRelationship.find(
+            (i) =>
+              (i.payer.id === receiver.id && i.receiver.id === payer.id) ||
+              (i.payer.id === payer.id && i.receiver.id === receiver.id),
+          );
+
+          if (currentPaymentRelationship) {
+            if (currentPaymentRelationship.payer.id === receiver.id) {
+              currentPaymentRelationship.requiredAmount += amountToPaid;
+            } else {
+              currentPaymentRelationship.requiredAmount -= amountToPaid;
+            }
+
+            // Reserve the payer and receiver
+            if (currentPaymentRelationship.requiredAmount < 0) {
+              currentPaymentRelationship.payer = memberById[receiver.id];
+              currentPaymentRelationship.receiver = memberById[payer.id];
+              currentPaymentRelationship.requiredAmount = Math.abs(
+                currentPaymentRelationship.requiredAmount,
+              );
+            }
+          } else {
+            paymentRelationship.push({
+              payer: memberById[receiver.id],
+              receiver: memberById[payer.id],
+              requiredAmount: receiver.amount,
+            });
+          }
         }
 
         payer.amount -= amountToPaid;
@@ -62,19 +85,110 @@ export const getPaymentRelationship = (
 
       return paymentRelationshipByCurrency;
     },
+    {} as Record<CurrencyCode, PaymentRelationship>,
+  );
+
+  const netAmountsByCurrency = records.reduce(
+    (prev, curr) => {
+      prev[curr.currencyCode] = prev[curr.currencyCode] ?? {};
+
+      members.forEach((member) => {
+        const relatedAmount = getRelatedAmount(member.id, curr);
+        if (!relatedAmount) return;
+        prev[curr.currencyCode][member.id] = {
+          netAmount:
+            relatedAmount.netAmount +
+            (prev[curr.currencyCode][member.id]?.netAmount ?? 0),
+          member,
+        };
+      });
+      return prev;
+    },
     {} as Record<
       CurrencyCode,
-      Record<
-        string, // payerId
-        {
-          payer: User;
-          receiver: User;
-          receiverId: string;
-          requiredAmount: number;
-        }
-      >
+      Record<string, { netAmount: number; member: User }>
     >,
   );
+
+  const simplifiedPaymentRelationshipByCurrency = Object.entries(
+    netAmountsByCurrency,
+  ).reduce(
+    (prev, [currencyCode, netAmountsById]) => {
+      const netAmounts = Object.values(netAmountsById).sort((a, b) =>
+        a.netAmount > b.netAmount ? 1 : -1,
+      );
+
+      let receiverIndex = 0;
+      let payerIndex = netAmounts.length - 1;
+
+      while (receiverIndex < payerIndex) {
+        const receiver = netAmounts[receiverIndex];
+        const payer = netAmounts[payerIndex];
+
+        if (!receiver || !payer) break;
+
+        const amountToPaid = Math.min(
+          Math.abs(receiver.netAmount),
+          Math.abs(payer.netAmount),
+        );
+
+        if (amountToPaid === 0) break;
+
+        prev[currencyCode as CurrencyCode] =
+          prev[currencyCode as CurrencyCode] ?? [];
+
+        const paymentRelationship = prev[currencyCode as CurrencyCode];
+
+        const currentPaymentRelationship = paymentRelationship.find(
+          (i) =>
+            i.payer.id === payer.member.id &&
+            i.receiver.id === receiver.member.id,
+        );
+
+        if (currentPaymentRelationship) {
+          if (currentPaymentRelationship.payer.id === receiver.member.id) {
+            currentPaymentRelationship.requiredAmount += amountToPaid;
+          } else {
+            currentPaymentRelationship.requiredAmount -= amountToPaid;
+          }
+
+          // Reserve the payer and receiver
+          if (currentPaymentRelationship.requiredAmount < 0) {
+            currentPaymentRelationship.payer = memberById[receiver.member.id];
+            currentPaymentRelationship.receiver = memberById[payer.member.id];
+            currentPaymentRelationship.requiredAmount = Math.abs(
+              currentPaymentRelationship.requiredAmount,
+            );
+          }
+        } else {
+          paymentRelationship.push({
+            payer: receiver.member,
+            receiver: payer.member,
+            requiredAmount: amountToPaid,
+          });
+        }
+
+        receiver.netAmount += amountToPaid;
+        payer.netAmount -= amountToPaid;
+
+        if (Math.round(receiver.netAmount) === 0) receiverIndex++;
+        if (Math.round(payer.netAmount) === 0) payerIndex--;
+      }
+
+      return prev;
+    },
+    {} as Record<CurrencyCode, PaymentRelationship>,
+  );
+
+  console.log(
+    "simplifiedPaymentRelationshipByCurrency",
+    JSON.stringify(simplifiedPaymentRelationshipByCurrency, null, 2),
+  );
+
+  return {
+    paymentRelationshipByCurrency,
+    simplifiedPaymentRelationshipByCurrency,
+  };
 };
 
 export const getTotalNetAmount = (userId: string, records: PaymentRecord[]) => {
