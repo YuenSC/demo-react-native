@@ -53,6 +53,9 @@ export type IStackParamList = {
     groupId: string;
     recordId: string;
   };
+  GroupSummary: {
+    groupId: string;
+  };
 };
 
 export type IStackScreenProps<Screen extends keyof IStackParamList> =

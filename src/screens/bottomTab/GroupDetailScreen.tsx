@@ -101,6 +101,11 @@ const GroupDetailScreen = ({
                   <TouchableOpacity
                     key={currencyCode}
                     style={styles.amountButton}
+                    onPress={() =>
+                      navigation.navigate("GroupSummary", {
+                        groupId: currentGroup.id,
+                      })
+                    }
                   >
                     <HStack gap={4}>
                       <Text

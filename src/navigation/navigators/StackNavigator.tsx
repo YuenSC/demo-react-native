@@ -10,6 +10,7 @@ import SampleScreen from "@/screens/SampleScreen";
 import EditMemberScreen from "@/screens/stack/EditMemberScreen";
 import GroupDeletePaymentRecordBottomSheet from "@/screens/stack/GroupDeletePaymentRecordBottomSheet";
 import GroupDeleteUserBottomSheet from "@/screens/stack/GroupDeleteUserBottomSheet";
+import GroupSummaryScreen from "@/screens/stack/GroupSummaryScreen";
 import GroupUserListScreen from "@/screens/stack/GroupUserListScreen";
 import OnboardingScreen from "@/screens/stack/OnboardingScreen";
 import PaymentFormCurrencySelectBottomSheet from "@/screens/stack/PaymentFormCurrencySelectBottomSheet";
@@ -35,15 +36,9 @@ const StackNavigator = memo(() => {
       screenOptions={{
         gestureResponseDistance: Device.screen.width,
         headerBackTitle: "",
-        headerStyle: {
-          backgroundColor: theme.colors.background,
-        },
-        headerTitleStyle: {
-          color: theme.colors.black,
-        },
-        headerBackTitleStyle: {
-          color: theme.colors.black,
-        },
+        headerStyle: { backgroundColor: theme.colors.background },
+        headerTitleStyle: { color: theme.colors.black },
+        headerBackTitleStyle: { color: theme.colors.black },
         headerTintColor: theme.colors.black,
       }}
     >
@@ -69,6 +64,13 @@ const StackNavigator = memo(() => {
       />
 
       <Stack.Screen component={PaymentFormScreen} name="EditPayment" />
+      <Stack.Screen
+        component={GroupSummaryScreen}
+        name="GroupSummary"
+        options={{
+          headerTitle: "Group Summary",
+        }}
+      />
 
       {/* Bottom Sheet */}
       <Stack.Group

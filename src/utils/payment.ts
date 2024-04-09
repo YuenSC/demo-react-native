@@ -284,7 +284,7 @@ export const formatAmount = (
   },
 ) => {
   const sign = amount < 0 ? "-" : "";
-  const currencySymbol = options?.currencySymbol ?? "symbol";
+  const currencySymbol = options?.currencySymbol ?? "code";
 
   return (
     sign +

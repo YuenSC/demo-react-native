@@ -1,7 +1,7 @@
 import { AntDesign } from "@expo/vector-icons";
 import { Button, Switch, Text, makeStyles, useTheme } from "@rneui/themed";
 import { memo, useState } from "react";
-import { View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 
 import FullWidthArrow from "./FullWidthArrow";
 import AvatarIcon from "../AvatarIcon";
@@ -19,6 +19,7 @@ type IGroupDetailSummaryItemProps = {
   paymentRelationship: PaymentRelationship;
   simplifiedPaymentRelationship: PaymentRelationship;
   itemWidth: number;
+  onSummaryItemPress: () => void;
 };
 
 const GroupDetailSummaryItem = memo<IGroupDetailSummaryItemProps>(
@@ -27,6 +28,7 @@ const GroupDetailSummaryItem = memo<IGroupDetailSummaryItemProps>(
     paymentRelationship,
     itemWidth,
     simplifiedPaymentRelationship,
+    onSummaryItemPress,
   }) => {
     const styles = useStyles(itemWidth);
     const { theme } = useTheme();
@@ -62,14 +64,21 @@ const GroupDetailSummaryItem = memo<IGroupDetailSummaryItemProps>(
             </HStack>
           </VStack>
 
-          <Button size="sm" buttonStyle={styles.rounded}>
+          <Button
+            size="sm"
+            buttonStyle={styles.rounded}
+            onPress={onSummaryItemPress}
+          >
             <AntDesign name="checkcircleo" size={24} color="black" />
           </Button>
         </HStack>
 
         <VStack alignItems="stretch" gap={16}>
           {relationship.map((item) => (
-            <View key={currencyCode + item.payer.name + item.receiver.name}>
+            <TouchableOpacity
+              onPress={onSummaryItemPress}
+              key={currencyCode + item.payer.name + item.receiver.name}
+            >
               <HStack>
                 <VStack>
                   <AvatarIcon
@@ -99,7 +108,7 @@ const GroupDetailSummaryItem = memo<IGroupDetailSummaryItemProps>(
                   />
                 </VStack>
               </HStack>
-            </View>
+            </TouchableOpacity>
           ))}
         </VStack>
       </VStack>

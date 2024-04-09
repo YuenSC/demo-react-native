@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { Text, makeStyles } from "@rneui/themed";
 import { memo } from "react";
 import { ScrollView, View, useWindowDimensions } from "react-native";
@@ -16,6 +17,7 @@ const GroupDetailSummaryCarousel = memo<IGroupDetailSummaryCarouselProps>(
   ({ group }) => {
     const styles = useStyles();
     const windowDimensions = useWindowDimensions();
+    const navigation = useNavigation();
 
     const {
       paymentRelationshipByCurrency,
@@ -51,6 +53,9 @@ const GroupDetailSummaryCarousel = memo<IGroupDetailSummaryCarouselProps>(
           ([currencyCode, items]) => (
             <GroupDetailSummaryItem
               key={currencyCode}
+              onSummaryItemPress={() =>
+                navigation.navigate("GroupSummary", { groupId: group.id })
+              }
               currencyCode={currencyCode as CurrencyCode}
               itemWidth={itemWidth}
               paymentRelationship={items}
