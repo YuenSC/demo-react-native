@@ -7,6 +7,7 @@ import { useAppSelector } from "@/hooks/reduxHook";
 import SampleScreen from "@/screens/SampleScreen";
 import GroupDetailScreen from "@/screens/bottomTab/GroupDetailScreen";
 import PaymentRecordScreen from "@/screens/bottomTab/PaymentRecordScreen";
+import StatisticScreen from "@/screens/bottomTab/StatisticScreen";
 import { IBottomTabParamList } from "@/types/navigation";
 
 const BottomTab = createBottomTabNavigator<IBottomTabParamList>();
@@ -41,7 +42,7 @@ const BottomTabNavigator = () => {
       />
       <BottomTab.Screen
         name="Statistic"
-        component={SampleScreen}
+        component={StatisticScreen}
         options={{
           tabBarIcon: ({ color }) => (
             <Ionicons name="stats-chart" size={24} color={color} />
