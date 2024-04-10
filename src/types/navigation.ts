@@ -8,6 +8,7 @@ import {
 import { StackScreenProps } from "@react-navigation/stack";
 
 import { CurrencyCode } from "./Currency";
+import { PaymentRecordCreate } from "./PaymentRecord";
 
 // Structure of the navigation params
 // Tab -> BottomTab -> Stack
@@ -26,9 +27,21 @@ export type IStackParamList = {
   Drawer: NavigatorScreenParams<IDrawerParamList> | undefined;
   SignUpSuccessBottomSheet: undefined;
   EditMember: { id: string; groupId: string };
-  AddPayment: { groupId: string; recordId?: string };
-  EditPayment: { groupId: string; recordId: string };
-  EditPaymentModal: { groupId: string; recordId: string };
+  AddPayment: {
+    groupId: string;
+    recordId?: string;
+    defaultValue?: PaymentRecordCreate;
+  };
+  EditPayment: {
+    groupId: string;
+    recordId: string;
+    defaultValue?: PaymentRecordCreate;
+  };
+  EditPaymentModal: {
+    groupId: string;
+    recordId: string;
+    defaultValue?: PaymentRecordCreate;
+  };
   MemberList: undefined;
   GroupUserList: { groupId: string };
   PaymentRecordFilter: {

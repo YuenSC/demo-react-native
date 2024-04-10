@@ -1,18 +1,13 @@
 import { AntDesign } from "@expo/vector-icons";
 import { Button, Switch, Text, makeStyles, useTheme } from "@rneui/themed";
 import { memo, useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity } from "react-native";
 
-import FullWidthArrow from "./FullWidthArrow";
-import AvatarIcon from "../AvatarIcon";
+import PaymentRelationshipDisplay from "./PaymentRelationshipDisplay";
 import { HStack, VStack } from "../common/Stack";
 
 import { CurrencyCode } from "@/types/Currency";
-import {
-  PaymentRelationship,
-  formatAmount,
-  roundAmountToTwoDecimal,
-} from "@/utils/payment";
+import { PaymentRelationship } from "@/utils/payment";
 
 type IGroupDetailSummaryItemProps = {
   currencyCode: CurrencyCode;
@@ -55,11 +50,11 @@ const GroupDetailSummaryItem = memo<IGroupDetailSummaryItemProps>(
                 value={isUsingSimplified}
                 onValueChange={setIsUsingSimplified}
                 style={styles.switch}
+                ios_backgroundColor={theme.colors.grey2}
                 trackColor={{
                   true: theme.colors.primary,
                   false: theme.colors.grey2,
                 }}
-                ios_backgroundColor={theme.colors.grey2}
               />
             </HStack>
           </VStack>
@@ -74,40 +69,17 @@ const GroupDetailSummaryItem = memo<IGroupDetailSummaryItemProps>(
         </HStack>
 
         <VStack alignItems="stretch" gap={16}>
-          {relationship.map((item) => (
+          {relationship?.map((item) => (
             <TouchableOpacity
               onPress={onSummaryItemPress}
               key={currencyCode + item.payer.name + item.receiver.name}
             >
-              <HStack>
-                <VStack>
-                  <AvatarIcon
-                    userName={item.payer.name}
-                    color={item.payer.avatarColor}
-                    size="small"
-                    isShowName
-                  />
-                </VStack>
-                <View style={styles.amountContainer}>
-                  <FullWidthArrow />
-                  <VStack>
-                    <Text>
-                      {formatAmount(
-                        roundAmountToTwoDecimal(item.requiredAmount),
-                        currencyCode as CurrencyCode,
-                      )}
-                    </Text>
-                  </VStack>
-                </View>
-                <VStack>
-                  <AvatarIcon
-                    userName={item.receiver.name}
-                    color={item.receiver.avatarColor}
-                    size="small"
-                    isShowName
-                  />
-                </VStack>
-              </HStack>
+              <PaymentRelationshipDisplay
+                currencyCode={currencyCode}
+                payer={item.payer}
+                receiver={item.receiver}
+                requiredAmount={item.requiredAmount}
+              />
             </TouchableOpacity>
           ))}
         </VStack>
@@ -125,10 +97,7 @@ const useStyles = makeStyles((theme, itemWidth: number) => ({
     borderWidth: 1,
     borderColor: theme.colors.divider,
   },
-  amountContainer: {
-    flex: 1,
-    marginHorizontal: 12,
-  },
+
   switch: {
     transform: [
       {

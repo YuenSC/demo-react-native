@@ -1,6 +1,7 @@
-import GorhomBottomSheet from "@gorhom/bottom-sheet";
+import GorhomBottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import { makeStyles } from "@rneui/themed";
-import { ComponentProps, forwardRef, memo } from "react";
+import { ComponentProps, forwardRef } from "react";
+import { StyleSheet } from "react-native";
 
 type IStyledBottomSheetProps = ComponentProps<typeof GorhomBottomSheet>;
 
@@ -14,12 +15,22 @@ const StyledBottomSheet = forwardRef<
     <GorhomBottomSheet
       {...props}
       ref={ref}
-      containerStyle={[styles.backdrop, props.containerStyle]}
+      containerStyle={[props.containerStyle]}
       backgroundStyle={[styles.background, props.backgroundStyle]}
       handleIndicatorStyle={[
         styles.handleIndicator,
         props.handleIndicatorStyle,
       ]}
+      backdropComponent={(props) => (
+        <BottomSheetBackdrop
+          {...props}
+          opacity={0.5}
+          enableTouchThrough={false}
+          appearsOnIndex={0}
+          disappearsOnIndex={-1}
+          style={[styles.backdrop, StyleSheet.absoluteFillObject]}
+        />
+      )}
     >
       {children}
     </GorhomBottomSheet>

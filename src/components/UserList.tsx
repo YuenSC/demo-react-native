@@ -132,7 +132,7 @@ const UserList = memo<IUserListProps>(
               onPress={() => setIsFocused(true)}
               style={[styles.input]}
             >
-              <Entypo name="plus" size={24} color="black" />
+              <Entypo name="plus" size={24} color={theme.colors.primary} />
               <Text style={styles.memberName}>Add participant</Text>
             </TouchableOpacity>
           )}

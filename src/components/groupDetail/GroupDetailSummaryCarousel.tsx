@@ -25,7 +25,7 @@ const GroupDetailSummaryCarousel = memo<IGroupDetailSummaryCarouselProps>(
     } = getPaymentRelationshipByCurrency(group.members, group.paymentRecords);
 
     const isSingleCurrency =
-      Object.keys(paymentRelationshipByCurrency).length === 1;
+      Object.keys(simplifiedPaymentRelationshipByCurrency).length === 1;
 
     const itemWidth = isSingleCurrency
       ? windowDimensions.width - 32
@@ -35,6 +35,14 @@ const GroupDetailSummaryCarousel = memo<IGroupDetailSummaryCarouselProps>(
       return (
         <View style={styles.container}>
           <Text>No payment records found</Text>
+        </View>
+      );
+    }
+
+    if (Object.keys(simplifiedPaymentRelationshipByCurrency).length === 0) {
+      return (
+        <View style={styles.container}>
+          <Text>All your expenses are balanced.</Text>
         </View>
       );
     }
@@ -49,7 +57,7 @@ const GroupDetailSummaryCarousel = memo<IGroupDetailSummaryCarouselProps>(
         decelerationRate="fast"
         scrollEnabled={!isSingleCurrency}
       >
-        {Object.entries(paymentRelationshipByCurrency).map(
+        {Object.entries(simplifiedPaymentRelationshipByCurrency).map(
           ([currencyCode, items]) => (
             <GroupDetailSummaryItem
               key={currencyCode}
@@ -58,12 +66,10 @@ const GroupDetailSummaryCarousel = memo<IGroupDetailSummaryCarouselProps>(
               }
               currencyCode={currencyCode as CurrencyCode}
               itemWidth={itemWidth}
-              paymentRelationship={items}
-              simplifiedPaymentRelationship={
-                simplifiedPaymentRelationshipByCurrency[
-                  currencyCode as CurrencyCode
-                ]
+              paymentRelationship={
+                paymentRelationshipByCurrency[currencyCode as CurrencyCode]
               }
+              simplifiedPaymentRelationship={items}
             />
           ),
         )}

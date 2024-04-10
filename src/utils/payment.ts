@@ -9,9 +9,22 @@ export type PaymentRelationship = {
 }[];
 
 export const getPaymentRelationshipByCurrency = (
-  members: User[],
+  members?: User[],
   records = [] as PaymentRecord[],
 ) => {
+  if (!members) {
+    return {
+      paymentRelationshipByCurrency: {} as Record<
+        CurrencyCode,
+        PaymentRelationship
+      >,
+      simplifiedPaymentRelationshipByCurrency: {} as Record<
+        CurrencyCode,
+        PaymentRelationship
+      >,
+    };
+  }
+
   const memberById = Object.fromEntries(
     members.map((member) => [member.id, member]),
   );
@@ -180,11 +193,6 @@ export const getPaymentRelationshipByCurrency = (
     {} as Record<CurrencyCode, PaymentRelationship>,
   );
 
-  console.log(
-    "simplifiedPaymentRelationshipByCurrency",
-    JSON.stringify(simplifiedPaymentRelationshipByCurrency, null, 2),
-  );
-
   return {
     paymentRelationshipByCurrency,
     simplifiedPaymentRelationshipByCurrency,
@@ -192,7 +200,7 @@ export const getPaymentRelationshipByCurrency = (
 };
 
 export const getTotalNetAmount = (userId: string, records: PaymentRecord[]) => {
-  return records.reduce(
+  const totalNetAmount = records.reduce(
     (prev, curr) => {
       const { netAmount, currencyCode } = getRelatedAmount(userId, curr) ?? {
         netAmount: 0,
@@ -207,6 +215,15 @@ export const getTotalNetAmount = (userId: string, records: PaymentRecord[]) => {
     },
     {} as Record<CurrencyCode, number>,
   );
+
+  // Round the amount to 2 decimal places to prevent extreme small value
+  Object.keys(totalNetAmount).forEach((currencyCode) => {
+    totalNetAmount[currencyCode as CurrencyCode] = roundAmountToDecimal(
+      totalNetAmount[currencyCode as CurrencyCode],
+    );
+  });
+
+  return totalNetAmount;
 };
 
 export const getRelatedAmount = (userId?: string, record?: PaymentRecord) => {
@@ -268,12 +285,13 @@ export const getActualAmountPerUser = (
 
   return {
     actualAmountPerUser,
-    isPaymentEqualExpense: Math.round(realAmountSum) === amount,
+    isPaymentEqualExpense:
+      roundAmountToDecimal(realAmountSum) === roundAmountToDecimal(amount),
   };
 };
 
-export const roundAmountToTwoDecimal = (amount: number) => {
-  return parseFloat(amount.toFixed(2));
+export const roundAmountToDecimal = (amount: number, decimal: number = 2) => {
+  return parseFloat(amount.toFixed(decimal));
 };
 
 export const formatAmount = (
@@ -283,13 +301,15 @@ export const formatAmount = (
     currencySymbol?: "symbol" | "code";
   },
 ) => {
-  const sign = amount < 0 ? "-" : "";
+  const formattedAmount = roundAmountToDecimal(amount);
+
+  const sign = formattedAmount < 0 ? "-" : "";
   const currencySymbol = options?.currencySymbol ?? "code";
 
   return (
     sign +
     currencyCodes[currencyCode][currencySymbol] +
     (currencySymbol === "code" ? " " : "") +
-    Math.abs(amount).toLocaleString()
+    Math.abs(formattedAmount).toLocaleString()
   );
 };

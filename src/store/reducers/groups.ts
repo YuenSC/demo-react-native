@@ -211,6 +211,9 @@ export default groupsSlice.reducer;
 export const currentGroupSelector = (state: RootState) =>
   state.groups.groups.find((group) => group.id === state.groups.currentGroupId);
 
+export const groupSelector = (state: RootState, groupId: string) =>
+  state.groups.groups.find((group) => group.id === groupId);
+
 export const memberSelector = (
   state: RootState,
   groupId: string,

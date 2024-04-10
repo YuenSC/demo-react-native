@@ -19,7 +19,7 @@ const Tab = createMaterialTopTabNavigator<IAddPaymentTabParamList>();
 const PaymentFormScreen = ({
   navigation,
   route: {
-    params: { groupId, recordId },
+    params: { groupId, recordId, defaultValue },
   },
 }: IStackScreenProps<"AddPayment" | "EditPayment" | "EditPaymentModal">) => {
   const styles = useStyles();
@@ -35,6 +35,7 @@ const PaymentFormScreen = ({
   );
   const record = group?.paymentRecords.find((item) => item.id === recordId);
 
+  console.log("defaultValue", defaultValue);
   const form = useForm<PaymentRecordCreate>({
     defaultValues: {
       amount: Config.isDev ? 1000 : 0,
@@ -59,19 +60,20 @@ const PaymentFormScreen = ({
 
   useEffect(() => {
     navigation.setOptions({ title: group?.name, headerBackTitle: "" });
+    const resetValues = record || defaultValue;
 
-    if (record) {
+    if (resetValues) {
       reset({
-        id: record.id,
-        amount: record.amount,
-        currencyCode: record.currencyCode,
-        groupId: record.groupId,
-        date: record.date,
-        category: record.category,
-        comment: record.comment,
+        id: resetValues.id,
+        amount: resetValues.amount,
+        currencyCode: resetValues.currencyCode,
+        groupId: resetValues.groupId,
+        date: resetValues.date,
+        category: resetValues.category,
+        comment: resetValues.comment,
         payers:
           group?.members.map((user) => {
-            const payer = record.payers.find((p) => p.id === user.id);
+            const payer = resetValues.payers.find((p) => p.id === user.id);
             if (payer) return payer;
 
             return {
@@ -81,7 +83,7 @@ const PaymentFormScreen = ({
           }) ?? [],
         payees:
           group?.members.map((user) => {
-            const payee = record.payees.find((p) => p.id === user.id);
+            const payee = resetValues.payees.find((p) => p.id === user.id);
             if (payee) return payee;
 
             return {
@@ -91,7 +93,7 @@ const PaymentFormScreen = ({
           }) ?? [],
       });
     }
-  }, [group?.members, group?.name, navigation, record, reset]);
+  }, [defaultValue, group?.members, group?.name, navigation, record, reset]);
 
   useEffect(() => {
     if (record) {

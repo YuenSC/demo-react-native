@@ -34,6 +34,7 @@ const GroupDetailScreen = ({
       profile.id,
       currentGroup.paymentRecords,
     );
+
     return {
       totalNetAmountByCurrency,
       hasUnresolvedExpenses: Object.values(totalNetAmountByCurrency).some(
@@ -118,11 +119,6 @@ const GroupDetailScreen = ({
                       >
                         {amount}
                       </Text>
-                      <AntDesign
-                        name="checkcircleo"
-                        size={24}
-                        color={theme.colors.grey3}
-                      />
                     </HStack>
                   </TouchableOpacity>
                 );
@@ -131,7 +127,22 @@ const GroupDetailScreen = ({
           </HStack>
         </View>
         <View>
-          <Text style={[styles.label, styles.sectionPadding]}>Summary</Text>
+          <HStack style={[styles.sectionPadding, { marginBottom: 2 }]}>
+            <Text style={styles.label}>Summary</Text>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("GroupSummary", {
+                  groupId: currentGroup.id,
+                })
+              }
+            >
+              <AntDesign
+                name="arrowright"
+                size={24}
+                color={theme.colors.primary}
+              />
+            </TouchableOpacity>
+          </HStack>
           <GroupDetailSummaryCarousel group={currentGroup} />
         </View>
 
