@@ -10,6 +10,13 @@ const OptionsScreen = () => {
   return (
     <View style={styles.container}>
       <Text h1>Options</Text>
+      <Text>Group</Text>
+      <Text>Profile</Text>
+      <Text>Member</Text>
+      <Text>Category</Text>
+      <Text>Language</Text>
+      <Text>Online Mode</Text>
+      <Text>Delete Group Mode</Text>
     </View>
   );
 };

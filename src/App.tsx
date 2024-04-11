@@ -16,7 +16,7 @@ const App = () => {
       <PersistGate loading={null} persistor={persistor}>
         <SafeAreaProvider>
           <ThemeProvider theme={theme}>
-            <StatusBar style="dark" />
+            <StatusBar style="light" />
             <Navigation />
           </ThemeProvider>
         </SafeAreaProvider>

@@ -1,12 +1,13 @@
 import { AntDesign } from "@expo/vector-icons";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
-import { DrawerActions, useNavigation } from "@react-navigation/native";
-import { Button, makeStyles, Text, useTheme } from "@rneui/themed";
+import { useNavigation } from "@react-navigation/native";
+import { Button, Text, makeStyles, useTheme } from "@rneui/themed";
 import { memo } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import Config from "@/Config";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import {
   currentGroupSelector,
@@ -71,7 +72,7 @@ const DrawerContent = memo<IDrawerContentProps>(({ state }) => {
         }}
       />
       <View>
-        <Text>Version 1.0.0</Text>
+        <Text>Version {Config.version}</Text>
       </View>
     </SafeAreaView>
   );
