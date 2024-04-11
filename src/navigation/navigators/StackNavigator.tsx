@@ -28,7 +28,7 @@ const StackNavigator = memo(() => {
   const { theme } = useTheme();
 
   const isInitialSetupDone = useAppSelector(
-    (state) => !!state.profile.id && !!state.groups?.groups?.[0]?.id,
+    (state) => !!state.profile.userId && !!state.groups?.groups?.[0]?.id,
   );
 
   return (

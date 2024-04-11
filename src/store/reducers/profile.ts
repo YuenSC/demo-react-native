@@ -1,11 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import "react-native-get-random-values";
-import { v4 as uuidv4 } from "uuid";
 
-import { IProfileCreatePayload } from "@/types/ProfileCreate";
-import { User } from "@/types/User";
+import { RootState } from "..";
 
-export type ProfileState = Partial<User>;
+export type ProfileState = {
+  userId?: string;
+};
 
 const initialState: ProfileState = {};
 
@@ -13,12 +12,8 @@ export const profileSlice = createSlice({
   name: "profile",
   initialState,
   reducers: {
-    updateProfile: (state, action: PayloadAction<IProfileCreatePayload>) => {
-      if (!state.id) {
-        state.id = uuidv4();
-      }
-      state.name = action.payload.name;
-      state.avatarColor = action.payload.avatarColor;
+    updateProfile: (state, action: PayloadAction<string>) => {
+      state.userId = action.payload;
     },
   },
 });
@@ -26,3 +21,7 @@ export const profileSlice = createSlice({
 export const { updateProfile } = profileSlice.actions;
 
 export default profileSlice.reducer;
+
+export const profileUserSelector = (state: RootState) => {
+  return state.users.users.find((user) => user.id === state.profile.userId);
+};

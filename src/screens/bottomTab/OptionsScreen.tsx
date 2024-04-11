@@ -4,8 +4,9 @@ import { Fragment } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 
 import { HStack } from "@/components/common/Stack";
+import { IBottomTabScreenProps } from "@/types/navigation";
 
-const OptionsScreen = () => {
+const OptionsScreen = ({ navigation }: IBottomTabScreenProps<"Option">) => {
   const styles = useStyles();
 
   return (
@@ -23,7 +24,7 @@ const OptionsScreen = () => {
       <Section
         title="Group Related"
         sections={[
-          <SectionItem title="Group" onPress={() => {}} />,
+          <SectionItem title="Group Detail" onPress={() => {}} />,
           <SectionItem title="Member" onPress={() => {}} />,
           <SectionItem title="Category" onPress={() => {}} />,
         ]}
@@ -33,7 +34,12 @@ const OptionsScreen = () => {
         title="App Related"
         sections={[
           <SectionItem title="Language" onPress={() => {}} />,
-          <SectionItem title="Online Mode" onPress={() => {}} />,
+          <SectionItem
+            title="Online Mode"
+            onPress={() => {}}
+            disabled
+            itemRight={<Text style={styles.sectionLabel}>Coming Soon</Text>}
+          />,
         ]}
       />
 
@@ -92,7 +98,7 @@ const SectionItem = ({
       disabled={disabled}
       onPress={onPress}
     >
-      <HStack>
+      <HStack style={{ minHeight: 24 }}>
         <Text>{title}</Text>
         {itemRight ? (
           itemRight

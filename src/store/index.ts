@@ -13,6 +13,7 @@ import {
 
 import groupsReducer from "./reducers/groups";
 import profileReducer from "./reducers/profile";
+import usersReducer from "./reducers/users";
 
 const persistConfig = {
   key: "root",
@@ -22,6 +23,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   groups: groupsReducer,
   profile: profileReducer,
+  users: usersReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

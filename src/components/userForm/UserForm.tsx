@@ -7,13 +7,13 @@ import ProfileFormAvatarSelect from "./UserFormAvatarSelect";
 import { VStack } from "../common/Stack";
 
 import { useAppSelector } from "@/hooks/reduxHook";
+import { userSelector } from "@/store/reducers/users";
 import { AvatarColor } from "@/types/AvatarColor";
-import { IProfileCreatePayload } from "@/types/ProfileCreate";
+import { IUserCreatePayload } from "@/types/User";
 
 type IUserFormProps = {
-  type: "profile" | "groupUser";
   isEdit?: boolean;
-  onSubmit: (values: IProfileCreatePayload) => void;
+  onSubmit: (values: IUserCreatePayload) => void;
   onDelete?: () => void;
   groupId?: string;
   userId?: string;
@@ -21,29 +21,20 @@ type IUserFormProps = {
 };
 
 const UserForm = memo<IUserFormProps>(
-  ({ type, onSubmit, isEdit, groupId, userId, onDelete, submitButtonText }) => {
+  ({ onSubmit, isEdit, userId, onDelete, submitButtonText }) => {
     const styles = useStyles();
-    const primaryUser = useAppSelector((state) => state.profile);
-    const groups = useAppSelector((state) => state.groups.groups);
+    const user = useAppSelector((state) => userSelector(state, userId));
 
     const defaultUser = useMemo(() => {
-      if (!isEdit)
-        return {
-          name: "Calvin", // TODO: REMOVE THIS LINE
-          avatarColor: AvatarColor.AmethystPurple,
-        };
+      return isEdit
+        ? user
+        : {
+            name: "Calvin", // TODO: REMOVE THIS LINE
+            avatarColor: AvatarColor.AmethystPurple,
+          };
+    }, [isEdit, user]);
 
-      switch (type) {
-        case "profile":
-          return primaryUser;
-        case "groupUser":
-          return groups
-            .find((group) => group.id === groupId)
-            ?.members?.find((member) => member.id === userId);
-      }
-    }, [groupId, groups, isEdit, primaryUser, type, userId]);
-
-    const { control, handleSubmit } = useForm<IProfileCreatePayload>({
+    const { control, handleSubmit } = useForm<IUserCreatePayload>({
       defaultValues: defaultUser,
     });
 

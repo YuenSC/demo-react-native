@@ -1,6 +1,5 @@
-import { Text, makeStyles, useTheme } from "@rneui/themed";
+import { makeStyles, useTheme } from "@rneui/themed";
 import { memo, useMemo } from "react";
-import { View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { MarkedDates } from "react-native-calendars/src/types";
 

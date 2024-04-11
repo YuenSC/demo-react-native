@@ -48,7 +48,7 @@ const EditMemberScreen = ({
         onSubmit={(values) => {
           dispatch(
             updateMember({
-              groupId,
+              groupIds: groupId,
               id,
               name: values.name.trim(),
               avatarColor: values.avatarColor,

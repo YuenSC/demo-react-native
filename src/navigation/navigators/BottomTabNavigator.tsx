@@ -1,14 +1,14 @@
 import {
-  Ionicons,
-  MaterialIcons,
   AntDesign,
   FontAwesome,
+  Ionicons,
+  MaterialIcons,
 } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { DrawerActions } from "@react-navigation/native";
 import { useTheme } from "@rneui/themed";
-import { Pressable, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 
 import BottomTabBar from "../BottomTabBar";
 

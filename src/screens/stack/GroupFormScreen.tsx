@@ -1,6 +1,6 @@
 import { makeStyles } from "@rneui/themed";
-import { useEffect } from "react";
 import { View } from "react-native";
+import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 
 import GroupForm from "@/components/GroupForm";

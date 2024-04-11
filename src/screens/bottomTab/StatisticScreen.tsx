@@ -1,14 +1,5 @@
 import { Text, makeStyles, useTheme } from "@rneui/themed";
-import AnimatedLottieView from "lottie-react-native";
-import { View } from "react-native";
-import {
-  BarChart,
-  LineChart,
-  PieChart,
-  PopulationPyramid,
-  pieDataItem,
-  PieChartPro,
-} from "react-native-gifted-charts";
+import { PieChart, pieDataItem } from "react-native-gifted-charts";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const data: pieDataItem[] = [

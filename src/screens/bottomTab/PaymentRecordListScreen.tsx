@@ -3,7 +3,6 @@ import { Text, makeStyles, useTheme } from "@rneui/themed";
 import AnimatedLottieView from "lottie-react-native";
 import { useEffect, useMemo, useState } from "react";
 import { FlatList, TouchableOpacity, View } from "react-native";
-import { Calendar } from "react-native-calendars";
 
 import PaymentRecordDisplay from "@/components/PaymentRecordDisplay";
 import { HStack, VStack } from "@/components/common/Stack";
@@ -43,7 +42,7 @@ const PaymentRecordListScreen = ({
   const [target, setTarget] = useState<PaymentRecordListTarget>(
     PaymentRecordListTarget.You,
   );
-  const userId = useAppSelector((state) => state.profile.id);
+  const userId = useAppSelector((state) => state.profile.userId);
   const hasMoreThanOneCurrency = useMemo(() => {
     if (!currentGroup) {
       return false;

@@ -10,11 +10,7 @@ import AvatarIcon from "./AvatarIcon";
 import { HStack, VStack } from "./common/Stack";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
-import {
-  addExistingUserInGroup,
-  addMember,
-  groupSelector,
-} from "@/store/reducers/groups";
+import { addUser, groupUsersSelector } from "@/store/reducers/users";
 import { AvatarColor } from "@/types/AvatarColor";
 import "react-native-get-random-values";
 
@@ -31,14 +27,12 @@ const UserListForm = memo<IUserListFormProps>(
     const dispatch = useAppDispatch();
     const navigation = useNavigation();
 
-    const group = useAppSelector((state) => groupSelector(state, groupId));
+    const groupUsers = useAppSelector((state) =>
+      groupUsersSelector(state, groupId),
+    );
     const profile = useAppSelector((state) => state.profile);
     const [username, setUserName] = useState("");
     const [isFocused, setIsFocused] = useState(false);
-
-    const isProfileUserInGroup = group?.members?.some(
-      (member) => member.id === profile.id,
-    );
 
     return (
       <ScrollView
@@ -49,31 +43,11 @@ const UserListForm = memo<IUserListFormProps>(
           <Text h1 style={styles.title}>
             Members
           </Text>
-
-          {!isProfileUserInGroup && (
-            <TouchableOpacity
-              onPress={() => {
-                dispatch(
-                  addExistingUserInGroup({
-                    groupId,
-                    id: profile.id!,
-                    name: profile.name!,
-                    avatarColor: profile.avatarColor!,
-                  }),
-                );
-              }}
-            >
-              <HStack>
-                <Entypo name="plus" size={24} color={theme.colors.primary} />
-                <Text>Add Current User</Text>
-              </HStack>
-            </TouchableOpacity>
-          )}
         </VStack>
 
         <View>
-          {group?.members?.map((member) => {
-            const isProfileUser = member.id === profile.id;
+          {groupUsers?.map((member) => {
+            const isProfileUser = member.id === profile.userId;
 
             return (
               <View key={member.id} style={styles.memberContainer}>
@@ -92,21 +66,23 @@ const UserListForm = memo<IUserListFormProps>(
                 </HStack>
 
                 <HStack gap={8}>
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate("EditMember", {
-                        id: member.id,
-                        groupId,
-                        isDeleteDisabled: isProfileUser,
-                      })
-                    }
-                  >
-                    <Feather
-                      name="edit"
-                      size={24}
-                      color={theme.colors.primary}
-                    />
-                  </TouchableOpacity>
+                  {!isProfileUser && (
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate("EditMember", {
+                          id: member.id,
+                          groupId,
+                          isDeleteDisabled: isProfileUser,
+                        })
+                      }
+                    >
+                      <Feather
+                        name="edit"
+                        size={24}
+                        color={theme.colors.primary}
+                      />
+                    </TouchableOpacity>
+                  )}
                   <TouchableOpacity
                     onPress={() => {
                       navigation.navigate("GroupDeleteUserBottomSheet", {
@@ -145,8 +121,8 @@ const UserListForm = memo<IUserListFormProps>(
                 onEndEditing={() => {
                   if (username) {
                     dispatch(
-                      addMember({
-                        groupId,
+                      addUser({
+                        groupIds: [groupId],
                         name: username,
                         avatarColor: AvatarColor.AmethystPurple,
                       }),

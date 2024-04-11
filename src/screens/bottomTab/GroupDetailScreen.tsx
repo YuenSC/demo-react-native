@@ -9,6 +9,7 @@ import { HStack } from "@/components/common/Stack";
 import GroupDetailSummaryCarousel from "@/components/groupDetail/GroupDetailSummaryCarousel";
 import { useAppSelector } from "@/hooks/reduxHook";
 import { currentGroupSelector } from "@/store/reducers/groups";
+import { groupUsersSelector } from "@/store/reducers/users";
 import { CurrencyCode } from "@/types/Currency";
 import { IBottomTabScreenProps } from "@/types/navigation";
 import {
@@ -23,15 +24,19 @@ const GroupDetailScreen = ({
   const headerHeight = useHeaderHeight();
   const { theme } = useTheme();
   const currentGroup = useAppSelector(currentGroupSelector);
-
+  const groupUsers = useAppSelector((state) =>
+    groupUsersSelector(state, currentGroup?.id ?? ""),
+  );
   const profile = useAppSelector((state) => state.profile);
 
+  console.log("groupUsers", JSON.stringify(groupUsers, null, 2));
+
   const { totalNetAmountByCurrency, hasUnresolvedExpenses } = useMemo(() => {
-    if (!currentGroup || !profile.id)
+    if (!currentGroup || !profile.userId)
       return { totalNetAmountByCurrency: {} as Record<CurrencyCode, number> };
 
     const totalNetAmountByCurrency = getTotalNetAmountByCurrency(
-      profile.id,
+      profile.userId,
       currentGroup.paymentRecords,
     );
 
@@ -41,18 +46,18 @@ const GroupDetailScreen = ({
         (amount) => amount !== 0,
       ),
     };
-  }, [currentGroup, profile.id]);
+  }, [currentGroup, profile.userId]);
 
   const memberListText = useMemo(() => {
     if (!currentGroup) return "";
-    const names = currentGroup.members
-      .filter((item) => item.name !== profile.name)
+    const names = groupUsers
+      .filter((item) => item.id !== profile.userId)
       .map((item) => item.name);
 
     return names.length > 2
       ? `${names.slice(0, 2).join(", ")} and more ...`
       : names.join(" and ");
-  }, [currentGroup, profile.name]);
+  }, [currentGroup, groupUsers, profile.userId]);
 
   if (!currentGroup) {
     return (
@@ -155,7 +160,7 @@ const GroupDetailScreen = ({
             }
           >
             <HStack gap={8}>
-              <Text>{`Current: ${currentGroup.members.find((i) => i.id === profile.id)?.name ?? "Not In Group"}`}</Text>
+              <Text>{`Current: ${groupUsers.find((i) => i.id === profile.userId)?.name ?? "Not In Group"}`}</Text>
               <Text style={{ flex: 1, textAlign: "right" }} numberOfLines={1}>
                 {memberListText}
               </Text>

@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button, makeStyles } from "@rneui/themed";
 import AnimatedLottieView from "lottie-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";

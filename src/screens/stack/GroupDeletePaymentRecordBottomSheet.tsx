@@ -1,6 +1,5 @@
-import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import { BottomSheetView } from "@gorhom/bottom-sheet";
 import { Button, Text, makeStyles } from "@rneui/themed";
-import { View } from "react-native";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import StyledBottomSheet from "@/components/common/StyledBottomSheet";

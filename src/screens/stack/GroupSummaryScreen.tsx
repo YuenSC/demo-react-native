@@ -6,6 +6,7 @@ import { HStack, VStack } from "@/components/common/Stack";
 import PaymentRelationshipDisplay from "@/components/groupDetail/PaymentRelationshipDisplay";
 import { useAppSelector } from "@/hooks/reduxHook";
 import { groupSelector } from "@/store/reducers/groups";
+import { groupUsersSelector } from "@/store/reducers/users";
 import { BillCategoryEnum } from "@/types/BillCategories";
 import { CurrencyCode } from "@/types/Currency";
 import { IStackScreenProps } from "@/types/navigation";
@@ -24,9 +25,12 @@ const GroupSummaryScreen = ({
   const styles = useStyles();
 
   const group = useAppSelector((state) => groupSelector(state, groupId));
+  const groupUsers = useAppSelector((state) =>
+    groupUsersSelector(state, groupId),
+  );
 
   const { simplifiedPaymentRelationshipByCurrency } =
-    getPaymentRelationshipByCurrency(group?.members, group?.paymentRecords);
+    getPaymentRelationshipByCurrency(groupUsers, group?.paymentRecords);
 
   const sections = useMemo(() => {
     return Object.entries(simplifiedPaymentRelationshipByCurrency).map(
@@ -51,12 +55,12 @@ const GroupSummaryScreen = ({
                 Summary
               </Text>
               <VStack alignItems="stretch" style={styles.members}>
-                {group?.members?.map((member, index) => {
+                {groupUsers?.map((member, index) => {
                   const totalNetAmount = getTotalNetAmount(
                     member.id,
-                    group.paymentRecords,
+                    group?.paymentRecords ?? [],
                   );
-                  const isLast = index === group.members.length - 1;
+                  const isLast = index === groupUsers.length - 1;
 
                   return (
                     <HStack
