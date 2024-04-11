@@ -18,11 +18,6 @@ const GroupFormScreen = ({
   const styles = useStyles();
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    navigation.addListener("beforeRemove", () => {
-      console.log("beforeRemove");
-    });
-  }, [navigation]);
   return (
     <View style={styles.container}>
       {step === 0 && (

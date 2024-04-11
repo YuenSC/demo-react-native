@@ -7,10 +7,14 @@ import { ScrollView } from "react-native-gesture-handler";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 import AvatarIcon from "./AvatarIcon";
-import { HStack } from "./common/Stack";
+import { HStack, VStack } from "./common/Stack";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
-import { addMember, groupSelector } from "@/store/reducers/groups";
+import {
+  addExistingUserInGroup,
+  addMember,
+  groupSelector,
+} from "@/store/reducers/groups";
 import { AvatarColor } from "@/types/AvatarColor";
 import "react-native-get-random-values";
 
@@ -32,14 +36,40 @@ const UserListForm = memo<IUserListFormProps>(
     const [username, setUserName] = useState("");
     const [isFocused, setIsFocused] = useState(false);
 
+    const isProfileUserInGroup = group?.members?.some(
+      (member) => member.id === profile.id,
+    );
+
     return (
       <ScrollView
         contentContainerStyle={styles.container}
         keyboardDismissMode="on-drag"
       >
-        <Text h1 style={styles.title}>
-          Members
-        </Text>
+        <VStack alignItems="flex-start">
+          <Text h1 style={styles.title}>
+            Members
+          </Text>
+
+          {!isProfileUserInGroup && (
+            <TouchableOpacity
+              onPress={() => {
+                dispatch(
+                  addExistingUserInGroup({
+                    groupId,
+                    id: profile.id!,
+                    name: profile.name!,
+                    avatarColor: profile.avatarColor!,
+                  }),
+                );
+              }}
+            >
+              <HStack>
+                <Entypo name="plus" size={24} color={theme.colors.primary} />
+                <Text>Add Current User</Text>
+              </HStack>
+            </TouchableOpacity>
+          )}
+        </VStack>
 
         <View>
           {group?.members?.map((member) => {
@@ -155,7 +185,6 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     fontWeight: "bold",
-    marginBottom: 24,
   },
   button: {
     marginTop: 16,

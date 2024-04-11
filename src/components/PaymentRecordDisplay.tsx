@@ -5,6 +5,7 @@ import { View } from "react-native";
 import BillCategoryIcon from "./BillCategoryIcon";
 import { HStack, VStack } from "./common/Stack";
 
+import { PaymentRecordListTarget } from "@/screens/bottomTab/PaymentRecordListScreen";
 import { BillCategoryEnum } from "@/types/BillCategories";
 import { PaymentRecord } from "@/types/PaymentRecord";
 import { formatDate } from "@/utils/formatDate";
@@ -13,15 +14,20 @@ import { formatAmount, getRelatedAmount } from "@/utils/payment";
 type IPaymentRecordDisplayProps = {
   record: PaymentRecord;
   userId: string;
+  paymentTarget: PaymentRecordListTarget;
 };
 
 const PaymentRecordDisplay = memo<IPaymentRecordDisplayProps>(
-  ({ record, userId }) => {
+  ({ record, userId, paymentTarget }) => {
     const styles = useStyles();
     const { theme } = useTheme();
 
     const relatedAmount = getRelatedAmount(userId, record);
-    const netAmountSign = Math.sign(relatedAmount?.netAmount ?? 0);
+    const amount =
+      paymentTarget === PaymentRecordListTarget.Group
+        ? record.amount
+        : relatedAmount?.netAmount;
+    const netAmountSign = Math.sign(amount ?? 0);
 
     return (
       <View style={styles.item}>
@@ -36,12 +42,14 @@ const PaymentRecordDisplay = memo<IPaymentRecordDisplayProps>(
         <Text
           style={[
             styles.amount,
-            netAmountSign === 1 && { color: theme.colors.success },
-            netAmountSign === -1 && { color: theme.colors.error },
+            paymentTarget === PaymentRecordListTarget.You &&
+              netAmountSign === 1 && { color: theme.colors.success },
+            paymentTarget === PaymentRecordListTarget.You &&
+              netAmountSign === -1 && { color: theme.colors.error },
           ]}
           numberOfLines={1}
         >
-          {formatAmount(relatedAmount?.netAmount ?? 0, record?.currencyCode)}
+          {formatAmount(amount ?? 0, record?.currencyCode)}
         </Text>
       </View>
     );

@@ -155,7 +155,7 @@ const GroupDetailScreen = ({
             }
           >
             <HStack gap={8}>
-              <Text>{`Current: ${currentGroup.members.find((i) => i.id === profile.id)?.name ?? "null"}`}</Text>
+              <Text>{`Current: ${currentGroup.members.find((i) => i.id === profile.id)?.name ?? "Not In Group"}`}</Text>
               <Text style={{ flex: 1, textAlign: "right" }} numberOfLines={1}>
                 {memberListText}
               </Text>
@@ -172,7 +172,7 @@ const GroupDetailScreen = ({
             </Text>
 
             <TouchableOpacity
-              onPress={() => navigation.navigate("PaymentRecord")}
+              onPress={() => navigation.navigate("PaymentRecordList")}
             >
               <AntDesign
                 name="arrowright"

@@ -7,7 +7,7 @@ import { EdgeInsets } from "react-native-safe-area-context";
 
 const BottomTabBar = memo<
   BottomTabBarProps & {
-    groupId: string;
+    groupId?: string;
   }
 >(({ state, descriptors, insets, navigation, groupId }) => {
   const styles = useStyles(insets);
@@ -37,6 +37,7 @@ const BottomTabBar = memo<
           <Fragment key={route.key}>
             {index === 2 && (
               <TouchableOpacity
+                disabled={!groupId}
                 style={styles.addPaymentButton}
                 onPress={() => navigation.navigate("AddPayment", { groupId })}
               >

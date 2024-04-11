@@ -1,25 +1,120 @@
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import {
+  Ionicons,
+  MaterialIcons,
+  AntDesign,
+  FontAwesome,
+} from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { DrawerActions } from "@react-navigation/native";
+import { useTheme } from "@rneui/themed";
+import { Pressable, TouchableOpacity } from "react-native";
 
 import BottomTabBar from "../BottomTabBar";
 
-import { useAppSelector } from "@/hooks/reduxHook";
+import { HStack } from "@/components/common/Stack";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import SampleScreen from "@/screens/SampleScreen";
 import GroupDetailScreen from "@/screens/bottomTab/GroupDetailScreen";
 import OptionsScreen from "@/screens/bottomTab/OptionsScreen";
-import PaymentRecordScreen from "@/screens/bottomTab/PaymentRecordScreen";
-import StatisticScreen from "@/screens/bottomTab/StatisticScreen";
+import PaymentRecordListScreen from "@/screens/bottomTab/PaymentRecordListScreen";
+import {
+  addPaymentRecord,
+  currentGroupSelector,
+} from "@/store/reducers/groups";
+import { BillCategoryEnum } from "@/types/BillCategories";
+import { PaymentRecordCreate } from "@/types/PaymentRecord";
 import { IBottomTabParamList } from "@/types/navigation";
 
 const BottomTab = createBottomTabNavigator<IBottomTabParamList>();
 
 const BottomTabNavigator = () => {
-  const firstGroupId = useAppSelector((state) => state.groups?.groups?.[0]?.id);
+  const { theme } = useTheme();
+  const dispatch = useAppDispatch();
+  const currentGroup = useAppSelector(currentGroupSelector);
+
+  const generateRandomPaymentRecord = (index: number) => {
+    const currentMembers = currentGroup?.members;
+    if (!currentMembers || currentMembers.length < 2) {
+      return;
+    }
+
+    const userIndexes = Array.from(Array(currentMembers.length).keys());
+    const payerIndex =
+      userIndexes[Math.floor(Math.random() * userIndexes.length)];
+
+    const currentDate = new Date();
+    currentDate.setDate(
+      currentDate.getDate() - Math.floor(Math.random() * 365),
+    );
+    currentDate.setMinutes(Math.floor(Math.random() * 60));
+    currentDate.setHours(Math.floor(Math.random() * 24));
+
+    const randomCategory =
+      Object.values(BillCategoryEnum)[
+        Math.floor(Math.random() * Object.values(BillCategoryEnum).length)
+      ];
+
+    const paymentRecord = {
+      id: undefined,
+      groupId: currentGroup?.id,
+      amount: Math.floor(Math.random() * 1000),
+      category: randomCategory,
+      comment: "Random Payment " + index,
+      date: currentDate.toISOString(),
+      currencyCode: Math.random() > 0.5 ? "JPY" : "HKD",
+      payers: [{ amount: "auto", id: currentMembers[payerIndex].id }],
+      payees: currentMembers.map((member) => ({
+        amount: "auto",
+        id: member.id,
+      })),
+    } satisfies PaymentRecordCreate;
+
+    dispatch(addPaymentRecord(paymentRecord));
+  };
 
   return (
     <BottomTab.Navigator
-      screenOptions={{ headerShown: false }}
-      tabBar={(props) => <BottomTabBar groupId={firstGroupId} {...props} />}
+      screenOptions={({ navigation }) => ({
+        headerTitle: "",
+        headerStyle: {
+          backgroundColor: theme.colors.background,
+        },
+        headerTintColor: theme.colors.black,
+        headerLeft: () => (
+          <TouchableOpacity
+            style={{ marginLeft: 16 }}
+            onPress={() => navigation.dispatch(DrawerActions.toggleDrawer)}
+          >
+            <Ionicons name="menu" size={24} color={theme.colors.black} />
+          </TouchableOpacity>
+        ),
+
+        headerRight: () => {
+          return (
+            <HStack gap={8} style={{ marginRight: 16 }}>
+              <TouchableOpacity
+                onPress={() => {
+                  Array.from(Array(1).keys()).forEach((index) =>
+                    generateRandomPaymentRecord(index),
+                  );
+                }}
+                onLongPress={() => {
+                  Array.from(Array(10).keys()).forEach((index) =>
+                    generateRandomPaymentRecord(index),
+                  );
+                }}
+              >
+                <AntDesign name="plus" size={24} color={theme.colors.error} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => AsyncStorage.clear()}>
+                <FontAwesome name="undo" size={24} color={theme.colors.error} />
+              </TouchableOpacity>
+            </HStack>
+          );
+        },
+      })}
+      tabBar={(props) => <BottomTabBar groupId={currentGroup?.id} {...props} />}
     >
       <BottomTab.Screen
         name="GroupDetail"
@@ -32,8 +127,8 @@ const BottomTabNavigator = () => {
         }}
       />
       <BottomTab.Screen
-        name="PaymentRecord"
-        component={PaymentRecordScreen}
+        name="PaymentRecordList"
+        component={PaymentRecordListScreen}
         options={{
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="payment" size={24} color={color} />

@@ -92,7 +92,7 @@ export type IDrawerScreenProps<Screen extends keyof IDrawerParamList> =
 
 export type IBottomTabParamList = {
   GroupDetail: undefined;
-  PaymentRecord: undefined; // TODO: Update params
+  PaymentRecordList: undefined; // TODO: Update params
   Statistic: undefined; // TODO: Update params
   Option: undefined; // TODO: Update params
 };

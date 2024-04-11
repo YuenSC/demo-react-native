@@ -111,6 +111,14 @@ export const groupsSlice = createSlice({
       }
     },
 
+    addExistingUserInGroup: (state, action: PayloadAction<User>) => {
+      const group = state.groups.find(
+        (group) => group.id === action.payload.groupId,
+      );
+      if (group) {
+        group.members.push(action.payload);
+      }
+    },
     addMember: (state, action: PayloadAction<IGroupMemberCreatePayload>) => {
       const group = state.groups.find(
         (group) => group.id === action.payload.groupId,
@@ -188,6 +196,7 @@ export const groupsSlice = createSlice({
 export const {
   addGroup,
   addMember,
+  addExistingUserInGroup,
   addPaymentRecord,
   deleteGroup,
   deleteMember,
