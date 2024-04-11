@@ -1,7 +1,7 @@
 import { makeStyles } from "@rneui/themed";
 import { View } from "react-native";
 
-import UserList from "@/components/UserList";
+import UserListForm from "@/components/UserListForm";
 import { IStackScreenProps } from "@/types/navigation";
 
 const GroupUserListScreen = ({
@@ -14,10 +14,10 @@ const GroupUserListScreen = ({
 
   return (
     <View style={styles.container}>
-      <UserList
+      <UserListForm
         groupId={groupId}
         buttonText="Done"
-        onSubmitSuccess={() => {
+        onSubmit={() => {
           navigation.goBack();
         }}
       />

@@ -4,9 +4,10 @@ import { v4 as uuidv4 } from "uuid";
 
 import { RootState } from "..";
 
-import { AvatarColor } from "@/types/AvatarColor";
 import { CurrencyCode } from "@/types/Currency";
-import { ICreateGroupPayload } from "@/types/GroupCreate";
+import { IGroupCreatePayload } from "@/types/GroupCreate";
+import { IGroupEditPayload } from "@/types/GroupEdit";
+import { IGroupMemberCreatePayload } from "@/types/GroupMemberCreate";
 import { PaymentRecord, PaymentRecordCreate } from "@/types/PaymentRecord";
 import { User } from "@/types/User";
 
@@ -36,7 +37,7 @@ export const groupsSlice = createSlice({
   name: "groups",
   initialState,
   reducers: {
-    addGroup: (state, action: PayloadAction<ICreateGroupPayload>) => {
+    addGroup: (state, action: PayloadAction<IGroupCreatePayload>) => {
       state.groups.push({
         id: uuidv4(),
         paymentRecords: [],
@@ -52,7 +53,15 @@ export const groupsSlice = createSlice({
         (group) => group.id !== action.payload.id,
       );
     },
-    updateGroup: () => {},
+    updateGroup: (state, action: PayloadAction<IGroupEditPayload>) => {
+      const group = state.groups.find(
+        (group) => group.id === action.payload.id,
+      );
+      if (group) {
+        group.name = action.payload.name;
+        group.description = action.payload.description;
+      }
+    },
     addPaymentRecord: (state, action: PayloadAction<PaymentRecordCreate>) => {
       const currentGroup = state.groups.find(
         (group) => group.id === action.payload.groupId,
@@ -71,7 +80,6 @@ export const groupsSlice = createSlice({
         recordId: string;
       }>,
     ) => {
-      console.log("deletePaymentRecord");
       const group = state.groups.find(
         (group) => group.id === action.payload.groupId,
       );
@@ -103,14 +111,7 @@ export const groupsSlice = createSlice({
       }
     },
 
-    addMember: (
-      state,
-      action: PayloadAction<{
-        groupId: string;
-        name: string;
-        avatarColor: AvatarColor;
-      }>,
-    ) => {
+    addMember: (state, action: PayloadAction<IGroupMemberCreatePayload>) => {
       const group = state.groups.find(
         (group) => group.id === action.payload.groupId,
       );
@@ -144,24 +145,17 @@ export const groupsSlice = createSlice({
       );
     },
 
-    updateMember: (
-      state,
-      action: PayloadAction<{
-        groupId: string;
-        userId: string;
-        name: string;
-      }>,
-    ) => {
+    updateMember: (state, action: PayloadAction<Partial<User>>) => {
       const group = state.groups.find(
         (group) => group.id === action.payload.groupId,
       );
       if (group) {
         const member = group.members.find(
-          (member) => member.id === action.payload.userId,
+          (member) => member.id === action.payload.id,
         );
-        console.log("member", member);
         if (member) {
-          member.name = action.payload.name;
+          member.name = action.payload.name || member.name;
+          member.avatarColor = action.payload.avatarColor || member.avatarColor;
         }
       }
     },

@@ -1,4 +1,5 @@
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import { StackActions } from "@react-navigation/native";
 import { Button, Text, makeStyles } from "@rneui/themed";
 import AnimatedLottieView from "lottie-react-native";
 import { useCallback, useRef } from "react";
@@ -10,22 +11,32 @@ import { useAppSelector } from "@/hooks/reduxHook";
 import { currentGroupSelector } from "@/store/reducers/groups";
 import { IStackScreenProps } from "@/types/navigation";
 
-const SignUpSuccessBottomSheet = ({
+const GroupCreateSuccessBottomSheet = ({
   navigation,
-}: IStackScreenProps<"SignUpSuccessBottomSheet">) => {
+  route: {
+    params: { isOnboarding },
+  },
+}: IStackScreenProps<"GroupCreateSuccessBottomSheet">) => {
   const insets = useSafeAreaInsets();
   const styles = useStyles(insets);
 
   const bottomSheetRef = useRef<BottomSheet>(null);
-
   const currentGroup = useAppSelector(currentGroupSelector);
 
   const handleClose = useCallback(() => {
-    navigation.replace("Drawer", {
-      screen: "BottomTab",
-      params: { id: currentGroup?.id },
-    });
-  }, [currentGroup?.id, navigation]);
+    if (isOnboarding)
+      navigation.replace("Drawer", {
+        screen: "BottomTab",
+        params: { id: currentGroup?.id },
+      });
+    else {
+      navigation.dispatch(StackActions.popToTop());
+      navigation.navigate("Drawer", {
+        screen: "BottomTab",
+        params: { id: currentGroup?.id },
+      });
+    }
+  }, [currentGroup?.id, isOnboarding, navigation]);
 
   return (
     <StyledBottomSheet
@@ -94,4 +105,4 @@ const useStyles = makeStyles((theme, inset: EdgeInsets) => ({
   },
 }));
 
-export default SignUpSuccessBottomSheet;
+export default GroupCreateSuccessBottomSheet;

@@ -42,7 +42,7 @@ const BottomTabNavigator = () => {
       />
       <BottomTab.Screen
         name="Statistic"
-        component={StatisticScreen}
+        component={SampleScreen}
         options={{
           tabBarIcon: ({ color }) => (
             <Ionicons name="stats-chart" size={24} color={color} />

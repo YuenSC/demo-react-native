@@ -49,8 +49,9 @@ const EditMemberScreen = ({
           dispatch(
             updateMember({
               groupId,
-              userId: id,
+              id,
               name: values.name.trim(),
+              avatarColor: values.avatarColor,
             }),
           );
           navigation.goBack();

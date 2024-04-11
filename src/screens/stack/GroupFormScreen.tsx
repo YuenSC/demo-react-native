@@ -1,58 +1,53 @@
 import { makeStyles } from "@rneui/themed";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useEffect } from "react";
+import { View } from "react-native";
 import { v4 as uuidv4 } from "uuid";
 
 import GroupForm from "@/components/GroupForm";
 import UserListForm from "@/components/UserListForm";
-import UserForm from "@/components/userForm/UserForm";
 import { useAppDispatch } from "@/hooks/reduxHook";
-import { addGroup } from "@/store/reducers/groups";
-import { updateProfile } from "@/store/reducers/profile";
+import { addGroup, setCurrentGroupId } from "@/store/reducers/groups";
 import { IStackScreenProps } from "@/types/navigation";
 
-const OnboardingScreen = ({
+const GroupFormScreen = ({
   navigation,
   route: {
     params: { step, groupId },
   },
-}: IStackScreenProps<"Onboarding">) => {
+}: IStackScreenProps<"GroupForm">) => {
   const styles = useStyles();
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    navigation.addListener("beforeRemove", () => {
+      console.log("beforeRemove");
+    });
+  }, [navigation]);
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {step === 0 && (
-        <UserForm
-          type="profile"
-          submitButtonText="Next"
-          isEdit={false}
-          onSubmit={(values) => {
-            dispatch(updateProfile({ ...values, name: values.name.trim() }));
-            navigation.replace("Onboarding", { step: 1 });
-          }}
-        />
-      )}
-      {step === 1 && (
         <GroupForm
           groupId={undefined}
           onSubmit={(values) => {
             const groupId = uuidv4();
             dispatch(addGroup({ ...values, id: groupId }));
-            navigation.replace("Onboarding", { step: 2, groupId });
+            navigation.replace("GroupForm", { step: 1, groupId });
           }}
         />
       )}
-      {step === 2 && (
+      {step === 1 && (
         <UserListForm
+          buttonText="Done"
           groupId={groupId || ""}
           onSubmit={() => {
-            navigation.navigate("GroupCreateSuccessBottomSheet", {
-              isOnboarding: true,
+            dispatch(setCurrentGroupId(groupId || ""));
+            navigation.push("GroupCreateSuccessBottomSheet", {
+              isOnboarding: false,
             });
           }}
         />
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -71,4 +66,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default OnboardingScreen;
+export default GroupFormScreen;

@@ -8,8 +8,10 @@ import Device from "@/constants/Device";
 import { useAppSelector } from "@/hooks/reduxHook";
 import SampleScreen from "@/screens/SampleScreen";
 import EditMemberScreen from "@/screens/stack/EditMemberScreen";
+import GroupCreateSuccessBottomSheet from "@/screens/stack/GroupCreateSuccessBottomSheet";
 import GroupDeletePaymentRecordBottomSheet from "@/screens/stack/GroupDeletePaymentRecordBottomSheet";
 import GroupDeleteUserBottomSheet from "@/screens/stack/GroupDeleteUserBottomSheet";
+import GroupFormScreen from "@/screens/stack/GroupFormScreen";
 import GroupSummaryScreen from "@/screens/stack/GroupSummaryScreen";
 import GroupUserListScreen from "@/screens/stack/GroupUserListScreen";
 import OnboardingScreen from "@/screens/stack/OnboardingScreen";
@@ -17,7 +19,6 @@ import PaymentFormCurrencySelectBottomSheet from "@/screens/stack/PaymentFormCur
 import PaymentFormDatePickerBottomSheet from "@/screens/stack/PaymentFormDatePickerBottomSheet";
 import PaymentFormScreen from "@/screens/stack/PaymentFormScreen";
 import PaymentRecordFilterScreen from "@/screens/stack/PaymentRecordFilterScreen";
-import SignUpSuccessBottomSheet from "@/screens/stack/SignUpSuccessBottomSheet";
 import WelcomeScreen from "@/screens/stack/WelcomeScreen";
 import { IStackParamList } from "@/types/navigation";
 
@@ -71,6 +72,13 @@ const StackNavigator = memo(() => {
           headerTitle: "Group Summary",
         }}
       />
+      <Stack.Screen
+        component={GroupFormScreen}
+        name="GroupForm"
+        options={{
+          headerTitle: "",
+        }}
+      />
 
       {/* Bottom Sheet */}
       <Stack.Group
@@ -80,8 +88,8 @@ const StackNavigator = memo(() => {
         }}
       >
         <Stack.Screen
-          component={SignUpSuccessBottomSheet}
-          name="SignUpSuccessBottomSheet"
+          component={GroupCreateSuccessBottomSheet}
+          name="GroupCreateSuccessBottomSheet"
         />
         <Stack.Screen
           component={GroupDeleteUserBottomSheet}

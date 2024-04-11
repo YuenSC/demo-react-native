@@ -10,29 +10,27 @@ import AvatarIcon from "./AvatarIcon";
 import { HStack } from "./common/Stack";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
-import { addMember, deleteMember } from "@/store/reducers/groups";
+import { addMember, groupSelector } from "@/store/reducers/groups";
 import { AvatarColor } from "@/types/AvatarColor";
 import "react-native-get-random-values";
 
-type IUserListProps = {
+type IUserListFormProps = {
   groupId: string;
-  onSubmitSuccess: () => void;
+  onSubmit: () => void;
   buttonText?: string;
 };
 
-const UserList = memo<IUserListProps>(
-  ({ groupId, onSubmitSuccess, buttonText = "Next" }) => {
+const UserListForm = memo<IUserListFormProps>(
+  ({ groupId, onSubmit, buttonText = "Next" }) => {
     const styles = useStyles();
     const { theme } = useTheme();
-    const group = useAppSelector((state) =>
-      state.groups.groups.find((group) => group.id === groupId),
-    );
-    const profile = useAppSelector((state) => state.profile);
     const dispatch = useAppDispatch();
+    const navigation = useNavigation();
+
+    const group = useAppSelector((state) => groupSelector(state, groupId));
+    const profile = useAppSelector((state) => state.profile);
     const [username, setUserName] = useState("");
     const [isFocused, setIsFocused] = useState(false);
-
-    const navigation = useNavigation();
 
     return (
       <ScrollView
@@ -45,7 +43,7 @@ const UserList = memo<IUserListProps>(
 
         <View>
           {group?.members?.map((member) => {
-            const isOwner = member.id === profile.id;
+            const isProfileUser = member.id === profile.id;
 
             return (
               <View key={member.id} style={styles.memberContainer}>
@@ -55,43 +53,45 @@ const UserList = memo<IUserListProps>(
                     color={member.avatarColor}
                     userName={member.name}
                   />
-                  <Text style={styles.memberName}>{member.name}</Text>
+                  <HStack gap={2}>
+                    <Text style={styles.memberName}>{member.name}</Text>
+                    {isProfileUser && (
+                      <Text style={styles.memberNameOwner}>(You)</Text>
+                    )}
+                  </HStack>
                 </HStack>
 
-                {isOwner ? (
-                  <Text>(Owner)</Text>
-                ) : (
-                  <HStack gap={8}>
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigation.navigate("EditMember", {
-                          id: member.id,
-                          groupId,
-                        })
-                      }
-                    >
-                      <Feather
-                        name="edit"
-                        size={24}
-                        color={theme.colors.primary}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => {
-                        navigation.navigate("GroupDeleteUserBottomSheet", {
-                          groupId,
-                          userId: member.id,
-                        });
-                      }}
-                    >
-                      <AntDesign
-                        name="delete"
-                        size={24}
-                        color={theme.colors.error}
-                      />
-                    </TouchableOpacity>
-                  </HStack>
-                )}
+                <HStack gap={8}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("EditMember", {
+                        id: member.id,
+                        groupId,
+                        isDeleteDisabled: isProfileUser,
+                      })
+                    }
+                  >
+                    <Feather
+                      name="edit"
+                      size={24}
+                      color={theme.colors.primary}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("GroupDeleteUserBottomSheet", {
+                        groupId,
+                        userId: member.id,
+                      });
+                    }}
+                  >
+                    <AntDesign
+                      name="delete"
+                      size={24}
+                      color={theme.colors.error}
+                    />
+                  </TouchableOpacity>
+                </HStack>
               </View>
             );
           })}
@@ -141,7 +141,7 @@ const UserList = memo<IUserListProps>(
         <Button
           title={buttonText}
           containerStyle={styles.button}
-          onPress={onSubmitSuccess}
+          onPress={onSubmit}
         />
       </ScrollView>
     );
@@ -183,8 +183,12 @@ const useStyles = makeStyles((theme) => ({
     padding: 12,
     paddingHorizontal: 16,
   },
+  memberNameOwner: {
+    fontStyle: "italic",
+    color: theme.colors.primary,
+  },
 }));
 
-UserList.displayName = "UserList";
+UserListForm.displayName = "UserList";
 
-export default UserList;
+export default UserListForm;

@@ -1,6 +1,6 @@
 import { User } from "./User";
 
-export type ICreateGroupPayload = {
+export type IGroupCreatePayload = {
   id?: string;
   name: string;
   description: string;

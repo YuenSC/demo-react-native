@@ -25,8 +25,10 @@ export type IStackParamList = {
   Welcome: undefined;
   Onboarding: { step: number; groupId?: string };
   Drawer: NavigatorScreenParams<IDrawerParamList> | undefined;
-  SignUpSuccessBottomSheet: undefined;
-  EditMember: { id: string; groupId: string };
+  GroupCreateSuccessBottomSheet: {
+    isOnboarding: boolean;
+  };
+  EditMember: { id: string; groupId: string; isDeleteDisabled?: boolean };
   AddPayment: {
     groupId: string;
     recordId?: string;
@@ -68,6 +70,10 @@ export type IStackParamList = {
   };
   GroupSummary: {
     groupId: string;
+  };
+  GroupForm: {
+    groupId?: string;
+    step: number;
   };
 };
 

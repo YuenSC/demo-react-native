@@ -4,27 +4,28 @@ import { Controller, useForm } from "react-hook-form";
 import { View } from "react-native";
 import { v4 as uuidv4 } from "uuid";
 
-import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
-import { addGroup } from "@/store/reducers/groups";
+import { useAppSelector } from "@/hooks/reduxHook";
 import { AvatarColor } from "@/types/AvatarColor";
-import { ICreateGroupPayload } from "@/types/GroupCreate";
+import { IGroupCreatePayload } from "@/types/GroupCreate";
 
 import "react-native-get-random-values";
 
 type IGroupFormProps = {
   groupId?: string;
-  onSubmit: (groupId: string) => void;
+  onSubmit: (values: IGroupCreatePayload) => void;
+  isProfileUserIncluded?: boolean;
 };
 
 const GroupForm = memo<IGroupFormProps>(({ groupId, onSubmit }) => {
   const styles = useStyles();
-  const dispatch = useAppDispatch();
+
+  const isEdit = groupId;
 
   const group = useAppSelector((state) =>
     state.groups.groups.find((group) => group.id === groupId),
   );
   const profile = useAppSelector((state) => state.profile);
-  const { control, handleSubmit } = useForm<ICreateGroupPayload>({
+  const { control, handleSubmit } = useForm<IGroupCreatePayload>({
     defaultValues: {
       name: "Calvin Group", // TODO: remove default value after testing,
       members: [
@@ -68,19 +69,14 @@ const GroupForm = memo<IGroupFormProps>(({ groupId, onSubmit }) => {
         )}
       />
       <Button
-        title="Next"
+        title={isEdit ? "Done" : "Create"}
         containerStyle={styles.button}
-        onPress={handleSubmit((values) => {
-          const createdGroupId = uuidv4();
-          dispatch(
-            addGroup({
-              id: createdGroupId,
-              ...values,
-              name: values.name.trim(),
-            }),
-          );
-          onSubmit(createdGroupId);
-        })}
+        onPress={handleSubmit((values) =>
+          onSubmit({
+            ...values,
+            name: values.name.trim(),
+          }),
+        )}
       />
     </View>
   );

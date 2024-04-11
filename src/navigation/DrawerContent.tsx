@@ -1,5 +1,7 @@
+import { AntDesign } from "@expo/vector-icons";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
-import { makeStyles, Text } from "@rneui/themed";
+import { DrawerActions, useNavigation } from "@react-navigation/native";
+import { Button, makeStyles, Text, useTheme } from "@rneui/themed";
 import { memo } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
@@ -16,6 +18,8 @@ type IDrawerContentProps = DrawerContentComponentProps;
 const DrawerContent = memo<IDrawerContentProps>(({ state }) => {
   const styles = useStyles();
   const groups = useAppSelector((state) => state.groups.groups);
+  const { theme } = useTheme();
+  const navigation = useNavigation();
 
   const currentGroup = useAppSelector(currentGroupSelector);
   const dispatch = useAppDispatch();
@@ -28,6 +32,25 @@ const DrawerContent = memo<IDrawerContentProps>(({ state }) => {
       <FlatList
         data={groups}
         bounces={false}
+        contentContainerStyle={styles.contentContainer}
+        ListFooterComponent={() => {
+          return (
+            <Button
+              type="clear"
+              size="sm"
+              onPress={() => {
+                navigation.navigate("GroupForm", { step: 0 });
+              }}
+            >
+              <AntDesign
+                name="addusergroup"
+                size={24}
+                color={theme.colors.primary}
+              />
+              Add Group
+            </Button>
+          );
+        }}
         renderItem={({ item }) => {
           const isCurrentGroupSelected = item.id === currentGroup?.id;
           return (
@@ -48,10 +71,6 @@ const DrawerContent = memo<IDrawerContentProps>(({ state }) => {
         }}
       />
       <View>
-        <TouchableOpacity>
-          <Text>Add Group</Text>
-        </TouchableOpacity>
-
         <Text>Version 1.0.0</Text>
       </View>
     </SafeAreaView>
@@ -64,10 +83,14 @@ const useStyles = makeStyles((theme) => ({
     padding: 16,
     backgroundColor: theme.colors.background,
   },
+  contentContainer: {
+    gap: 16,
+    paddingBottom: 32,
+  },
   group: {
     padding: 16,
     borderRadius: 8,
-    backgroundColor: theme.colors.grey5,
+    backgroundColor: theme.colors.modal,
   },
   groupSelected: {
     backgroundColor: theme.colors.primary,

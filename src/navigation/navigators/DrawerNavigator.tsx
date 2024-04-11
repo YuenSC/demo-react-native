@@ -94,30 +94,13 @@ const DrawerNavigator = () => {
                     );
                   }}
                 >
-                  <AntDesign
-                    name="plus"
-                    size={24}
-                    color={theme.colors.primary}
-                  />
+                  <AntDesign name="plus" size={24} color={theme.colors.error} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => AsyncStorage.clear()}>
                   <FontAwesome
                     name="undo"
                     size={24}
-                    color={theme.colors.warning}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate("GroupConfig", {
-                      groupId: currentGroup?.id,
-                    })
-                  }
-                >
-                  <AntDesign
-                    name="setting"
-                    size={24}
-                    color={theme.colors.secondary}
+                    color={theme.colors.error}
                   />
                 </TouchableOpacity>
               </View>

@@ -10,6 +10,7 @@ import StyledBottomSheet from "@/components/common/StyledBottomSheet";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import {
   deleteMember,
+  groupSelector,
   memberSelector,
   relatedPaymentsSelector,
 } from "@/store/reducers/groups";
@@ -26,6 +27,7 @@ const GroupDeleteUserBottomSheet = ({
   const dispatch = useAppDispatch();
 
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const group = useAppSelector((state) => groupSelector(state, groupId));
   const user = useAppSelector((state) =>
     memberSelector(state, groupId, userId),
   );
@@ -49,7 +51,9 @@ const GroupDeleteUserBottomSheet = ({
           <VStack alignItems="flex-start" style={styles.header} gap={4}>
             <Text style={styles.title}>
               {`Are you sure to delete `}
-              <Text style={styles.titleHighlight}>{user?.name}</Text>?
+              <Text style={styles.titleHighlight}>{user?.name}</Text>
+              {` from `}
+              <Text style={styles.titleHighlight}>{group?.name}</Text>?
             </Text>
             {relatedPayments.length > 0 && (
               <Text style={styles.subtitle}>

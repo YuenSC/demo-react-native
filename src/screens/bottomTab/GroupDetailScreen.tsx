@@ -154,8 +154,12 @@ const GroupDetailScreen = ({
               navigation.navigate("GroupUserList", { groupId: currentGroup.id })
             }
           >
-            <Text>{`Current: ${profile.name}`}</Text>
-            <Text>{memberListText}</Text>
+            <HStack gap={8}>
+              <Text>{`Current: ${currentGroup.members.find((i) => i.id === profile.id)?.name ?? "null"}`}</Text>
+              <Text style={{ flex: 1, textAlign: "right" }} numberOfLines={1}>
+                {memberListText}
+              </Text>
+            </HStack>
           </TouchableOpacity>
         </View>
 
@@ -235,12 +239,10 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 4,
   },
   members: {
-    flexDirection: "row",
     padding: 16,
     borderRadius: 16,
     borderWidth: 1,
     borderColor: theme.colors.divider,
-    justifyContent: "space-between",
   },
 }));
 
