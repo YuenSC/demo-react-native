@@ -71,7 +71,7 @@ const PaymentCalendar = memo<IPaymentCalendarProps>(
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    borderRadius: 16,
+    borderRadius: 8,
     borderWidth: 1,
     borderColor: theme.colors.divider,
     overflow: "hidden",
