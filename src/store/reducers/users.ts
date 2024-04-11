@@ -1,4 +1,9 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import {
+  PayloadAction,
+  createSelector,
+  createSlice,
+  weakMapMemoize,
+} from "@reduxjs/toolkit";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 
@@ -47,9 +52,21 @@ export const { addUser, deleteUser, updateUser } = usersSlice.actions;
 
 export default usersSlice.reducer;
 
-export const groupUsersSelector = (state: RootState, groupId: string) => {
-  return state.users.users.filter((user) => user.groupIds?.includes(groupId));
-};
+// export const groupUsersSelector = (state: RootState, groupId: string) => {
+//   return state.users.users.filter((user) => user.groupIds?.includes(groupId));
+// };
+
+export const groupUsersSelector = createSelector(
+  [
+    (state: RootState) => state.users.users,
+    (_: RootState, groupId: string) => groupId,
+  ],
+  (users, groupId) => users.filter((user) => user.groupIds?.includes(groupId)),
+  {
+    memoize: weakMapMemoize,
+    argsMemoize: weakMapMemoize,
+  },
+);
 
 export const userSelector = (state: RootState, userId?: string) => {
   return state.users.users.find((user) => user.id === userId);

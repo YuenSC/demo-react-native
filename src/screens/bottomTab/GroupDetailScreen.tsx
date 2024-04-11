@@ -29,8 +29,6 @@ const GroupDetailScreen = ({
   );
   const profile = useAppSelector((state) => state.profile);
 
-  console.log("groupUsers", JSON.stringify(groupUsers, null, 2));
-
   const { totalNetAmountByCurrency, hasUnresolvedExpenses } = useMemo(() => {
     if (!currentGroup || !profile.userId)
       return { totalNetAmountByCurrency: {} as Record<CurrencyCode, number> };
@@ -71,12 +69,7 @@ const GroupDetailScreen = ({
           You haven't created any group yet. Please create a group to get
           started
         </Text>
-        <Button
-          onPress={() => {
-            console.log("onPress");
-          }}
-          title="Add Group"
-        />
+        <Button title="Add Group" />
       </View>
     );
   }

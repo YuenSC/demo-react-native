@@ -9,11 +9,10 @@ import { VStack } from "@/components/common/Stack";
 import StyledBottomSheet from "@/components/common/StyledBottomSheet";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import {
-  deleteMember,
   groupSelector,
-  memberSelector,
   relatedPaymentsSelector,
 } from "@/store/reducers/groups";
+import { groupUsersSelector, updateUser } from "@/store/reducers/users";
 import { IStackScreenProps } from "@/types/navigation";
 
 const GroupDeleteUserBottomSheet = ({
@@ -28,9 +27,10 @@ const GroupDeleteUserBottomSheet = ({
 
   const bottomSheetRef = useRef<BottomSheet>(null);
   const group = useAppSelector((state) => groupSelector(state, groupId));
-  const user = useAppSelector((state) =>
-    memberSelector(state, groupId, userId),
+  const groupUsers = useAppSelector((state) =>
+    groupUsersSelector(state, groupId),
   );
+  const user = groupUsers.find((user) => user.id === userId);
   const relatedPayments = useAppSelector((state) =>
     relatedPaymentsSelector(state, groupId, userId),
   );
@@ -67,7 +67,12 @@ const GroupDeleteUserBottomSheet = ({
           <Button
             title="Delete"
             onPress={() => {
-              dispatch(deleteMember({ groupId, userId }));
+              dispatch(
+                updateUser({
+                  id: user?.id!,
+                  groupIds: user?.groupIds?.filter((id) => id !== groupId),
+                }),
+              );
               navigation.goBack();
             }}
             color="error"

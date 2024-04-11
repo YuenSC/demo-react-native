@@ -14,11 +14,11 @@ import { formatAmount, getRelatedAmount } from "@/utils/payment";
 type IPaymentRecordDisplayProps = {
   record: PaymentRecord;
   userId: string;
-  paymentTarget: PaymentRecordListTarget;
+  paymentTarget?: PaymentRecordListTarget;
 };
 
 const PaymentRecordDisplay = memo<IPaymentRecordDisplayProps>(
-  ({ record, userId, paymentTarget }) => {
+  ({ record, userId, paymentTarget = PaymentRecordListTarget.You }) => {
     const styles = useStyles();
     const { theme } = useTheme();
 

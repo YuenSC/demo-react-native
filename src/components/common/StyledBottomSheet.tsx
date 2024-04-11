@@ -3,12 +3,14 @@ import { makeStyles } from "@rneui/themed";
 import { ComponentProps, forwardRef } from "react";
 import { StyleSheet } from "react-native";
 
-type IStyledBottomSheetProps = ComponentProps<typeof GorhomBottomSheet>;
+type IStyledBottomSheetProps = ComponentProps<typeof GorhomBottomSheet> & {
+  backdropProps?: Partial<ComponentProps<typeof BottomSheetBackdrop>>;
+};
 
 const StyledBottomSheet = forwardRef<
   GorhomBottomSheet,
   IStyledBottomSheetProps
->(({ children, ...props }, ref) => {
+>(({ children, backdropProps, ...props }, ref) => {
   const styles = useStyles();
 
   return (
@@ -29,6 +31,7 @@ const StyledBottomSheet = forwardRef<
           appearsOnIndex={0}
           disappearsOnIndex={-1}
           style={[styles.backdrop, StyleSheet.absoluteFillObject]}
+          {...backdropProps}
         />
       )}
     >

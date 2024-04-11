@@ -22,6 +22,7 @@ import {
   addPaymentRecord,
   currentGroupSelector,
 } from "@/store/reducers/groups";
+import { groupUsersSelector } from "@/store/reducers/users";
 import { BillCategoryEnum } from "@/types/BillCategories";
 import { PaymentRecordCreate } from "@/types/PaymentRecord";
 import { IBottomTabParamList } from "@/types/navigation";
@@ -32,10 +33,13 @@ const BottomTabNavigator = () => {
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
   const currentGroup = useAppSelector(currentGroupSelector);
+  const groupUsers = useAppSelector((state) =>
+    groupUsersSelector(state, currentGroup?.id ?? ""),
+  );
 
   const generateRandomPaymentRecord = (index: number) => {
-    const currentMembers = currentGroup?.members;
-    if (!currentMembers || currentMembers.length < 2) {
+    const currentMembers = groupUsers;
+    if (!currentGroup || !currentMembers || currentMembers.length < 2) {
       return;
     }
 
@@ -57,7 +61,7 @@ const BottomTabNavigator = () => {
 
     const paymentRecord = {
       id: undefined,
-      groupId: currentGroup?.id,
+      groupId: currentGroup.id,
       amount: Math.floor(Math.random() * 1000),
       category: randomCategory,
       comment: "Random Payment " + index,

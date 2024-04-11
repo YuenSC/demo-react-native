@@ -41,7 +41,12 @@ const BillCalculatorBottomSheet = forwardRef<
   const bottomSheetRef = useRef<BottomSheet>(null);
   useImperativeHandle(outerRef, () => bottomSheetRef.current!, []);
 
-  const [records, setRecords] = useState<CalculatorRecord[]>([]);
+  const [records, setRecords] = useState<CalculatorRecord[]>([
+    {
+      num: value.toString(),
+      sign: undefined,
+    },
+  ]);
 
   const calculationResult = calculateResult(records);
 
@@ -165,6 +170,10 @@ const BillCalculatorBottomSheet = forwardRef<
       handleComponent={() => null}
       index={-1}
       containerStyle={styles.container}
+      backdropComponent={null}
+      backdropProps={{
+        opacity: 0,
+      }}
     >
       <BottomSheetView style={styles.bottomSheetContainer}>
         <View style={styles.bottomSheetInnerContainer}>

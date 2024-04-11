@@ -2,14 +2,15 @@ import { AntDesign } from "@expo/vector-icons";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Text, makeStyles, useTheme } from "@rneui/themed";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { TouchableOpacity, View } from "react-native";
 
 import Config from "@/Config";
 import BillForm from "@/components/addPayment/BillForm";
 import PayerPayeeSelectForm from "@/components/addPayment/PayerPayeeSelectForm";
-import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
+import { useAppSelector } from "@/hooks/reduxHook";
+import { groupUsersSelector } from "@/store/reducers/users";
 import { BillCategoryEnum } from "@/types/BillCategories";
 import { PaymentRecordCreate } from "@/types/PaymentRecord";
 import { IAddPaymentTabParamList, IStackScreenProps } from "@/types/navigation";
@@ -24,7 +25,6 @@ const PaymentFormScreen = ({
 }: IStackScreenProps<"AddPayment" | "EditPayment" | "EditPaymentModal">) => {
   const styles = useStyles();
   const { theme } = useTheme();
-  const dispatch = useAppDispatch();
 
   const lastUsedCurrency = useAppSelector(
     (state) => state.groups.lastUsedCurrency ?? "HKD",
@@ -33,9 +33,12 @@ const PaymentFormScreen = ({
   const group = useAppSelector((state) =>
     state.groups.groups.find((group) => group.id === groupId),
   );
+  const groupUsers = useAppSelector((state) =>
+    groupUsersSelector(state, groupId),
+  );
+  const memoizedGroupUsers = useMemo(() => groupUsers, [groupUsers]);
   const record = group?.paymentRecords.find((item) => item.id === recordId);
 
-  console.log("defaultValue", defaultValue);
   const form = useForm<PaymentRecordCreate>({
     defaultValues: {
       amount: Config.isDev ? 1000 : 0,
@@ -45,12 +48,12 @@ const PaymentFormScreen = ({
       category: BillCategoryEnum.Transportation,
       comment: Config.isDev ? "Example Comment" : "",
       payers:
-        group?.members.map((item, index) => ({
+        groupUsers.map((item, index) => ({
           amount: index === 0 ? "auto" : 0,
           id: item.id,
         })) ?? [],
       payees:
-        group?.members.map((item, index) => ({
+        groupUsers.map((item, index) => ({
           amount: "auto",
           id: item.id,
         })) ?? [],
@@ -72,7 +75,7 @@ const PaymentFormScreen = ({
         category: resetValues.category,
         comment: resetValues.comment,
         payers:
-          group?.members.map((user) => {
+          memoizedGroupUsers.map((user) => {
             const payer = resetValues.payers.find((p) => p.id === user.id);
             if (payer) return payer;
 
@@ -82,7 +85,7 @@ const PaymentFormScreen = ({
             };
           }) ?? [],
         payees:
-          group?.members.map((user) => {
+          memoizedGroupUsers.map((user) => {
             const payee = resetValues.payees.find((p) => p.id === user.id);
             if (payee) return payee;
 
@@ -93,7 +96,14 @@ const PaymentFormScreen = ({
           }) ?? [],
       });
     }
-  }, [defaultValue, group?.members, group?.name, navigation, record, reset]);
+  }, [
+    defaultValue,
+    group?.name,
+    memoizedGroupUsers,
+    navigation,
+    record,
+    reset,
+  ]);
 
   useEffect(() => {
     if (record) {
@@ -115,7 +125,7 @@ const PaymentFormScreen = ({
         },
       });
     }
-  }, [dispatch, groupId, navigation, record, theme.colors.error]);
+  }, [groupId, navigation, record, theme.colors.error]);
 
   if (!group)
     return (

@@ -14,6 +14,7 @@ import { ScrollView, TouchableOpacity, View } from "react-native";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
 import { addPaymentRecord, updatePaymentRecord } from "@/store/reducers/groups";
+import { groupUsersSelector } from "@/store/reducers/users";
 import { PaymentRecord, PaymentRecordCreate } from "@/types/PaymentRecord";
 import { IAddPaymentTabScreenProps } from "@/types/navigation";
 import { getActualAmountPerUser } from "@/utils/payment";
@@ -30,6 +31,9 @@ const PayerPayeeSelectForm = ({
   const groupIdWatch = useWatch({ name: "groupId" });
   const group = useAppSelector((state) =>
     state.groups.groups.find((group) => group.id === groupIdWatch),
+  );
+  const groupUsers = useAppSelector((state) =>
+    groupUsersSelector(state, group?.id ?? ""),
   );
   const { control, handleSubmit, setValue } = useFormContext<
     PaymentRecordCreate & { id?: string }
@@ -48,7 +52,7 @@ const PayerPayeeSelectForm = ({
         <Text style={styles.label}>
           {type === "payers" ? "Who Paid?" : "Paid For?"}
         </Text>
-        {group?.members.map((member) => {
+        {groupUsers.map((member) => {
           const index = paymentRecords.findIndex((i) => i.id === member.id);
           const actualAmount = actualAmountPerUser.find(
             (i) => i.id === member.id,

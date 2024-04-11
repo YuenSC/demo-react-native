@@ -4,7 +4,7 @@ import { View } from "react-native";
 
 import UserForm from "@/components/userForm/UserForm";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
-import { updateMember } from "@/store/reducers/groups";
+import { groupUsersSelector, updateUser } from "@/store/reducers/users";
 import { IStackScreenProps } from "@/types/navigation";
 
 const EditMemberScreen = ({
@@ -16,10 +16,10 @@ const EditMemberScreen = ({
   const styles = useStyles();
   const dispatch = useAppDispatch();
 
-  const group = useAppSelector((state) =>
-    state.groups.groups.find((group) => group.id === groupId),
+  const groupUsers = useAppSelector((state) =>
+    groupUsersSelector(state, groupId),
   );
-  const member = group?.members?.find((member) => member.id === id);
+  const member = groupUsers?.find((member) => member.id === id);
 
   useEffect(() => {
     navigation.setOptions({
@@ -44,12 +44,11 @@ const EditMemberScreen = ({
         groupId={groupId}
         submitButtonText="Save"
         userId={id}
-        type="groupUser"
         onSubmit={(values) => {
           dispatch(
-            updateMember({
-              groupIds: groupId,
+            updateUser({
               id,
+              groupIds: [...member.groupIds, groupId],
               name: values.name.trim(),
               avatarColor: values.avatarColor,
             }),

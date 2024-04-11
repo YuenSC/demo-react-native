@@ -5,7 +5,9 @@ import { ScrollView, View, useWindowDimensions } from "react-native";
 
 import GroupDetailSummaryItem from "./GroupDetailSummaryItem";
 
+import { useAppSelector } from "@/hooks/reduxHook";
 import { Group } from "@/store/reducers/groups";
+import { groupUsersSelector } from "@/store/reducers/users";
 import { CurrencyCode } from "@/types/Currency";
 import { getPaymentRelationshipByCurrency } from "@/utils/payment";
 
@@ -18,11 +20,14 @@ const GroupDetailSummaryCarousel = memo<IGroupDetailSummaryCarouselProps>(
     const styles = useStyles();
     const windowDimensions = useWindowDimensions();
     const navigation = useNavigation();
+    const groupUsers = useAppSelector((state) =>
+      groupUsersSelector(state, group.id),
+    );
 
     const {
       paymentRelationshipByCurrency,
       simplifiedPaymentRelationshipByCurrency,
-    } = getPaymentRelationshipByCurrency(group.members, group.paymentRecords);
+    } = getPaymentRelationshipByCurrency(groupUsers, group.paymentRecords);
 
     const isSingleCurrency =
       Object.keys(simplifiedPaymentRelationshipByCurrency).length === 1;
