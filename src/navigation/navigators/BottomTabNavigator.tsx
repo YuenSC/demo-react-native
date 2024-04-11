@@ -6,6 +6,7 @@ import BottomTabBar from "../BottomTabBar";
 import { useAppSelector } from "@/hooks/reduxHook";
 import SampleScreen from "@/screens/SampleScreen";
 import GroupDetailScreen from "@/screens/bottomTab/GroupDetailScreen";
+import OptionsScreen from "@/screens/bottomTab/OptionsScreen";
 import PaymentRecordScreen from "@/screens/bottomTab/PaymentRecordScreen";
 import StatisticScreen from "@/screens/bottomTab/StatisticScreen";
 import { IBottomTabParamList } from "@/types/navigation";
@@ -52,7 +53,7 @@ const BottomTabNavigator = () => {
       />
       <BottomTab.Screen
         name="Option"
-        component={SampleScreen}
+        component={OptionsScreen}
         options={{
           tabBarIcon: ({ color }) => (
             <Ionicons name="options" size={24} color={color} />

@@ -78,7 +78,7 @@ const GroupDetailScreen = ({
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={styles.contentContainer}>
         <View style={styles.sectionPadding}>
           <Text h1>{currentGroup.name}</Text>
           <Text style={styles.subtitle}>
@@ -192,6 +192,8 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     backgroundColor: theme.colors.background,
     paddingVertical: 16,
+  },
+  contentContainer: {
     gap: 16,
   },
   sectionPadding: {
