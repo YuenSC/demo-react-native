@@ -40,7 +40,10 @@ const DrawerContent = memo<IDrawerContentProps>(({ state }) => {
               type="clear"
               size="sm"
               onPress={() => {
-                navigation.navigate("GroupForm", { step: 0 });
+                navigation.navigate("GroupForm", {
+                  step: 0,
+                  shouldEditUserList: true,
+                });
               }}
             >
               <AntDesign

@@ -1,4 +1,9 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  createSelector,
+  createSlice,
+  PayloadAction,
+  weakMapMemoize,
+} from "@reduxjs/toolkit";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 
@@ -153,17 +158,42 @@ export const currentGroupSelector = (state: RootState) =>
 export const groupSelector = (state: RootState, groupId: string) =>
   state.groups.groups.find((group) => group.id === groupId);
 
-export const relatedPaymentsSelector = (
-  state: RootState,
-  groupId: string,
-  userId: string,
-) => {
-  const group = state.groups.groups.find((group) => group.id === groupId);
-  const relatedPaymentRecords =
-    group?.paymentRecords.filter(
-      (record) =>
-        record.payees.find((payee) => payee.id === userId) ||
-        record.payers.find((payer) => payer.id === userId),
-    ) ?? [];
-  return relatedPaymentRecords;
-};
+export const relatedPaymentsSelector = createSelector(
+  [
+    (state: RootState) => state.groups.groups,
+    (_: RootState, userId: string) => userId,
+    (_: RootState, userId: string, groupId?: string) => groupId,
+  ],
+  (groups, userId, groupId) => {
+    const paymentRecordsFromGroupId =
+      groups.find((group) => group.id === groupId)?.paymentRecords ?? [];
+    const paymentRecordsFromAllGroups = groups.reduce((acc, group) => {
+      return [...acc, ...group.paymentRecords];
+    }, [] as PaymentRecord[]);
+
+    const paymentRecords = groupId
+      ? paymentRecordsFromGroupId
+      : paymentRecordsFromAllGroups;
+
+    const relatedPaymentRecords =
+      paymentRecords.filter(
+        (record) =>
+          record.payees.find((payee) => payee.id === userId) ||
+          record.payers.find((payer) => payer.id === userId),
+      ) ?? [];
+    return relatedPaymentRecords;
+  },
+  {
+    memoize: weakMapMemoize,
+    argsMemoize: weakMapMemoize,
+  },
+);
+
+export const groupNameByIdSelector = (state: RootState) =>
+  state.groups.groups.reduce(
+    (acc, group) => {
+      acc[group.id] = group.name;
+      return acc;
+    },
+    {} as Record<string, string>,
+  );

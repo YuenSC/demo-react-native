@@ -205,7 +205,7 @@ const BillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
 const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.modal,
+    backgroundColor: "transparent",
     padding: 8,
     paddingTop: 16,
   },

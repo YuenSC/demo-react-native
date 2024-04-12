@@ -3,36 +3,82 @@ import { Button, Text, makeStyles, useTheme } from "@rneui/themed";
 import { Fragment } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 
-import { HStack } from "@/components/common/Stack";
+import { HStack, VStack } from "@/components/common/Stack";
+import { useAppSelector } from "@/hooks/reduxHook";
+import { currentGroupSelector } from "@/store/reducers/groups";
+import { profileUserSelector } from "@/store/reducers/profile";
 import { IBottomTabScreenProps } from "@/types/navigation";
 
 const OptionsScreen = ({ navigation }: IBottomTabScreenProps<"Option">) => {
   const styles = useStyles();
+  const currentGroup = useAppSelector(currentGroupSelector);
+  const profileUser = useAppSelector(profileUserSelector);
 
   return (
     <ScrollView
       contentContainerStyle={styles.contentContainer}
       style={styles.container}
     >
-      <Text h1>Options</Text>
+      <VStack alignItems="stretch">
+        <Text h1>Options</Text>
+        <Text style={styles.sectionLabel}>
+          Hi, {profileUser?.name || "User"}! Hope you are having a great day!
+        </Text>
+      </VStack>
 
-      <Section
-        title="Personal"
-        sections={[<SectionItem title="Profile" onPress={() => {}} />]}
-      />
-
-      <Section
-        title="Group Related"
-        sections={[
-          <SectionItem title="Group Detail" onPress={() => {}} />,
-          <SectionItem title="Member" onPress={() => {}} />,
-          <SectionItem title="Category" onPress={() => {}} />,
-        ]}
-      />
+      {profileUser?.id && (
+        <Section
+          title="Personal"
+          sections={[
+            <SectionItem
+              title="Profile"
+              onPress={() =>
+                navigation.navigate("EditMember", {
+                  id: profileUser.id,
+                })
+              }
+            />,
+          ]}
+        />
+      )}
+      {currentGroup?.id && (
+        <Section
+          title={`"${currentGroup.name}" Related`}
+          sections={[
+            <SectionItem
+              title="Group Detail"
+              onPress={() =>
+                navigation.navigate("GroupForm", {
+                  step: 0,
+                  groupId: currentGroup.id,
+                })
+              }
+            />,
+            <SectionItem
+              title="Group Members"
+              onPress={() =>
+                navigation.navigate("UserList", {
+                  groupId: currentGroup.id,
+                })
+              }
+            />,
+            <SectionItem
+              title="Category"
+              onPress={() => {}}
+              disabled
+              itemRight={<Text style={styles.sectionLabel}>Coming Soon</Text>}
+            />,
+          ]}
+        />
+      )}
 
       <Section
         title="App Related"
         sections={[
+          <SectionItem
+            title="All Members"
+            onPress={() => navigation.navigate("UserList", {})}
+          />,
           <SectionItem title="Language" onPress={() => {}} />,
           <SectionItem
             title="Online Mode"
@@ -43,7 +89,12 @@ const OptionsScreen = ({ navigation }: IBottomTabScreenProps<"Option">) => {
         ]}
       />
 
-      <Button title="Delete Group" type="outline" color="error" />
+      <Button
+        title="Delete Group"
+        type="outline"
+        color="error"
+        onPress={() => {}}
+      />
     </ScrollView>
   );
 };
@@ -125,16 +176,16 @@ const useStyles = makeStyles((theme) => ({
   },
 
   section: {
-    backgroundColor: theme.colors.modal,
+    backgroundColor: theme.colors.background,
     borderRadius: 8,
     overflow: "hidden",
     borderWidth: 1,
     borderColor: theme.colors.divider,
+    marginTop: 4,
   },
   sectionLabel: {
     fontSize: 12,
     color: theme.colors.grey1,
-    marginBottom: 4,
   },
   sectionItem: {
     paddingVertical: 12,

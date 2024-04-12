@@ -149,7 +149,7 @@ const GroupDetailScreen = ({
           <TouchableOpacity
             style={styles.members}
             onPress={() =>
-              navigation.navigate("GroupUserList", { groupId: currentGroup.id })
+              navigation.navigate("UserList", { groupId: currentGroup.id })
             }
           >
             <HStack gap={8}>
@@ -193,6 +193,7 @@ const useStyles = makeStyles((theme) => ({
   },
   contentContainer: {
     gap: 16,
+    paddingBottom: 32,
   },
   sectionPadding: {
     paddingHorizontal: 16,

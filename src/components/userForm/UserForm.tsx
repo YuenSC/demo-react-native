@@ -15,7 +15,6 @@ type IUserFormProps = {
   isEdit?: boolean;
   onSubmit: (values: IUserCreatePayload) => void;
   onDelete?: () => void;
-  groupId?: string;
   userId?: string;
   submitButtonText: string;
 };

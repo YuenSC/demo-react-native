@@ -1,6 +1,8 @@
 import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import { Button, Text, makeStyles } from "@rneui/themed";
+import { StatusBar } from "expo-status-bar";
 import { useRef } from "react";
+import { useWindowDimensions } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -12,27 +14,30 @@ import {
   groupSelector,
   relatedPaymentsSelector,
 } from "@/store/reducers/groups";
-import { groupUsersSelector, updateUser } from "@/store/reducers/users";
+import {
+  deleteUser,
+  removeUserFromGroup,
+  userSelector,
+} from "@/store/reducers/users";
 import { IStackScreenProps } from "@/types/navigation";
 
-const GroupDeleteUserBottomSheet = ({
+const UserDeleteBottomSheet = ({
   navigation,
   route: {
-    params: { groupId, userId },
+    params: { groupId = "", userId, onDeleteSuccess },
   },
-}: IStackScreenProps<"GroupDeleteUserBottomSheet">) => {
+}: IStackScreenProps<"UserDeleteBottomSheet">) => {
   const insets = useSafeAreaInsets();
   const styles = useStyles(insets);
   const dispatch = useAppDispatch();
+  const { height } = useWindowDimensions();
 
   const bottomSheetRef = useRef<BottomSheet>(null);
   const group = useAppSelector((state) => groupSelector(state, groupId));
-  const groupUsers = useAppSelector((state) =>
-    groupUsersSelector(state, groupId),
-  );
-  const user = groupUsers.find((user) => user.id === userId);
+
+  const user = useAppSelector((state) => userSelector(state, userId));
   const relatedPayments = useAppSelector((state) =>
-    relatedPaymentsSelector(state, groupId, userId),
+    relatedPaymentsSelector(state, userId, groupId),
   );
 
   return (
@@ -40,7 +45,9 @@ const GroupDeleteUserBottomSheet = ({
       ref={bottomSheetRef}
       onClose={navigation.goBack}
       enablePanDownToClose
-      snapPoints={relatedPayments.length > 0 ? ["50%", "90%"] : []}
+      snapPoints={
+        relatedPayments.length > 0 ? ["50%", height - insets.top] : []
+      }
       enableDynamicSizing={relatedPayments.length === 0}
     >
       <BottomSheetFlatList
@@ -53,7 +60,13 @@ const GroupDeleteUserBottomSheet = ({
               {`Are you sure to delete `}
               <Text style={styles.titleHighlight}>{user?.name}</Text>
               {` from `}
-              <Text style={styles.titleHighlight}>{group?.name}</Text>?
+              <Text style={styles.titleHighlight}>
+                {group?.name || "All Groups"}
+              </Text>
+              ?
+            </Text>
+            <Text style={styles.warning}>
+              Please note that this action is irreversible
             </Text>
             {relatedPayments.length > 0 && (
               <Text style={styles.subtitle}>
@@ -67,13 +80,18 @@ const GroupDeleteUserBottomSheet = ({
           <Button
             title="Delete"
             onPress={() => {
-              dispatch(
-                updateUser({
-                  id: user?.id!,
-                  groupIds: user?.groupIds?.filter((id) => id !== groupId),
-                }),
-              );
-              navigation.goBack();
+              if (groupId) {
+                dispatch(
+                  removeUserFromGroup({
+                    id: user?.id!,
+                    groupId,
+                  }),
+                );
+              } else {
+                dispatch(deleteUser(userId));
+              }
+
+              onDeleteSuccess();
             }}
             color="error"
             disabled={relatedPayments.length > 0}
@@ -86,7 +104,7 @@ const GroupDeleteUserBottomSheet = ({
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate("EditPayment", {
-                  groupId,
+                  groupId: item.groupId,
                   recordId: item.id,
                 })
               }
@@ -131,6 +149,9 @@ const useStyles = makeStyles((theme, inset: EdgeInsets) => ({
     color: theme.colors.grey1,
     fontWeight: "500",
   },
+  warning: {
+    color: theme.colors.grey2,
+  },
   footer: {
     marginHorizontal: 16,
     backgroundColor: theme.colors.background,
@@ -138,4 +159,4 @@ const useStyles = makeStyles((theme, inset: EdgeInsets) => ({
   },
 }));
 
-export default GroupDeleteUserBottomSheet;
+export default UserDeleteBottomSheet;

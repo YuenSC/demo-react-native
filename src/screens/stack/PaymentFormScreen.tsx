@@ -21,9 +21,10 @@ const PaymentFormScreen = ({
   navigation,
   route: {
     params: { groupId, recordId, defaultValue },
+    name,
   },
 }: IStackScreenProps<"AddPayment" | "EditPayment" | "EditPaymentModal">) => {
-  const styles = useStyles();
+  const styles = useStyles(name);
   const { theme } = useTheme();
 
   const lastUsedCurrency = useAppSelector(
@@ -137,12 +138,11 @@ const PaymentFormScreen = ({
   return (
     <BottomSheetModalProvider>
       <FormProvider {...form}>
-        <View style={styles.container}>
+        <View style={[[styles.container, styles.backgroundColor]]}>
           <Tab.Navigator
+            sceneContainerStyle={styles.backgroundColor}
             screenOptions={{
-              tabBarStyle: {
-                backgroundColor: theme.colors.modal,
-              },
+              tabBarStyle: styles.backgroundColor,
               tabBarLabelStyle: {
                 color: theme.colors.black,
                 fontWeight: "bold",
@@ -176,11 +176,16 @@ const PaymentFormScreen = ({
   );
 };
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.modal,
-  },
-}));
+const useStyles = makeStyles(
+  (theme, name: "AddPayment" | "EditPayment" | "EditPaymentModal") => ({
+    container: {
+      flex: 1,
+    },
+    backgroundColor: {
+      backgroundColor:
+        name === "EditPayment" ? theme.colors.background : theme.colors.modal,
+    },
+  }),
+);
 
 export default PaymentFormScreen;

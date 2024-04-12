@@ -10,15 +10,16 @@ import SampleScreen from "@/screens/SampleScreen";
 import EditMemberScreen from "@/screens/stack/EditMemberScreen";
 import GroupCreateSuccessBottomSheet from "@/screens/stack/GroupCreateSuccessBottomSheet";
 import GroupDeletePaymentRecordBottomSheet from "@/screens/stack/GroupDeletePaymentRecordBottomSheet";
-import GroupDeleteUserBottomSheet from "@/screens/stack/GroupDeleteUserBottomSheet";
+import GroupExistingUserSelectBottomSheet from "@/screens/stack/GroupExistingUserSelectBottomSheet";
 import GroupFormScreen from "@/screens/stack/GroupFormScreen";
 import GroupSummaryScreen from "@/screens/stack/GroupSummaryScreen";
-import GroupUserListScreen from "@/screens/stack/GroupUserListScreen";
 import OnboardingScreen from "@/screens/stack/OnboardingScreen";
 import PaymentFormCurrencySelectBottomSheet from "@/screens/stack/PaymentFormCurrencySelectBottomSheet";
 import PaymentFormDatePickerBottomSheet from "@/screens/stack/PaymentFormDatePickerBottomSheet";
 import PaymentFormScreen from "@/screens/stack/PaymentFormScreen";
 import PaymentRecordFilterScreen from "@/screens/stack/PaymentRecordFilterScreen";
+import UserDeleteBottomSheet from "@/screens/stack/UserDeleteBottomSheet";
+import UserListScreen from "@/screens/stack/UserListScreen";
 import WelcomeScreen from "@/screens/stack/WelcomeScreen";
 import { IStackParamList } from "@/types/navigation";
 
@@ -92,8 +93,8 @@ const StackNavigator = memo(() => {
           name="GroupCreateSuccessBottomSheet"
         />
         <Stack.Screen
-          component={GroupDeleteUserBottomSheet}
-          name="GroupDeleteUserBottomSheet"
+          component={UserDeleteBottomSheet}
+          name="UserDeleteBottomSheet"
         />
         <Stack.Screen
           component={PaymentRecordFilterScreen}
@@ -111,7 +112,17 @@ const StackNavigator = memo(() => {
           component={PaymentFormCurrencySelectBottomSheet}
           name="PaymentFormCurrencySelectBottomSheet"
         />
+        <Stack.Screen
+          component={GroupExistingUserSelectBottomSheet}
+          name="GroupExistingUserSelectBottomSheet"
+        />
       </Stack.Group>
+
+      <Stack.Screen
+        component={UserListScreen}
+        name="UserList"
+        options={{ title: "Users" }}
+      />
 
       {/* Modal */}
       <Stack.Group
@@ -123,11 +134,12 @@ const StackNavigator = memo(() => {
         }}
       >
         <Stack.Screen
-          component={GroupUserListScreen}
-          name="GroupUserList"
-          options={{ title: "Users" }}
+          component={EditMemberScreen}
+          name="EditMember"
+          options={{
+            headerTitle: "",
+          }}
         />
-        <Stack.Screen component={EditMemberScreen} name="EditMember" />
         <Stack.Screen component={PaymentFormScreen} name="AddPayment" />
         <Stack.Screen component={PaymentFormScreen} name="EditPaymentModal" />
         <Stack.Screen component={SampleScreen} name="MemberList" />

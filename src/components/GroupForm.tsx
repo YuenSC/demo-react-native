@@ -22,7 +22,7 @@ const GroupForm = memo<IGroupFormProps>(({ groupId, onSubmit }) => {
   );
   const { control, handleSubmit } = useForm<IGroupCreatePayload>({
     defaultValues: {
-      name: "Calvin Group", // TODO: remove default value after testing,
+      name: group?.name || "Calvin Group", // TODO: remove default value after testing,
     },
   });
 

@@ -4,12 +4,12 @@ import { View } from "react-native";
 import UserListForm from "@/components/UserListForm";
 import { IStackScreenProps } from "@/types/navigation";
 
-const GroupUserListScreen = ({
+const UserListScreen = ({
   navigation,
   route: {
     params: { groupId },
   },
-}: IStackScreenProps<"GroupUserList">) => {
+}: IStackScreenProps<"UserList">) => {
   const styles = useStyles();
 
   return (
@@ -28,9 +28,9 @@ const GroupUserListScreen = ({
 const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.modal,
-    padding: 16,
+    backgroundColor: theme.colors.background,
+    paddingVertical: 16,
   },
 }));
 
-export default GroupUserListScreen;
+export default UserListScreen;

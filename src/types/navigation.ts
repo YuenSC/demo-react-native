@@ -28,7 +28,7 @@ export type IStackParamList = {
   GroupCreateSuccessBottomSheet: {
     isOnboarding: boolean;
   };
-  EditMember: { id: string; groupId: string; isDeleteDisabled?: boolean };
+  EditMember: { id: string };
   AddPayment: {
     groupId: string;
     recordId?: string;
@@ -45,7 +45,7 @@ export type IStackParamList = {
     defaultValue?: PaymentRecordCreate;
   };
   MemberList: undefined;
-  GroupUserList: { groupId: string };
+  UserList: { groupId?: string };
   PaymentRecordFilter: {
     selectedCurrency: CurrencyCode | null;
     setSelectedCurrency: React.Dispatch<
@@ -60,9 +60,13 @@ export type IStackParamList = {
     currencyCode: CurrencyCode;
     setCurrencyCode: React.Dispatch<React.SetStateAction<CurrencyCode>>;
   };
-  GroupDeleteUserBottomSheet: {
-    groupId: string;
+  UserDeleteBottomSheet: {
+    groupId?: string;
     userId: string;
+    onDeleteSuccess: () => void;
+  };
+  GroupExistingUserSelectBottomSheet: {
+    groupId: string;
   };
   GroupDeletePaymentRecordBottomSheet: {
     groupId: string;
@@ -74,6 +78,7 @@ export type IStackParamList = {
   GroupForm: {
     groupId?: string;
     step: number;
+    shouldEditUserList?: boolean;
   };
 };
 

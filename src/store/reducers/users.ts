@@ -30,11 +30,33 @@ export const usersSlice = createSlice({
         id: action.payload.id ?? id,
       });
     },
-    deleteUser: (
+    removeUserFromGroup: (
       state,
-      action: PayloadAction<{ id: string; groupIds: string[] }>,
+      action: PayloadAction<{ id: string; groupId: string }>,
     ) => {
-      state.users = state.users.filter((user) => user.id !== action.payload.id);
+      const user = state.users.find((user) => user.id === action.payload.id);
+      if (!user) return;
+
+      user.groupIds = user.groupIds.filter(
+        (groupId) => groupId !== action.payload.groupId,
+      );
+    },
+    addUserToGroup: (
+      state,
+      action: PayloadAction<{ id: string; groupId: string }>,
+    ) => {
+      const user = state.users.find((user) => user.id === action.payload.id);
+      if (!user) return;
+
+      if (!user.groupIds.includes(action.payload.groupId)) {
+        user.groupIds.push(action.payload.groupId);
+      }
+    },
+    deleteUser: (state, action: PayloadAction<string>) => {
+      const index = state.users.findIndex((user) => user.id === action.payload);
+      if (index !== -1) {
+        state.users.splice(index, 1);
+      }
     },
     updateUser: (state, action: PayloadAction<IUserUpdatePayload>) => {
       const user = state.users.find((user) => user.id === action.payload.id);
@@ -48,13 +70,15 @@ export const usersSlice = createSlice({
   },
 });
 
-export const { addUser, deleteUser, updateUser } = usersSlice.actions;
+export const {
+  addUser,
+  removeUserFromGroup,
+  updateUser,
+  addUserToGroup,
+  deleteUser,
+} = usersSlice.actions;
 
 export default usersSlice.reducer;
-
-// export const groupUsersSelector = (state: RootState, groupId: string) => {
-//   return state.users.users.filter((user) => user.groupIds?.includes(groupId));
-// };
 
 export const groupUsersSelector = createSelector(
   [

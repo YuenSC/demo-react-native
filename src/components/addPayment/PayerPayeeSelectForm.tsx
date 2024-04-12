@@ -169,7 +169,6 @@ const PayerPayeeSelectForm = ({
 const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.modal,
     padding: 8,
     paddingTop: 32,
   },
@@ -194,9 +193,6 @@ const useStyles = makeStyles((theme) => ({
   inputContainer: {
     borderBottomWidth: 0,
     paddingHorizontal: 0,
-  },
-  item: {
-    backgroundColor: theme.colors.modal,
   },
   itemContent: {
     flexDirection: "row",

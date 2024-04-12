@@ -15,7 +15,7 @@ import { AvatarColor } from "@/types/AvatarColor";
 import "react-native-get-random-values";
 
 type IUserListFormProps = {
-  groupId: string;
+  groupId?: string;
   onSubmit: () => void;
   buttonText?: string;
 };
@@ -28,8 +28,11 @@ const UserListForm = memo<IUserListFormProps>(
     const navigation = useNavigation();
 
     const groupUsers = useAppSelector((state) =>
-      groupUsersSelector(state, groupId),
+      groupUsersSelector(state, groupId || ""),
     );
+    const allUsers = useAppSelector((state) => state.users.users);
+    const users = groupId ? groupUsers : allUsers;
+
     const profile = useAppSelector((state) => state.profile);
     const [username, setUserName] = useState("");
     const [isFocused, setIsFocused] = useState(false);
@@ -46,11 +49,18 @@ const UserListForm = memo<IUserListFormProps>(
         </VStack>
 
         <View>
-          {groupUsers?.map((member) => {
+          {users?.map((member, index) => {
             const isProfileUser = member.id === profile.userId;
+            const isLast = index === users.length - 1;
 
             return (
-              <View key={member.id} style={styles.memberContainer}>
+              <View
+                key={member.id}
+                style={[
+                  styles.memberContainer,
+                  isLast && { borderBottomWidth: 0 },
+                ]}
+              >
                 <HStack gap={4}>
                   <AvatarIcon
                     size="small"
@@ -66,89 +76,99 @@ const UserListForm = memo<IUserListFormProps>(
                 </HStack>
 
                 <HStack gap={8}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("EditMember", { id: member.id })
+                    }
+                  >
+                    <Feather
+                      name="edit"
+                      size={24}
+                      color={theme.colors.primary}
+                    />
+                  </TouchableOpacity>
                   {!isProfileUser && (
                     <TouchableOpacity
-                      onPress={() =>
-                        navigation.navigate("EditMember", {
-                          id: member.id,
+                      onPress={() => {
+                        navigation.navigate("UserDeleteBottomSheet", {
                           groupId,
-                          isDeleteDisabled: isProfileUser,
-                        })
-                      }
+                          userId: member.id,
+                          onDeleteSuccess: navigation.goBack,
+                        });
+                      }}
                     >
-                      <Feather
-                        name="edit"
+                      <AntDesign
+                        name="delete"
                         size={24}
-                        color={theme.colors.primary}
+                        color={theme.colors.error}
                       />
                     </TouchableOpacity>
                   )}
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate("GroupDeleteUserBottomSheet", {
-                        groupId,
-                        userId: member.id,
-                      });
-                    }}
-                  >
-                    <AntDesign
-                      name="delete"
-                      size={24}
-                      color={theme.colors.error}
-                    />
-                  </TouchableOpacity>
                 </HStack>
               </View>
             );
           })}
 
-          {isFocused ? (
-            <Animated.View
-              entering={FadeIn.duration(300)}
-              exiting={FadeOut.duration(300)}
-            >
-              <Input
-                autoFocus
-                onChangeText={setUserName}
-                value={username}
-                placeholder="Type participant name"
-                renderErrorMessage={false}
-                containerStyle={styles.inputContainer}
-                inputContainerStyle={{
-                  borderBottomWidth: 0,
-                  paddingHorizontal: 0,
-                }}
-                onEndEditing={() => {
-                  if (username) {
-                    dispatch(
-                      addUser({
-                        groupIds: [groupId],
-                        name: username,
-                        avatarColor: AvatarColor.AmethystPurple,
-                      }),
-                    );
-                  }
-                  setUserName("");
-                  setIsFocused(false);
-                }}
-              />
-            </Animated.View>
-          ) : (
-            <TouchableOpacity
-              onPress={() => setIsFocused(true)}
-              style={[styles.input]}
-            >
-              <Entypo name="plus" size={24} color={theme.colors.primary} />
-              <Text style={styles.memberName}>Add participant</Text>
-            </TouchableOpacity>
+          {groupId && (
+            <View>
+              {isFocused ? (
+                <Animated.View
+                  entering={FadeIn.duration(300)}
+                  exiting={FadeOut.duration(300)}
+                >
+                  <Input
+                    autoFocus
+                    onChangeText={setUserName}
+                    value={username}
+                    placeholder="Type participant name"
+                    renderErrorMessage={false}
+                    containerStyle={styles.inputContainer}
+                    inputContainerStyle={{
+                      borderBottomWidth: 0,
+                      paddingHorizontal: 0,
+                    }}
+                    onEndEditing={() => {
+                      if (username) {
+                        dispatch(
+                          addUser({
+                            groupIds: [groupId],
+                            name: username,
+                            avatarColor: AvatarColor.AmethystPurple,
+                          }),
+                        );
+                      }
+                      setUserName("");
+                      setIsFocused(false);
+                    }}
+                  />
+                </Animated.View>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => setIsFocused(true)}
+                  style={[styles.input]}
+                >
+                  <Entypo name="plus" size={24} color={theme.colors.primary} />
+                  <Text style={styles.memberName}>Add participant</Text>
+                </TouchableOpacity>
+              )}
+            </View>
           )}
         </View>
 
-        <Button
-          title={buttonText}
-          containerStyle={styles.button}
-          onPress={onSubmit}
-        />
+        <VStack alignItems="stretch" gap={8} style={styles.buttonContainer}>
+          {groupId && (
+            <Button
+              title="Select Existing User"
+              type="outline"
+              onPress={() =>
+                navigation.navigate("GroupExistingUserSelectBottomSheet", {
+                  groupId,
+                })
+              }
+            />
+          )}
+          <Button title={buttonText} onPress={onSubmit} />
+        </VStack>
       </ScrollView>
     );
   },
@@ -162,7 +182,7 @@ const useStyles = makeStyles((theme) => ({
   title: {
     fontWeight: "bold",
   },
-  button: {
+  buttonContainer: {
     marginTop: 16,
   },
 

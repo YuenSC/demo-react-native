@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme, inset: EdgeInsets) => ({
   content: {
     paddingHorizontal: 16,
     gap: 12,
-    paddingBottom: inset.bottom + 24,
+    paddingBottom: inset.bottom,
   },
   title: {
     fontSize: 20,

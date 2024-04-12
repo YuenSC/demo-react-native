@@ -6,13 +6,17 @@ import { v4 as uuidv4 } from "uuid";
 import GroupForm from "@/components/GroupForm";
 import UserListForm from "@/components/UserListForm";
 import { useAppDispatch } from "@/hooks/reduxHook";
-import { addGroup, setCurrentGroupId } from "@/store/reducers/groups";
+import {
+  addGroup,
+  setCurrentGroupId,
+  updateGroup,
+} from "@/store/reducers/groups";
 import { IStackScreenProps } from "@/types/navigation";
 
 const GroupFormScreen = ({
   navigation,
   route: {
-    params: { step, groupId },
+    params: { step, groupId, shouldEditUserList },
   },
 }: IStackScreenProps<"GroupForm">) => {
   const styles = useStyles();
@@ -22,11 +26,20 @@ const GroupFormScreen = ({
     <View style={styles.container}>
       {step === 0 && (
         <GroupForm
-          groupId={undefined}
+          groupId={groupId}
           onSubmit={(values) => {
-            const groupId = uuidv4();
-            dispatch(addGroup({ ...values, id: groupId }));
-            navigation.replace("GroupForm", { step: 1, groupId });
+            const newGroupId = uuidv4();
+            if (groupId) {
+              dispatch(updateGroup({ ...values, id: groupId }));
+            } else {
+              dispatch(addGroup({ ...values, id: newGroupId }));
+            }
+
+            if (shouldEditUserList)
+              navigation.replace("GroupForm", { step: 1, groupId: newGroupId });
+            else {
+              navigation.goBack();
+            }
           }}
         />
       )}
