@@ -63,7 +63,9 @@ const PayerPayeeSelectForm = ({
               key={member.id}
               bottomDivider
               style={{ width: "100%" }}
-              containerStyle={styles.item}
+              containerStyle={{
+                backgroundColor: "transparent",
+              }}
             >
               <ListItem.CheckBox
                 iconType="material-community"
