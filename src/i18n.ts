@@ -31,18 +31,13 @@ i18n
   .use({
     type: "languageDetector",
     async: true, // If this is set to true, your detect function receives a callback function that you should call with your language, useful to retrieve your language stored in AsyncStorage for example
-    init(services, detectorOptions, i18nextOptions) {
-      console.log("init");
-    },
+    init(services, detectorOptions, i18nextOptions) {},
     detect(callback) {
-      console.log("detect");
       AsyncStorage.getItem("user-language").then((userLanguage) => {
-        console.log("userLanguage", userLanguage);
         callback(userLanguage || deviceLanguage || "en");
       });
     },
     cacheUserLanguage(lng) {
-      console.log("cacheUserLanguage");
       AsyncStorage.setItem("user-language", lng);
     },
   } satisfies LanguageDetectorAsyncModule)

@@ -2,7 +2,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { Button, Text, makeStyles, useTheme } from "@rneui/themed";
 import { Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, ScrollView, View } from "react-native";
+import { Linking, Pressable, ScrollView, View } from "react-native";
 
 import { HStack, VStack } from "@/components/common/Stack";
 import { useAppSelector } from "@/hooks/reduxHook";
@@ -92,6 +92,12 @@ const OptionsScreen = ({ navigation }: IBottomTabScreenProps<"Option">) => {
           <SectionItem
             title={t("OptionsScreen:language")}
             onPress={() => navigation.navigate("Language")}
+          />,
+          <SectionItem
+            title={t("OptionsScreen:contact-us")}
+            onPress={() =>
+              Linking.openURL("mailto:groupexpense.calvin@gmail.com")
+            }
           />,
           <SectionItem
             title={t("OptionsScreen:online-mode")}

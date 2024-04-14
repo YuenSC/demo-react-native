@@ -21,6 +21,9 @@ const theme = createTheme({
   mode: "dark",
   components: {
     Button,
+    Input: () => ({
+      keyboardAppearance: "light",
+    }),
   },
 });
 

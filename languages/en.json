@@ -103,6 +103,7 @@
     "all-members": "All Members",
     "app-related": "App Related",
     "category": "Category",
+    "contact-us": "Contact Us",
     "delete-group": "Delete Group",
     "greeting": "Hi, {{name}}! Hope you are having a great day!",
     "group-detail": "Group Detail",
@@ -128,7 +129,7 @@
   },
   "PaymentFormScreen": {
     "bill": "Bill",
-    "paid-for": "Paid For Who?",
+    "paid-for": "Paid For?",
     "who-paid": "Who Paid?"
   },
   "PaymentRecordFilterScreen": {
