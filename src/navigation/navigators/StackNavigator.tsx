@@ -62,7 +62,7 @@ const StackNavigator = memo(() => {
     );
 
     // Start loading the interstitial straight away
-    if (isFirstPaymentDone) {
+    if (isFirstPaymentDone && !Config.isDev) {
       interstitialAd.load();
     } else {
       setLoaded(true);
@@ -187,7 +187,7 @@ const StackNavigator = memo(() => {
       <Stack.Screen
         component={UserListScreen}
         name="UserList"
-        options={{ title: t("StackNavigator:users") }}
+        options={{ title: "" }}
       />
 
       {/* Modal */}

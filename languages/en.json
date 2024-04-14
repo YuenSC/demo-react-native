@@ -4,14 +4,14 @@
     "enter-something": "Enter something~"
   },
   "BillCategoryEnum": {
-    "Accommodation": "Accommodation",
+    "Accommodation": "Living",
     "Entertainment": "Entertainment",
     "FoodAndDining": "Food & Dining",
     "Insurance": "Insurance",
     "Miscellaneous": "Miscellaneous",
     "Shopping": "Shopping",
-    "SightseeingAndActivities": "Sightseeing & Activities",
-    "Transportation": "Transportation"
+    "SightseeingAndActivities": "Sightseeing",
+    "Transportation": "Transport"
   },
   "BillForm": {
     "amount-is-required": "Amount is required",
@@ -158,12 +158,14 @@
     "edit-member": "Edit Member",
     "hi-user": "Hi {{name}}",
     "name": "Name",
+    "related-groups": "Related Groups",
     "who-are-you": "Who are you?",
     "your-avatar-color": "Your avatar color",
     "your-name-is-required": "Your name is required"
   },
   "UserListForm": {
     "add-participant": "Add participant",
+    "all-members": "All Members",
     "members": "Members",
     "select-existing-user": "Select Existing User",
     "type-participant-name": "Type participant name"

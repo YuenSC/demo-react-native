@@ -46,7 +46,9 @@ const UserListForm = memo<IUserListFormProps>(
       >
         <VStack alignItems="flex-start">
           <Text h1 style={styles.title}>
-            {t("UserListForm:members")}
+            {groupId
+              ? t("UserListForm:members")
+              : t("UserListForm:all-members")}
           </Text>
         </VStack>
 
@@ -91,23 +93,21 @@ const UserListForm = memo<IUserListFormProps>(
                       color={theme.colors.primary}
                     />
                   </TouchableOpacity>
-                  {!isProfileUser && (
-                    <TouchableOpacity
-                      onPress={() => {
-                        navigation.navigate("UserDeleteBottomSheet", {
-                          groupId,
-                          userId: member.id,
-                          onDeleteSuccess: navigation.goBack,
-                        });
-                      }}
-                    >
-                      <AntDesign
-                        name="delete"
-                        size={24}
-                        color={theme.colors.error}
-                      />
-                    </TouchableOpacity>
-                  )}
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("UserDeleteBottomSheet", {
+                        groupId,
+                        userId: member.id,
+                        onDeleteSuccess: navigation.goBack,
+                      });
+                    }}
+                  >
+                    <AntDesign
+                      name="delete"
+                      size={24}
+                      color={theme.colors.error}
+                    />
+                  </TouchableOpacity>
                 </HStack>
               </View>
             );

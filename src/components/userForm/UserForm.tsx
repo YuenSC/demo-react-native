@@ -26,6 +26,11 @@ const UserForm = memo<IUserFormProps>(
     const user = useAppSelector((state) => userSelector(state, userId));
     const { t } = useTranslation();
 
+    const groups = useAppSelector((state) => state.groups.groups);
+    const relatedGroups = groups.filter((group) =>
+      user?.groupIds.includes(group.id),
+    );
+
     const defaultUser = useMemo(() => {
       return isEdit
         ? user
@@ -87,6 +92,17 @@ const UserForm = memo<IUserFormProps>(
           </View>
         )}
 
+        <View style={{ marginTop: 20 }}>
+          <Text style={styles.label}>{t("UserForm:related-groups")}</Text>
+          <VStack alignItems="flex-start" style={styles.relatedGroup}>
+            {relatedGroups.map((group) => (
+              <Text key={group.id} style={styles.groupName}>
+                {group.name}
+              </Text>
+            ))}
+          </VStack>
+        </View>
+
         <VStack alignItems="stretch" gap={4}>
           <Button
             title={submitButtonText}
@@ -124,6 +140,15 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
     fontSize: 16,
     marginLeft: 10,
+  },
+  relatedGroup: {
+    marginLeft: 10,
+    marginTop: 4,
+    marginBottom: 16,
+  },
+  groupName: {
+    fontSize: 16,
+    fontWeight: "bold",
   },
 }));
 

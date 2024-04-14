@@ -158,12 +158,14 @@
     "edit-member": "メンバーの編集",
     "hi-user": "こんにちは、{{名前}}",
     "name": "名前",
+    "related-groups": "関連グループ",
     "who-are-you": "あなたは誰ですか？",
     "your-avatar-color": "あなたのアバターの色",
     "your-name-is-required": "お名前は必須です"
   },
   "UserListForm": {
     "add-participant": "参加者を追加",
+    "all-members": "全員",
     "members": "メンバー",
     "select-existing-user": "既存のユーザーを選択",
     "type-participant-name": "参加者名を入力してください"
