@@ -52,6 +52,10 @@
     "congrat-message": "Let's create your first payment record with your friends!",
     "congratulations": "Congratulations!"
   },
+  "GroupDeleteBottomSheet": {
+    "are-you-sure-to-delete-this-group": "Are you sure to delete this group?",
+    "warning": "Please note that this action is irreversible. All the data will be lost."
+  },
   "GroupDeletePaymentRecordBottomSheet": {
     "are-you-sure-to-delete-this-record": "Are you sure to delete this record?"
   },

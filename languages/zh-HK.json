@@ -52,6 +52,10 @@
     "congrat-message": "和你的朋友一起創造你的第一筆付款記錄吧！",
     "congratulations": "恭喜！"
   },
+  "GroupDeleteBottomSheet": {
+    "are-you-sure-to-delete-this-group": "您確定要刪除該群組嗎？",
+    "warning": "請注意，此操作是不可逆轉的。\n所有資料都將遺失。"
+  },
   "GroupDeletePaymentRecordBottomSheet": {
     "are-you-sure-to-delete-this-record": "您確定要刪除此記錄嗎？"
   },

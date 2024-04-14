@@ -70,7 +70,15 @@ const GroupDetailScreen = ({
         <Text style={styles.emptyText}>
           {t("GroupDetailScreen:no-group-warning")}
         </Text>
-        <Button title="Add Group" />
+        <Button
+          title="Add Group"
+          onPress={() =>
+            navigation.navigate("GroupForm", {
+              step: 0,
+              shouldEditUserList: true,
+            })
+          }
+        />
       </View>
     );
   }

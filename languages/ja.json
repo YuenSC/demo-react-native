@@ -52,6 +52,10 @@
     "congrat-message": "友達と一緒に最初の支払い記録を作成しましょう!",
     "congratulations": "おめでとう！"
   },
+  "GroupDeleteBottomSheet": {
+    "are-you-sure-to-delete-this-group": "このグループを削除してもよろしいですか?",
+    "warning": "この操作は元に戻せないことに注意してください。\nすべてのデータが失われます。"
+  },
   "GroupDeletePaymentRecordBottomSheet": {
     "are-you-sure-to-delete-this-record": "このレコードを削除してもよろしいですか?"
   },

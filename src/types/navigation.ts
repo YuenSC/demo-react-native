@@ -44,6 +44,7 @@ export type IStackParamList = {
   Language: undefined;
 
   GroupCreateSuccessBottomSheet: { isOnboarding: boolean };
+  GroupDeleteBottomSheet: { groupId: string };
   GroupExistingUserSelectBottomSheet: {
     groupId: string;
   };

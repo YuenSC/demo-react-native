@@ -38,7 +38,10 @@ const BottomTabBar = memo<
             {index === 2 && (
               <TouchableOpacity
                 disabled={!groupId}
-                style={styles.addPaymentButton}
+                style={[
+                  styles.addPaymentButton,
+                  !groupId && { backgroundColor: theme.colors.grey3 },
+                ]}
                 onPress={() => navigation.navigate("AddPayment", { groupId })}
               >
                 <Entypo name="plus" size={40} color={theme.colors.white} />

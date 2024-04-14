@@ -10,6 +10,7 @@ import { useAppSelector } from "@/hooks/reduxHook";
 import SampleScreen from "@/screens/SampleScreen";
 import EditMemberScreen from "@/screens/stack/EditMemberScreen";
 import GroupCreateSuccessBottomSheet from "@/screens/stack/GroupCreateSuccessBottomSheet";
+import GroupDeleteBottomSheet from "@/screens/stack/GroupDeleteBottomSheet";
 import GroupDeletePaymentRecordBottomSheet from "@/screens/stack/GroupDeletePaymentRecordBottomSheet";
 import GroupExistingUserSelectBottomSheet from "@/screens/stack/GroupExistingUserSelectBottomSheet";
 import GroupFormScreen from "@/screens/stack/GroupFormScreen";
@@ -123,6 +124,10 @@ const StackNavigator = memo(() => {
         <Stack.Screen
           component={GroupExistingUserSelectBottomSheet}
           name="GroupExistingUserSelectBottomSheet"
+        />
+        <Stack.Screen
+          component={GroupDeleteBottomSheet}
+          name="GroupDeleteBottomSheet"
         />
       </Stack.Group>
 

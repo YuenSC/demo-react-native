@@ -116,10 +116,6 @@ const PaymentRecordListScreen = ({
     });
   }, [mode, navigation, theme.colors.primary]);
 
-  if (!currentGroup) {
-    return null;
-  }
-
   return (
     <FlatList
       data={data}
@@ -225,6 +221,7 @@ const PaymentRecordListScreen = ({
       contentContainerStyle={styles.contentContainerStyle}
       renderItem={({ item }) => {
         if (!userId) return null;
+        if (!currentGroup?.id) return null;
 
         return (
           <TouchableOpacity

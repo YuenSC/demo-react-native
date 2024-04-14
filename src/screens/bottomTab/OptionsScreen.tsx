@@ -104,12 +104,18 @@ const OptionsScreen = ({ navigation }: IBottomTabScreenProps<"Option">) => {
         ]}
       />
 
-      <Button
-        title={t("OptionsScreen:delete-group")}
-        type="outline"
-        color="error"
-        onPress={() => {}}
-      />
+      {currentGroup && (
+        <Button
+          title={t("OptionsScreen:delete-group")}
+          type="outline"
+          color="error"
+          onPress={() =>
+            navigation.navigate("GroupDeleteBottomSheet", {
+              groupId: currentGroup.id,
+            })
+          }
+        />
+      )}
     </ScrollView>
   );
 };
