@@ -1,5 +1,6 @@
 import { Text, makeStyles, useTheme } from "@rneui/themed";
 import { memo } from "react";
+import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 
 import BillCategoryIcon from "./BillCategoryIcon";
@@ -21,6 +22,7 @@ const PaymentRecordDisplay = memo<IPaymentRecordDisplayProps>(
   ({ record, userId, paymentTarget = PaymentRecordListTarget.You }) => {
     const styles = useStyles();
     const { theme } = useTheme();
+    const { i18n } = useTranslation();
 
     const relatedAmount = getRelatedAmount(userId, record);
     const amount =
@@ -34,7 +36,7 @@ const PaymentRecordDisplay = memo<IPaymentRecordDisplayProps>(
         <VStack gap={4} justifyContent="flex-start" alignItems="flex-start">
           <HStack gap={4} justifyContent="flex-start">
             <BillCategoryIcon category={record.category as BillCategoryEnum} />
-            <Text>{formatDate(record.date)}</Text>
+            <Text>{formatDate(record.date, i18n.language)}</Text>
           </HStack>
 
           <Text numberOfLines={1}>{record.comment}</Text>

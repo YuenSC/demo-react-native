@@ -1,8 +1,10 @@
 import { makeStyles, useTheme } from "@rneui/themed";
 import { memo, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import { MarkedDates } from "react-native-calendars/src/types";
 
+import { LanguageEnum } from "@/i18n";
 import { PaymentRecord } from "@/types/PaymentRecord";
 
 type IPaymentCalendarProps = {
@@ -12,51 +14,76 @@ type IPaymentCalendarProps = {
 };
 
 LocaleConfig.locales.en = LocaleConfig.locales[""];
-LocaleConfig.locales.fr = {
+LocaleConfig.locales[LanguageEnum.JA] = {
   monthNames: [
-    "Janvier",
-    "Février",
-    "Mars",
-    "Avril",
-    "Mai",
-    "Juin",
-    "Juillet",
-    "Août",
-    "Septembre",
-    "Octobre",
-    "Novembre",
-    "Décembre",
+    "1月",
+    "2月",
+    "3月",
+    "4月",
+    "5月",
+    "6月",
+    "7月",
+    "8月",
+    "9月",
+    "10月",
+    "11月",
+    "12月",
   ],
   monthNamesShort: [
-    "Janv.",
-    "Févr.",
-    "Mars",
-    "Avril",
-    "Mai",
-    "Juin",
-    "Juil.",
-    "Août",
-    "Sept.",
-    "Oct.",
-    "Nov.",
-    "Déc.",
+    "1月",
+    "2月",
+    "3月",
+    "4月",
+    "5月",
+    "6月",
+    "7月",
+    "8月",
+    "9月",
+    "10月",
+    "11月",
+    "12月",
   ],
-  dayNames: [
-    "Dimanche",
-    "Lundi",
-    "Mardi",
-    "Mercredi",
-    "Jeudi",
-    "Vendredi",
-    "Samedi",
+  dayNames: ["日", "月", "火", "水", "木", "金", "土"],
+  dayNamesShort: ["日", "月", "火", "水", "木", "金", "土"],
+};
+LocaleConfig.locales[LanguageEnum.ZH_HK] = {
+  monthNames: [
+    "1月",
+    "2月",
+    "3月",
+    "4月",
+    "5月",
+    "6月",
+    "7月",
+    "8月",
+    "9月",
+    "10月",
+    "11月",
+    "12月",
   ],
-  dayNamesShort: ["Dim.", "Lun.", "Mar.", "Mer.", "Jeu.", "Ven.", "Sam."],
+  monthNamesShort: [
+    "1月",
+    "2月",
+    "3月",
+    "4月",
+    "5月",
+    "6月",
+    "7月",
+    "8月",
+    "9月",
+    "10月",
+    "11月",
+    "12月",
+  ],
+  dayNames: ["日", "一", "二", "三", "四", "五", "六"],
+  dayNamesShort: ["日", "一", "二", "三", "四", "五", "六"],
 };
 
 const PaymentCalendar = memo<IPaymentCalendarProps>(
   ({ onDateChange, records, date }) => {
     const styles = useStyles();
     const { theme } = useTheme();
+    const { i18n } = useTranslation();
 
     const isSelectedDateHasRecord = records.some(
       (record) =>
@@ -78,8 +105,11 @@ const PaymentCalendar = memo<IPaymentCalendarProps>(
       [date, records],
     );
 
+    LocaleConfig.defaultLocale = i18n.language;
+
     return (
       <Calendar
+        key={i18n.language}
         style={styles.container}
         theme={{
           backgroundColor: theme.colors.background,

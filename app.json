@@ -20,6 +20,11 @@
         "CFBundleAllowMixedLocalizations": true
       }
     },
+    "locales": {
+      "ja": "./languages/ja.json",
+      "en": "./languages/en.json",
+      "zh": "./languages/zh-HK.json"
+    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",

@@ -22,18 +22,14 @@ declare global {
 }
 
 export type IStackParamList = {
-  Welcome: undefined;
-  Onboarding: { step: number; groupId?: string };
-  Drawer: NavigatorScreenParams<IDrawerParamList> | undefined;
-  GroupCreateSuccessBottomSheet: {
-    isOnboarding: boolean;
-  };
-  EditMember: { id: string };
   AddPayment: {
     groupId: string;
     recordId?: string;
     defaultValue?: PaymentRecordCreate;
   };
+  Drawer: NavigatorScreenParams<IDrawerParamList> | undefined;
+
+  EditMember: { id: string };
   EditPayment: {
     groupId: string;
     recordId: string;
@@ -44,27 +40,10 @@ export type IStackParamList = {
     recordId: string;
     defaultValue?: PaymentRecordCreate;
   };
-  MemberList: undefined;
-  UserList: { groupId?: string };
-  PaymentRecordFilter: {
-    selectedCurrency: CurrencyCode | null;
-    setSelectedCurrency: React.Dispatch<
-      React.SetStateAction<CurrencyCode | null>
-    >;
-  };
-  PaymentFormDatePickerBottomSheet: {
-    date: string;
-    setDate: React.Dispatch<React.SetStateAction<string>>;
-  };
-  PaymentFormCurrencySelectBottomSheet: {
-    currencyCode: CurrencyCode;
-    setCurrencyCode: React.Dispatch<React.SetStateAction<CurrencyCode>>;
-  };
-  UserDeleteBottomSheet: {
-    groupId?: string;
-    userId: string;
-    onDeleteSuccess: () => void;
-  };
+
+  Language: undefined;
+
+  GroupCreateSuccessBottomSheet: { isOnboarding: boolean };
   GroupExistingUserSelectBottomSheet: {
     groupId: string;
   };
@@ -80,6 +59,30 @@ export type IStackParamList = {
     step: number;
     shouldEditUserList?: boolean;
   };
+
+  PaymentRecordFilter: {
+    selectedCurrency: CurrencyCode | null;
+    setSelectedCurrency: React.Dispatch<
+      React.SetStateAction<CurrencyCode | null>
+    >;
+  };
+  PaymentFormDatePickerBottomSheet: {
+    date: string;
+    setDate: React.Dispatch<React.SetStateAction<string>>;
+  };
+  PaymentFormCurrencySelectBottomSheet: {
+    currencyCode: CurrencyCode;
+    setCurrencyCode: React.Dispatch<React.SetStateAction<CurrencyCode>>;
+  };
+  UserList: { groupId?: string };
+  UserDeleteBottomSheet: {
+    groupId?: string;
+    userId: string;
+    onDeleteSuccess: () => void;
+  };
+
+  Welcome: undefined;
+  Onboarding: { step: number; groupId?: string };
 };
 
 export type IStackScreenProps<Screen extends keyof IStackParamList> =

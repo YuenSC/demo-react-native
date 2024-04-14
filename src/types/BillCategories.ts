@@ -1,8 +1,8 @@
 export enum BillCategoryEnum {
-  Transportation = "Transport",
-  Accommodation = "Home",
-  FoodAndDining = "Food",
-  SightseeingAndActivities = "Sightseeing",
+  Transportation = "Transportation",
+  Accommodation = "Accommodation",
+  FoodAndDining = "FoodAndDining",
+  SightseeingAndActivities = "SightseeingAndActivities",
   Entertainment = "Entertainment",
   Shopping = "Shopping",
   Insurance = "Insurance",

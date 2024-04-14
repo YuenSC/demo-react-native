@@ -78,7 +78,7 @@ const DrawerContent = memo<IDrawerContentProps>(({ state }) => {
       />
       <View>
         <Text>
-          {t("DrawerContent.version", {
+          {t("DrawerContent:version", {
             version: Config.version,
           })}
         </Text>

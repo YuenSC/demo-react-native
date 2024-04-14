@@ -89,7 +89,10 @@ const OptionsScreen = ({ navigation }: IBottomTabScreenProps<"Option">) => {
             title={t("OptionsScreen:all-members")}
             onPress={() => navigation.navigate("UserList", {})}
           />,
-          <SectionItem title="Language" onPress={() => {}} />,
+          <SectionItem
+            title={t("OptionsScreen:language")}
+            onPress={() => navigation.navigate("Language")}
+          />,
           <SectionItem
             title={t("OptionsScreen:online-mode")}
             onPress={() => {}}

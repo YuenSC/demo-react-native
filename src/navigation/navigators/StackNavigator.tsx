@@ -14,6 +14,7 @@ import GroupDeletePaymentRecordBottomSheet from "@/screens/stack/GroupDeletePaym
 import GroupExistingUserSelectBottomSheet from "@/screens/stack/GroupExistingUserSelectBottomSheet";
 import GroupFormScreen from "@/screens/stack/GroupFormScreen";
 import GroupSummaryScreen from "@/screens/stack/GroupSummaryScreen";
+import LanguageScreen from "@/screens/stack/LanguageScreen";
 import OnboardingScreen from "@/screens/stack/OnboardingScreen";
 import PaymentFormCurrencySelectBottomSheet from "@/screens/stack/PaymentFormCurrencySelectBottomSheet";
 import PaymentFormDatePickerBottomSheet from "@/screens/stack/PaymentFormDatePickerBottomSheet";
@@ -44,6 +45,7 @@ const StackNavigator = memo(() => {
         headerTitleStyle: { color: theme.colors.black },
         headerBackTitleStyle: { color: theme.colors.black },
         headerTintColor: theme.colors.black,
+        headerTruncatedBackTitle: t("Common:back"),
       }}
     >
       <Stack.Screen
@@ -78,9 +80,13 @@ const StackNavigator = memo(() => {
       <Stack.Screen
         component={GroupFormScreen}
         name="GroupForm"
-        options={{
-          headerTitle: "",
-        }}
+        options={{ headerTitle: "" }}
+      />
+
+      <Stack.Screen
+        component={LanguageScreen}
+        name="Language"
+        options={{ headerTitle: "" }}
       />
 
       {/* Bottom Sheet */}
@@ -142,7 +148,6 @@ const StackNavigator = memo(() => {
         />
         <Stack.Screen component={PaymentFormScreen} name="AddPayment" />
         <Stack.Screen component={PaymentFormScreen} name="EditPaymentModal" />
-        <Stack.Screen component={SampleScreen} name="MemberList" />
       </Stack.Group>
     </Stack.Navigator>
   );

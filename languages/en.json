@@ -3,6 +3,16 @@
     "done": "Done",
     "enter-something": "Enter something~"
   },
+  "BillCategoryEnum": {
+    "Accommodation": "Accommodation",
+    "Entertainment": "Entertainment",
+    "FoodAndDining": "Food & Dining",
+    "Insurance": "Insurance",
+    "Miscellaneous": "Miscellaneous",
+    "Shopping": "Shopping",
+    "SightseeingAndActivities": "Sightseeing & Activities",
+    "Transportation": "Transportation"
+  },
   "BillForm": {
     "amount-is-required": "Amount is required",
     "amount-label": "Bill Amount",
@@ -20,12 +30,15 @@
     "payment": "Payment",
     "stats": "Stats"
   },
+  "CFBundleDisplayName": "GroupExpense",
   "Common": {
     "NA": "N/A",
+    "back": "Back",
     "coming-soon": "Coming Soon",
     "create": "Create",
     "delete": "Delete",
     "done": "Done",
+    "groupLabel": "(Group)",
     "next": "Next",
     "profileUserLabel": "(You)",
     "save": "Save"
@@ -36,7 +49,8 @@
     "version": "Version {{version}}"
   },
   "GroupCreateSuccessBottomSheet": {
-    "congrat-message": "Let's create your first payment record \n with your friends!"
+    "congrat-message": "Let's create your first payment record with your friends!",
+    "congratulations": "Congratulations!"
   },
   "GroupDeletePaymentRecordBottomSheet": {
     "are-you-sure-to-delete-this-record": "Are you sure to delete this record?"
@@ -46,7 +60,7 @@
     "and-more": "and more ...",
     "current-username": "Current: {{name}}",
     "expense-reminder": "Your unresolved expenses are as below",
-    "expense-reminder-empty": "You have no unresolved expenses. Good job!",
+    "expense-reminder-empty": "You have no unresolved expenses. Well Done!",
     "member": "Member",
     "no-group-warning": "You haven't created any group yet. Please create a group to get started",
     "not-in-group": "Not In Group",
@@ -77,6 +91,10 @@
     "debt-settlement": "Debt settlement 💰",
     "summary": "Summary"
   },
+  "LanguageScreen": {
+    "language": "Language",
+    "warning": "Machine translation is employed to translate languages other than English."
+  },
   "OptionsScreen": {
     "all-members": "All Members",
     "app-related": "App Related",
@@ -86,10 +104,11 @@
     "group-detail": "Group Detail",
     "group-members": "Group Members",
     "group-related": "{{name}} Related",
+    "language": "Language",
     "online-mode": "Online Mode",
     "options": "Options",
     "personal": "Personal",
-    "profile": "Profile",
+    "profile": "User Profile",
     "unknown-user": "User"
   },
   "PayerPayeeSelectForm": {
@@ -105,7 +124,7 @@
   },
   "PaymentFormScreen": {
     "bill": "Bill",
-    "paid-for": "Paid For?",
+    "paid-for": "Paid For Who?",
     "who-paid": "Who Paid?"
   },
   "PaymentRecordFilterScreen": {

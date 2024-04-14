@@ -29,7 +29,7 @@ const BillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
   const calculatorRef = useRef<BottomSheet>(null);
   const amountInputRef = useRef<TextInput & BaseInput>(null);
   const dateInputRef = useRef<TextInput & BaseInput>(null);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const { control, handleSubmit } = useFormContext<PaymentRecordCreate>();
 
@@ -160,7 +160,9 @@ const BillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
                     color="white"
                   />
                 </TouchableOpacity>
-                <Text style={styles.categoryText}>{key}</Text>
+                <Text style={styles.categoryText}>
+                  {t(`BillCategoryEnum:${key}`)}
+                </Text>
               </View>
             );
           })}
@@ -177,7 +179,7 @@ const BillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
             });
           }}
           showSoftInputOnFocus={false}
-          value={date.value ? formatDate(date.value) : undefined}
+          value={date.value ? formatDate(date.value, i18n.language) : undefined}
           onBlur={() => {
             date.onBlur();
           }}

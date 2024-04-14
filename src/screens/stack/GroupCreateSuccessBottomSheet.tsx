@@ -55,7 +55,9 @@ const GroupCreateSuccessBottomSheet = ({
           source={require("@/assets/lottie/congrat.json")}
         />
         <View style={styles.content}>
-          <Text style={styles.title}>Congratulations!</Text>
+          <Text style={styles.title}>
+            {t("GroupCreateSuccessBottomSheet:congratulations")}
+          </Text>
           <Text style={styles.subtitle}>
             {t("GroupCreateSuccessBottomSheet:congrat-message")}
           </Text>

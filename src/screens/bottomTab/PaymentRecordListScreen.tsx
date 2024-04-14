@@ -162,7 +162,11 @@ const PaymentRecordListScreen = ({
                   )
                 }
               >
-                <Text style={styles.toggleTargetText}>({target})</Text>
+                <Text style={styles.toggleTargetText}>
+                  {target === PaymentRecordListTarget.Group
+                    ? t("Common:groupLabel")
+                    : t("Common:profileUserLabel")}
+                </Text>
               </TouchableOpacity>
             </HStack>
             <HStack gap={12}>

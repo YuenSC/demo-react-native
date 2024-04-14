@@ -1,4 +1,5 @@
 import { Text, makeStyles } from "@rneui/themed";
+import AnimatedLottieView from "lottie-react-native";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { SectionList, TouchableOpacity, View } from "react-native";
@@ -50,6 +51,21 @@ const GroupSummaryScreen = ({
         style={styles.contentContainer}
         contentContainerStyle={styles.contentContainer}
         keyExtractor={(item, index) => item.payer.id + item.receiver.id + index}
+        ListEmptyComponent={() => {
+          return (
+            <VStack>
+              <AnimatedLottieView
+                autoPlay
+                style={[styles.lottie]}
+                source={require("@/assets/lottie/empty.json")}
+              />
+
+              <Text style={styles.emptyText}>
+                {t("PaymentRecordListScreen:no-payment-records-found")}
+              </Text>
+            </VStack>
+          );
+        }}
         ListHeaderComponent={() => {
           return (
             <View>
@@ -159,6 +175,15 @@ const useStyles = makeStyles((theme) => ({
   },
   member: {
     paddingVertical: 8,
+  },
+  lottie: {
+    width: "100%",
+    aspectRatio: 1,
+  },
+  emptyText: {
+    fontSize: 16,
+    fontWeight: "500",
+    marginBottom: 16,
   },
   sectionHeader: {
     backgroundColor: theme.colors.background,
