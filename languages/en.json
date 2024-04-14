@@ -53,7 +53,7 @@
     "congratulations": "Congratulations!"
   },
   "GroupDeleteBottomSheet": {
-    "are-you-sure-to-delete-this-group": "Are you sure to delete this group?",
+    "are-you-sure-to-delete-this-group": "<Text>Are you sure to delete <Highlight>{{groupName}}</Highlight>?</Text>",
     "warning": "Please note that this action is irreversible. All the data will be lost."
   },
   "GroupDeletePaymentRecordBottomSheet": {
@@ -109,7 +109,7 @@
     "greeting": "Hi, {{name}}! Hope you are having a great day!",
     "group-detail": "Group Detail",
     "group-members": "Group Members",
-    "group-related": "{{name}} Related",
+    "group-related": "\"{{name}}\" Related",
     "language": "Language",
     "online-mode": "Online Mode",
     "options": "Options",

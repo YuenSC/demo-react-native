@@ -53,7 +53,7 @@
     "congratulations": "恭喜！"
   },
   "GroupDeleteBottomSheet": {
-    "are-you-sure-to-delete-this-group": "您確定要刪除該群組嗎？",
+    "are-you-sure-to-delete-this-group": "<Text>您確定刪除<Highlight>{{groupName}}</Highlight>嗎？",
     "warning": "請注意，此操作是不可逆轉的。\n所有資料都將遺失。"
   },
   "GroupDeletePaymentRecordBottomSheet": {
@@ -100,6 +100,7 @@
     "warning": "機器翻譯用於翻譯英語以外的語言。"
   },
   "OptionsScreen": {
+    "Upgrade": "升級到專業版",
     "all-members": "所有會員",
     "app-related": "應用程式相關",
     "category": "類別",
@@ -108,7 +109,7 @@
     "greeting": "嗨，{{name}}！\n希望您度過愉快的一天！",
     "group-detail": "團體詳情",
     "group-members": "小組成員",
-    "group-related": "{{name}} 相關",
+    "group-related": "“{{name}}”相關",
     "language": "語言",
     "online-mode": "線上模式",
     "options": "選項",
@@ -143,6 +144,7 @@
   },
   "StackNavigator": {
     "group-summary": "小組總結",
+    "loading-interstitial-ad": "廣告載入",
     "users": "使用者"
   },
   "UserDeleteBottomSheet": {

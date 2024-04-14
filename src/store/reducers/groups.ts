@@ -55,6 +55,10 @@ export const groupsSlice = createSlice({
       state.groups = state.groups.filter(
         (group) => group.id !== action.payload.id,
       );
+
+      if (state.currentGroupId === action.payload.id) {
+        state.currentGroupId = state.groups[0]?.id;
+      }
     },
     updateGroup: (state, action: PayloadAction<IGroupEditPayload>) => {
       const group = state.groups.find(

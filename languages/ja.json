@@ -53,7 +53,7 @@
     "congratulations": "おめでとう！"
   },
   "GroupDeleteBottomSheet": {
-    "are-you-sure-to-delete-this-group": "このグループを削除してもよろしいですか?",
+    "are-you-sure-to-delete-this-group": "<Text><Highlight>{{groupName}}</Highlight> を削除してもよろしいですか?</Text>",
     "warning": "この操作は元に戻せないことに注意してください。\nすべてのデータが失われます。"
   },
   "GroupDeletePaymentRecordBottomSheet": {
@@ -100,6 +100,7 @@
     "warning": "英語以外の言語の翻訳には機械翻訳が使用されます。"
   },
   "OptionsScreen": {
+    "Upgrade": "プロ仕様にアップグレードする",
     "all-members": "全員",
     "app-related": "アプリ関連",
     "category": "カテゴリー",
@@ -108,7 +109,7 @@
     "greeting": "こんにちは、{{name}}!\n素晴らしい一日をお過ごしください。",
     "group-detail": "グループ詳細",
     "group-members": "グループの人（仲間）たち",
-    "group-related": "{{name}}関連",
+    "group-related": "「{{name}}」関連",
     "language": "言語",
     "online-mode": "オンラインモード",
     "options": "オプション",
@@ -143,6 +144,7 @@
   },
   "StackNavigator": {
     "group-summary": "グループ概要",
+    "loading-interstitial-ad": "広告の読み込み",
     "users": "ユーザー"
   },
   "UserDeleteBottomSheet": {

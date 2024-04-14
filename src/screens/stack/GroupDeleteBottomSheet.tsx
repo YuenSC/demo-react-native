@@ -1,11 +1,12 @@
 import { BottomSheetView } from "@gorhom/bottom-sheet";
+import { DrawerActions, TabActions } from "@react-navigation/native";
 import { Button, Text, makeStyles } from "@rneui/themed";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import StyledBottomSheet from "@/components/common/StyledBottomSheet";
-import { useAppDispatch } from "@/hooks/reduxHook";
-import { deleteGroup } from "@/store/reducers/groups";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
+import { deleteGroup, groupSelector } from "@/store/reducers/groups";
 import { IStackScreenProps } from "@/types/navigation";
 
 const GroupDeleteBottomSheet = ({
@@ -19,6 +20,8 @@ const GroupDeleteBottomSheet = ({
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
+  const group = useAppSelector((state) => groupSelector(state, groupId));
+
   return (
     <StyledBottomSheet
       onClose={() => navigation.goBack()}
@@ -26,9 +29,17 @@ const GroupDeleteBottomSheet = ({
       enableDynamicSizing
     >
       <BottomSheetView style={styles.content}>
-        <Text style={styles.title}>
-          {t("GroupDeleteBottomSheet:are-you-sure-to-delete-this-group")}
-        </Text>
+        <Trans
+          i18nKey="GroupDeleteBottomSheet:are-you-sure-to-delete-this-group" // optional -> fallbacks to defaults if not provided
+          values={{
+            groupName: group?.name,
+          }}
+          components={{
+            Highlight: <Text style={styles.titleHighlight} />,
+            Text: <Text style={styles.title} />,
+          }}
+        />
+
         <Text style={styles.subtitle}>
           {t("GroupDeleteBottomSheet:warning")}
         </Text>
@@ -48,6 +59,8 @@ const GroupDeleteBottomSheet = ({
           onPress={() => {
             dispatch(deleteGroup({ id: groupId }));
             navigation.goBack();
+            navigation.dispatch(TabActions.jumpTo("GroupDetail"));
+            navigation.dispatch(DrawerActions.openDrawer());
           }}
         />
       </BottomSheetView>
@@ -74,6 +87,9 @@ const useStyles = makeStyles((theme, inset: EdgeInsets) => ({
     fontSize: 14,
     marginBottom: 16,
     color: theme.colors.grey1,
+  },
+  titleHighlight: {
+    color: theme.colors.primary,
   },
 }));
 
