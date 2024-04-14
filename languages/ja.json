@@ -60,6 +60,7 @@
     "are-you-sure-to-delete-this-record": "このレコードを削除してもよろしいですか?"
   },
   "GroupDetailScreen": {
+    "add-group": "グループの追加",
     "and": "そして",
     "and-more": "もっと ...",
     "current-username": "現在: {{name}}",
@@ -156,7 +157,7 @@
   "UserForm": {
     "create-profile": "プロフィール作成",
     "edit-member": "メンバーの編集",
-    "hi-user": "こんにちは、{{名前}}",
+    "hi-user": "こんにちは、{{name}}",
     "name": "名前",
     "related-groups": "関連グループ",
     "who-are-you": "あなたは誰ですか？",
@@ -171,7 +172,7 @@
     "type-participant-name": "参加者名を入力してください"
   },
   "WelcomeScreen": {
-    "subtitle": "グループの支出をまとめ始めます\n \nあなたの友人たちとともに",
+    "subtitle": "友達とグループでの出費のまとめを始めましょう",
     "title": "GroupExpenseへようこそ"
   },
   "common": {

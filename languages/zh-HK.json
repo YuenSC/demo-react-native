@@ -60,6 +60,7 @@
     "are-you-sure-to-delete-this-record": "您確定要刪除此記錄嗎？"
   },
   "GroupDetailScreen": {
+    "add-group": "新增群組",
     "and": "和",
     "and-more": "和更多 ...",
     "current-username": "目前：{{name}}",
@@ -171,7 +172,7 @@
     "type-participant-name": "輸入參與者姓名"
   },
   "WelcomeScreen": {
-    "subtitle": "開始總結您的團體費用\n \n與你的朋友一起",
+    "subtitle": "開始和朋友一起總結團體開支",
     "title": "歡迎來到集團消費"
   },
   "common": {

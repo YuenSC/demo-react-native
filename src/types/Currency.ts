@@ -1,5 +1,7 @@
 // From https://gist.github.com/ksafranski/2973986
 
+import { LanguageEnum } from "@/i18n";
+
 export const currencyCodes = {
   USD: {
     symbol: "$",
@@ -1075,3 +1077,30 @@ export const currencyCodes = {
 } as const;
 
 export type CurrencyCode = keyof typeof currencyCodes;
+
+export const getCurrencyBasedOnLanguage = (
+  language: LanguageEnum,
+): CurrencyCode => {
+  switch (language) {
+    case LanguageEnum.EN:
+      return "USD";
+    case LanguageEnum.FR:
+      return "EUR";
+    case LanguageEnum.ES:
+      return "EUR";
+    case LanguageEnum.ZH:
+      return "CNY";
+    case LanguageEnum.HI:
+      return "INR";
+    case LanguageEnum.JA:
+      return "JPY";
+    case LanguageEnum.PT:
+      return "BRL";
+    case LanguageEnum.RU:
+      return "RUB";
+    case LanguageEnum.ZH_HK:
+      return "HKD";
+    default:
+      return "USD";
+  }
+};

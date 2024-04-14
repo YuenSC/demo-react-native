@@ -60,6 +60,7 @@
     "are-you-sure-to-delete-this-record": "Are you sure to delete this record?"
   },
   "GroupDetailScreen": {
+    "add-group": "Add Group",
     "and": "and",
     "and-more": "and more ...",
     "current-username": "Current: {{name}}",
@@ -171,7 +172,7 @@
     "type-participant-name": "Type participant name"
   },
   "WelcomeScreen": {
-    "subtitle": "Start summarizing your group expenses \n with your friends",
+    "subtitle": "Start summarizing your group expenses with your friends",
     "title": "Welcome to GroupExpense"
   },
   "common": {

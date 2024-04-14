@@ -11,8 +11,10 @@ import Config from "@/Config";
 import BillForm from "@/components/addPayment/BillForm";
 import PayerPayeeSelectForm from "@/components/addPayment/PayerPayeeSelectForm";
 import { useAppSelector } from "@/hooks/reduxHook";
+import { LanguageEnum } from "@/i18n";
 import { groupUsersSelector } from "@/store/reducers/users";
 import { BillCategoryEnum } from "@/types/BillCategories";
+import { getCurrencyBasedOnLanguage } from "@/types/Currency";
 import { PaymentRecordCreate } from "@/types/PaymentRecord";
 import { IAddPaymentTabParamList, IStackScreenProps } from "@/types/navigation";
 
@@ -27,10 +29,12 @@ const PaymentFormScreen = ({
 }: IStackScreenProps<"AddPayment" | "EditPayment" | "EditPaymentModal">) => {
   const styles = useStyles(name);
   const { theme } = useTheme();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const lastUsedCurrency = useAppSelector(
-    (state) => state.groups.lastUsedCurrency ?? "HKD",
+    (state) =>
+      state.groups.lastUsedCurrency ??
+      getCurrencyBasedOnLanguage(i18n.language as LanguageEnum),
   );
 
   const group = useAppSelector((state) =>

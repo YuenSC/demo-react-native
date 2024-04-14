@@ -7,7 +7,9 @@ import { IStackScreenProps } from "@/types/navigation";
 
 const WelcomeScreen = ({ navigation }: IStackScreenProps<"Welcome">) => {
   const styles = useStyles();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  console.log("i18n", i18n.language);
 
   return (
     <SafeAreaView style={styles.container}>

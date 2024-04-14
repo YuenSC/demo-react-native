@@ -73,7 +73,7 @@ const GroupDetailScreen = ({
           {t("GroupDetailScreen:no-group-warning")}
         </Text>
         <Button
-          title="Add Group"
+          title={t("GroupDetailScreen:add-group")}
           onPress={() =>
             navigation.navigate("GroupForm", {
               step: 0,
