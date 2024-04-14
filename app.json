@@ -15,6 +15,7 @@
     "ios": {
       "supportsTablet": true,
       "usesAppleSignIn": true,
+      "googleServicesFile": "./GoogleService-Info.plist",
       "bundleIdentifier": "com.scyuenab.demoreactnative",
       "infoPlist": {
         "CFBundleAllowMixedLocalizations": true
@@ -36,6 +37,8 @@
     },
     "plugins": [
       "expo-localization",
+      "@react-native-firebase/app",
+      "@react-native-firebase/crashlytics",
       [
         "expo-build-properties",
         {
