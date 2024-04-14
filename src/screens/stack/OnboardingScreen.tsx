@@ -15,6 +15,8 @@ import { AvatarColor } from "@/types/AvatarColor";
 import { User } from "@/types/User";
 import { IStackScreenProps } from "@/types/navigation";
 
+import { useTranslation } from "react-i18next";
+
 const OnboardingScreen = ({
   navigation,
   route: {
@@ -24,12 +26,13 @@ const OnboardingScreen = ({
   const styles = useStyles();
   const dispatch = useAppDispatch();
   const profileUser = useAppSelector(profileUserSelector);
+  const { t } = useTranslation();
 
   return (
     <SafeAreaView style={styles.container}>
       {step === 0 && (
         <UserForm
-          submitButtonText="Next"
+          submitButtonText={t("Common:next")}
           isEdit={false}
           onSubmit={(values) => {
             const id = uuidv4();

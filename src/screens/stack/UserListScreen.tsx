@@ -1,4 +1,5 @@
 import { makeStyles } from "@rneui/themed";
+import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 
 import UserListForm from "@/components/UserListForm";
@@ -11,15 +12,14 @@ const UserListScreen = ({
   },
 }: IStackScreenProps<"UserList">) => {
   const styles = useStyles();
+  const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
       <UserListForm
         groupId={groupId}
-        buttonText="Done"
-        onSubmit={() => {
-          navigation.goBack();
-        }}
+        buttonText={t("Common:done")}
+        onSubmit={navigation.goBack}
       />
     </View>
   );

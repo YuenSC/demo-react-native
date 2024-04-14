@@ -1,6 +1,7 @@
 import { AntDesign } from "@expo/vector-icons";
 import { Button, Switch, Text, makeStyles, useTheme } from "@rneui/themed";
 import { memo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { TouchableOpacity } from "react-native";
 
 import PaymentRelationshipDisplay from "./PaymentRelationshipDisplay";
@@ -27,6 +28,7 @@ const GroupDetailSummaryItem = memo<IGroupDetailSummaryItemProps>(
   }) => {
     const styles = useStyles(itemWidth);
     const { theme } = useTheme();
+    const { t } = useTranslation();
 
     const [isUsingSimplified, setIsUsingSimplified] = useState(true);
 
@@ -45,7 +47,11 @@ const GroupDetailSummaryItem = memo<IGroupDetailSummaryItemProps>(
           <VStack alignItems="flex-start">
             <Text h3>{currencyCode}</Text>
             <HStack>
-              <Text>{isUsingSimplified ? "Simplified" : "Individual"}</Text>
+              <Text>
+                {isUsingSimplified
+                  ? t("GroupDetailSummaryItem:simplified")
+                  : t("GroupDetailSummaryItem:individual")}
+              </Text>
               <Switch
                 value={isUsingSimplified}
                 onValueChange={setIsUsingSimplified}

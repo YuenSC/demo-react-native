@@ -2,6 +2,7 @@ import { BottomSheetView } from "@gorhom/bottom-sheet";
 import { Picker } from "@react-native-picker/picker";
 import { Button, Text, makeStyles, useTheme } from "@rneui/themed";
 import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import StyledBottomSheet from "@/components/common/StyledBottomSheet";
@@ -22,6 +23,8 @@ const PaymentRecordFilterScreen = ({
   const insets = useSafeAreaInsets();
   const styles = useStyles(insets);
   const { theme } = useTheme();
+  const { t } = useTranslation();
+
   const currentGroup = useAppSelector(currentGroupSelector);
   const availableCurrencyCodes = useMemo(() => {
     const codes = currentGroup?.paymentRecords.map(
@@ -49,13 +52,13 @@ const PaymentRecordFilterScreen = ({
       snapPoints={["50%"]}
     >
       <BottomSheetView style={styles.contentContainer}>
-        <Text h2>Currency</Text>
+        <Text h2>{t("PaymentRecordFilterScreen:currency")}</Text>
         <Picker
           selectedValue={selectedCurrency}
           onValueChange={(itemValue) => setSelectedCurrency(itemValue)}
         >
           <Picker.Item
-            label="All"
+            label={t("PaymentRecordFilterScreen:all")}
             value=""
             color={theme.colors.black}
             style={styles.pickerItemText}
@@ -70,7 +73,7 @@ const PaymentRecordFilterScreen = ({
             />
           ))}
         </Picker>
-        <Button title="Close" onPress={handleClose} />
+        <Button title={t("Common:done")} onPress={handleClose} />
       </BottomSheetView>
     </StyledBottomSheet>
   );

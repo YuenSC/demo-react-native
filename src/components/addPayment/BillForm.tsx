@@ -10,6 +10,7 @@ import {
   useFormContext,
   useWatch,
 } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { ScrollView, TextInput, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -28,6 +29,7 @@ const BillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
   const calculatorRef = useRef<BottomSheet>(null);
   const amountInputRef = useRef<TextInput & BaseInput>(null);
   const dateInputRef = useRef<TextInput & BaseInput>(null);
+  const { t } = useTranslation();
 
   const { control, handleSubmit } = useFormContext<PaymentRecordCreate>();
 
@@ -47,10 +49,10 @@ const BillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
     name: "amount",
     control,
     rules: {
-      required: "Amount is required",
+      required: t("BillForm:amount-is-required"),
       min: {
         value: 1,
-        message: "Amount is required",
+        message: t("BillForm:amount-is-required"),
       },
     },
   });
@@ -81,8 +83,8 @@ const BillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
         {/* Bill */}
         <Input
           ref={amountInputRef}
-          label="Bill Amount"
-          placeholder="$XXX"
+          label={t("BillForm:amount-label")}
+          placeholder={t("BillForm:amount-placeholder")}
           style={styles.input}
           selection={{
             start: amount.value.toLocaleString().length,
@@ -118,7 +120,7 @@ const BillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
         {/* Comment and Date */}
         <Controller
           control={control}
-          rules={{ required: "Comment is required" }}
+          rules={{ required: t("BillForm:comment-is-required") }}
           name="comment"
           render={({
             field: { value, onChange, ref },
@@ -129,8 +131,8 @@ const BillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
                 ref={ref}
                 errorMessage={error?.message}
                 value={value}
-                label="Comment"
-                placeholder="Describe this expense"
+                label={t("BillForm:comment-label")}
+                placeholder={t("BillForm:comment-placeholder")}
                 onChangeText={onChange}
               />
             );
@@ -138,7 +140,7 @@ const BillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
         />
 
         {/* Category */}
-        <Text style={styles.label}>Category</Text>
+        <Text style={styles.label}>{t("BillForm:category")}</Text>
         <View style={styles.categoryGrid}>
           {Object.values(BillCategoryEnum).map((key) => {
             const isActive = category.value === key;
@@ -166,8 +168,8 @@ const BillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
 
         <Input
           ref={dateInputRef}
-          label="Date"
-          placeholder="When do you do it?"
+          label={t("BillForm:date")}
+          placeholder={t("BillForm:date-placeholder")}
           onFocus={() => {
             navigation.navigate("PaymentFormDatePickerBottomSheet", {
               date: date.value,
@@ -184,7 +186,7 @@ const BillForm = ({ navigation }: IAddPaymentTabScreenProps<"Bill">) => {
 
       <View style={styles.footer}>
         <Button
-          title="Next"
+          title={t("Common:next")}
           onPress={handleSubmit(() => {
             navigation.navigate("PayerSelect");
           })}

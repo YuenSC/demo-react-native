@@ -10,6 +10,7 @@ import {
 } from "@rneui/themed";
 import { useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
@@ -27,6 +28,7 @@ const PayerPayeeSelectForm = ({
   const { theme } = useTheme();
   const type = route.name === "PayerSelect" ? "payers" : "payees";
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   const groupIdWatch = useWatch({ name: "groupId" });
   const group = useAppSelector((state) =>
@@ -50,7 +52,9 @@ const PayerPayeeSelectForm = ({
     <View style={styles.container}>
       <ScrollView keyboardDismissMode="on-drag">
         <Text style={styles.label}>
-          {type === "payers" ? "Who Paid?" : "Paid For?"}
+          {type === "payers"
+            ? t("PayerPayeeSelectForm:who-paid")
+            : t("PayerPayeeSelectForm:paid-for")}
         </Text>
         {groupUsers.map((member) => {
           const index = paymentRecords.findIndex((i) => i.id === member.id);
@@ -63,9 +67,7 @@ const PayerPayeeSelectForm = ({
               key={member.id}
               bottomDivider
               style={{ width: "100%" }}
-              containerStyle={{
-                backgroundColor: "transparent",
-              }}
+              containerStyle={{ backgroundColor: "transparent" }}
             >
               <ListItem.CheckBox
                 iconType="material-community"
@@ -87,7 +89,9 @@ const PayerPayeeSelectForm = ({
                     {member.name}
                   </ListItem.Title>
                   {paymentRecords[index].amount === "auto" && (
-                    <Text style={styles.autoTag}>(Auto)</Text>
+                    <Text style={styles.autoTag}>
+                      {t("PayerPayeeSelectForm:auto-tag")}
+                    </Text>
                   )}
                 </View>
                 <View style={{ flex: 1 }}>
@@ -145,7 +149,7 @@ const PayerPayeeSelectForm = ({
 
       <View style={styles.footer}>
         <Button
-          title={type === "payers" ? "Next" : "Done"}
+          title={type === "payers" ? t("Common:next") : t("Common:done")}
           disabled={!isPaymentEqualExpense}
           onPress={handleSubmit((values) => {
             switch (type) {

@@ -1,5 +1,6 @@
 import { Text, makeStyles } from "@rneui/themed";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { SectionList, TouchableOpacity, View } from "react-native";
 
 import { HStack, VStack } from "@/components/common/Stack";
@@ -23,6 +24,7 @@ const GroupSummaryScreen = ({
   },
 }: IStackScreenProps<"GroupSummary">) => {
   const styles = useStyles();
+  const { t } = useTranslation();
 
   const group = useAppSelector((state) => groupSelector(state, groupId));
   const groupUsers = useAppSelector((state) =>
@@ -52,7 +54,7 @@ const GroupSummaryScreen = ({
           return (
             <View>
               <Text h1 style={styles.horizontalSpacing}>
-                Summary
+                {t("GroupSummaryScreen:summary")}
               </Text>
               <VStack alignItems="stretch" style={styles.members}>
                 {groupUsers?.map((member, index) => {
@@ -112,7 +114,7 @@ const GroupSummaryScreen = ({
                 defaultValue: {
                   amount: item.requiredAmount,
                   category: BillCategoryEnum.Miscellaneous,
-                  comment: "Debt settlement 💰",
+                  comment: t("GroupSummaryScreen:debt-settlement"),
                   currencyCode: currencyCode as CurrencyCode,
                   date: new Date().toISOString(),
                   groupId,

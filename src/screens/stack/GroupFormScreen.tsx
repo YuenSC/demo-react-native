@@ -2,6 +2,7 @@ import { makeStyles } from "@rneui/themed";
 import { View } from "react-native";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
+import { useTranslation } from "react-i18next";
 
 import GroupForm from "@/components/GroupForm";
 import UserListForm from "@/components/UserListForm";
@@ -21,6 +22,7 @@ const GroupFormScreen = ({
 }: IStackScreenProps<"GroupForm">) => {
   const styles = useStyles();
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
@@ -45,7 +47,7 @@ const GroupFormScreen = ({
       )}
       {step === 1 && (
         <UserListForm
-          buttonText="Done"
+          buttonText={t("Common:done")}
           groupId={groupId || ""}
           onSubmit={() => {
             dispatch(setCurrentGroupId(groupId || ""));

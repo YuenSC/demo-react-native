@@ -1,5 +1,6 @@
 import { BottomSheetView } from "@gorhom/bottom-sheet";
 import { Button, Text, makeStyles } from "@rneui/themed";
+import { useTranslation } from "react-i18next";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import StyledBottomSheet from "@/components/common/StyledBottomSheet";
@@ -16,6 +17,7 @@ const GroupDeletePaymentRecordBottomSheet = ({
   const insets = useSafeAreaInsets();
   const styles = useStyles(insets);
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   return (
     <StyledBottomSheet
@@ -25,10 +27,14 @@ const GroupDeletePaymentRecordBottomSheet = ({
       snapPoints={["20%"]}
     >
       <BottomSheetView style={styles.content}>
-        <Text style={styles.title}>Are you sure to delete this record?</Text>
+        <Text style={styles.title}>
+          {t(
+            "GroupDeletePaymentRecordBottomSheet:are-you-sure-to-delete-this-record",
+          )}
+        </Text>
 
         <Button
-          title="Delete"
+          title={t("Common:delete")}
           color="error"
           onPress={() => {
             dispatch(deletePaymentRecord({ groupId, recordId }));

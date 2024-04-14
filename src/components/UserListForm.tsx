@@ -2,6 +2,7 @@ import { AntDesign, Entypo, Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Button, Input, Text, makeStyles, useTheme } from "@rneui/themed";
 import { memo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
@@ -21,11 +22,12 @@ type IUserListFormProps = {
 };
 
 const UserListForm = memo<IUserListFormProps>(
-  ({ groupId, onSubmit, buttonText = "Next" }) => {
+  ({ groupId, onSubmit, buttonText }) => {
     const styles = useStyles();
     const { theme } = useTheme();
     const dispatch = useAppDispatch();
     const navigation = useNavigation();
+    const { t } = useTranslation();
 
     const groupUsers = useAppSelector((state) =>
       groupUsersSelector(state, groupId || ""),
@@ -44,7 +46,7 @@ const UserListForm = memo<IUserListFormProps>(
       >
         <VStack alignItems="flex-start">
           <Text h1 style={styles.title}>
-            Members
+            {t("UserListForm:members")}
           </Text>
         </VStack>
 
@@ -70,7 +72,9 @@ const UserListForm = memo<IUserListFormProps>(
                   <HStack gap={2}>
                     <Text style={styles.memberName}>{member.name}</Text>
                     {isProfileUser && (
-                      <Text style={styles.memberNameOwner}>(You)</Text>
+                      <Text style={styles.memberNameOwner}>
+                        {t("Common:profileUserLabel")}
+                      </Text>
                     )}
                   </HStack>
                 </HStack>
@@ -120,7 +124,7 @@ const UserListForm = memo<IUserListFormProps>(
                     autoFocus
                     onChangeText={setUserName}
                     value={username}
-                    placeholder="Type participant name"
+                    placeholder={t("UserListForm:type-participant-name")}
                     renderErrorMessage={false}
                     containerStyle={styles.inputContainer}
                     inputContainerStyle={{
@@ -148,7 +152,9 @@ const UserListForm = memo<IUserListFormProps>(
                   style={[styles.input]}
                 >
                   <Entypo name="plus" size={24} color={theme.colors.primary} />
-                  <Text style={styles.memberName}>Add participant</Text>
+                  <Text style={styles.memberName}>
+                    {t("UserListForm:add-participant")}
+                  </Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -158,7 +164,7 @@ const UserListForm = memo<IUserListFormProps>(
         <VStack alignItems="stretch" gap={8} style={styles.buttonContainer}>
           {groupId && (
             <Button
-              title="Select Existing User"
+              title={t("UserListForm:select-existing-user")}
               type="outline"
               onPress={() =>
                 navigation.navigate("GroupExistingUserSelectBottomSheet", {
@@ -167,7 +173,7 @@ const UserListForm = memo<IUserListFormProps>(
               }
             />
           )}
-          <Button title={buttonText} onPress={onSubmit} />
+          <Button title={buttonText ?? t("Common:next")} onPress={onSubmit} />
         </VStack>
       </ScrollView>
     );

@@ -3,6 +3,7 @@ import { StackActions } from "@react-navigation/native";
 import { Button, Text, makeStyles } from "@rneui/themed";
 import AnimatedLottieView from "lottie-react-native";
 import { useCallback, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -22,6 +23,7 @@ const GroupCreateSuccessBottomSheet = ({
 
   const bottomSheetRef = useRef<BottomSheet>(null);
   const currentGroup = useAppSelector(currentGroupSelector);
+  const { t } = useTranslation();
 
   const handleClose = useCallback(() => {
     if (isOnboarding)
@@ -55,10 +57,10 @@ const GroupCreateSuccessBottomSheet = ({
         <View style={styles.content}>
           <Text style={styles.title}>Congratulations!</Text>
           <Text style={styles.subtitle}>
-            {"Let's create your first payment record \n with your friends!"}
+            {t("GroupCreateSuccessBottomSheet:congrat-message")}
           </Text>
           <Button
-            title="Get Started"
+            title={t("common:get-started")}
             containerStyle={styles.buttonContainer}
             onPress={handleClose}
           />

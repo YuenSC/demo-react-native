@@ -5,6 +5,7 @@ import "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
+import "./i18n";
 
 import Navigation from "./navigation/Navigation";
 import { persistor, store } from "./store";

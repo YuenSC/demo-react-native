@@ -11,6 +11,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, TouchableOpacity, Vibration, View } from "react-native";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -37,6 +38,7 @@ const BillCalculatorBottomSheet = forwardRef<
   const insets = useSafeAreaInsets();
   const styles = useStyles(insets);
   const { theme } = useTheme();
+  const { t } = useTranslation();
 
   const bottomSheetRef = useRef<BottomSheet>(null);
   useImperativeHandle(outerRef, () => bottomSheetRef.current!, []);
@@ -62,8 +64,8 @@ const BillCalculatorBottomSheet = forwardRef<
 
     const fullText = steps + result;
 
-    return fullText ? fullText : "Enter something~";
-  }, [calculationResult, records]);
+    return fullText ? fullText : t("BillCalculatorBottomSheet:enter-something");
+  }, [calculationResult, records, t]);
 
   const onNumberClick = async (key: string) => {
     const recordCopy = [...records];
@@ -171,9 +173,7 @@ const BillCalculatorBottomSheet = forwardRef<
       index={-1}
       containerStyle={styles.container}
       backdropComponent={null}
-      backdropProps={{
-        opacity: 0,
-      }}
+      backdropProps={{ opacity: 0 }}
     >
       <BottomSheetView style={styles.bottomSheetContainer}>
         <View style={styles.bottomSheetInnerContainer}>
@@ -190,7 +190,9 @@ const BillCalculatorBottomSheet = forwardRef<
                 onBlurInput();
               }}
             >
-              <Text style={styles.calculatorResultDone}>Done</Text>
+              <Text style={styles.calculatorResultDone}>
+                {t("BillCalculatorBottomSheet:done")}
+              </Text>
             </TouchableOpacity>
           </View>
           {CalculatorButtons.map((row, index) => (

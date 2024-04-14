@@ -1,6 +1,7 @@
 import { AntDesign } from "@expo/vector-icons";
 import { Button, Text, makeStyles, useTheme } from "@rneui/themed";
 import { Fragment } from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, View } from "react-native";
 
 import { HStack, VStack } from "@/components/common/Stack";
@@ -13,6 +14,7 @@ const OptionsScreen = ({ navigation }: IBottomTabScreenProps<"Option">) => {
   const styles = useStyles();
   const currentGroup = useAppSelector(currentGroupSelector);
   const profileUser = useAppSelector(profileUserSelector);
+  const { t } = useTranslation();
 
   return (
     <ScrollView
@@ -20,18 +22,20 @@ const OptionsScreen = ({ navigation }: IBottomTabScreenProps<"Option">) => {
       style={styles.container}
     >
       <VStack alignItems="stretch">
-        <Text h1>Options</Text>
+        <Text h1>{t("OptionsScreen:options")}</Text>
         <Text style={styles.sectionLabel}>
-          Hi, {profileUser?.name || "User"}! Hope you are having a great day!
+          {t("OptionsScreen:greeting", {
+            name: profileUser?.name || t("OptionsScreen:unknown-user"),
+          })}
         </Text>
       </VStack>
 
       {profileUser?.id && (
         <Section
-          title="Personal"
+          title={t("OptionsScreen:personal")}
           sections={[
             <SectionItem
-              title="Profile"
+              title={t("OptionsScreen:profile")}
               onPress={() =>
                 navigation.navigate("EditMember", {
                   id: profileUser.id,
@@ -43,10 +47,12 @@ const OptionsScreen = ({ navigation }: IBottomTabScreenProps<"Option">) => {
       )}
       {currentGroup?.id && (
         <Section
-          title={`"${currentGroup.name}" Related`}
+          title={t("OptionsScreen:group-related", {
+            name: currentGroup.name,
+          })}
           sections={[
             <SectionItem
-              title="Group Detail"
+              title={t("OptionsScreen:group-detail")}
               onPress={() =>
                 navigation.navigate("GroupForm", {
                   step: 0,
@@ -55,7 +61,7 @@ const OptionsScreen = ({ navigation }: IBottomTabScreenProps<"Option">) => {
               }
             />,
             <SectionItem
-              title="Group Members"
+              title={t("OptionsScreen:group-members")}
               onPress={() =>
                 navigation.navigate("UserList", {
                   groupId: currentGroup.id,
@@ -63,34 +69,40 @@ const OptionsScreen = ({ navigation }: IBottomTabScreenProps<"Option">) => {
               }
             />,
             <SectionItem
-              title="Category"
+              title={t("OptionsScreen:category")}
               onPress={() => {}}
               disabled
-              itemRight={<Text style={styles.sectionLabel}>Coming Soon</Text>}
+              itemRight={
+                <Text style={styles.sectionLabel}>
+                  {t("Common:coming-soon")}
+                </Text>
+              }
             />,
           ]}
         />
       )}
 
       <Section
-        title="App Related"
+        title={t("OptionsScreen:app-related")}
         sections={[
           <SectionItem
-            title="All Members"
+            title={t("OptionsScreen:all-members")}
             onPress={() => navigation.navigate("UserList", {})}
           />,
           <SectionItem title="Language" onPress={() => {}} />,
           <SectionItem
-            title="Online Mode"
+            title={t("OptionsScreen:online-mode")}
             onPress={() => {}}
             disabled
-            itemRight={<Text style={styles.sectionLabel}>Coming Soon</Text>}
+            itemRight={
+              <Text style={styles.sectionLabel}>{t("Common:coming-soon")}</Text>
+            }
           />,
         ]}
       />
 
       <Button
-        title="Delete Group"
+        title={t("OptionsScreen:delete-group")}
         type="outline"
         color="error"
         onPress={() => {}}

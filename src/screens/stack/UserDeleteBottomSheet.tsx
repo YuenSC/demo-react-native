@@ -2,6 +2,7 @@ import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import { Button, Text, makeStyles } from "@rneui/themed";
 import { StatusBar } from "expo-status-bar";
 import { useRef } from "react";
+import { Trans, useTranslation } from "react-i18next";
 import { useWindowDimensions } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
@@ -31,6 +32,7 @@ const UserDeleteBottomSheet = ({
   const styles = useStyles(insets);
   const dispatch = useAppDispatch();
   const { height } = useWindowDimensions();
+  const { t } = useTranslation();
 
   const bottomSheetRef = useRef<BottomSheet>(null);
   const group = useAppSelector((state) => groupSelector(state, groupId));
@@ -56,7 +58,7 @@ const UserDeleteBottomSheet = ({
         contentContainerStyle={styles.content}
         ListHeaderComponent={
           <VStack alignItems="flex-start" style={styles.header} gap={4}>
-            <Text style={styles.title}>
+            {/* <Text style={styles.title}>
               {`Are you sure to delete `}
               <Text style={styles.titleHighlight}>{user?.name}</Text>
               {` from `}
@@ -64,21 +66,37 @@ const UserDeleteBottomSheet = ({
                 {group?.name || "All Groups"}
               </Text>
               ?
-            </Text>
+            </Text> */}
+
+            <Trans
+              i18nKey="UserDeleteBottomSheet:title" // optional -> fallbacks to defaults if not provided
+              values={{
+                username: user?.name,
+                groupname: group?.name || "All Groups",
+              }}
+              components={{
+                Highlight: <Text style={styles.titleHighlight} />,
+                Text: <Text style={styles.title} />,
+              }}
+            />
+
             <Text style={styles.warning}>
-              Please note that this action is irreversible
+              {t(
+                "UserDeleteBottomSheet:please-note-that-this-action-is-irreversible",
+              )}
             </Text>
             {relatedPayments.length > 0 && (
               <Text style={styles.subtitle}>
-                You will have to remove {relatedPayments.length} related payment
-                before deleting this user.
+                {t("UserDeleteBottomSheet:related-payment", {
+                  count: relatedPayments.length,
+                })}
               </Text>
             )}
           </VStack>
         }
         ListFooterComponent={
           <Button
-            title="Delete"
+            title={t("Common:delete")}
             onPress={() => {
               if (groupId) {
                 dispatch(

@@ -1,44 +1,28 @@
-import { Button, makeStyles } from "@rneui/themed";
+import { Button, makeStyles, Text } from "@rneui/themed";
 import AnimatedLottieView from "lottie-react-native";
+import { useTranslation } from "react-i18next";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import StyledText from "@/components/common/StyledText";
 import { IStackScreenProps } from "@/types/navigation";
 
 const WelcomeScreen = ({ navigation }: IStackScreenProps<"Welcome">) => {
   const styles = useStyles();
-
-  // useEffect(() => {
-  //   const showAsyncStorageData = async () => {
-  //     try {
-  //       const keys = await AsyncStorage.getAllKeys();
-  //       const result = await AsyncStorage.multiGet(keys);
-
-  //       return result.forEach(([key, value]) => {
-  //         log(`key: ${key}, value: ${value}`);
-  //       });
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-  //   showAsyncStorageData();
-  // }, []);
+  const { t } = useTranslation();
 
   return (
     <SafeAreaView style={styles.container}>
       <AnimatedLottieView
         autoPlay
+        loop={false}
         style={styles.lottie}
         source={require("@/assets/lottie/welcome.json")}
       />
 
-      <StyledText style={styles.title}>Welcome to the app!</StyledText>
-      <StyledText style={styles.subtitle}>
-        {"Start summarizing your group expenses \n with your friends"}
-      </StyledText>
+      <Text style={styles.title}>{t("WelcomeScreen:title")}</Text>
+      <Text style={styles.subtitle}>{t("WelcomeScreen:subtitle")}</Text>
 
       <Button
-        title="Get Started"
+        title={t("common:get-started")}
         containerStyle={styles.buttonContainer}
         onPress={() => navigation.replace("Onboarding", { step: 0 })}
       />

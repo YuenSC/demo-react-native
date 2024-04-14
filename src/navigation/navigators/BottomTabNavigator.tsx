@@ -8,6 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { DrawerActions } from "@react-navigation/native";
 import { useTheme } from "@rneui/themed";
+import { useTranslation } from "react-i18next";
 import { TouchableOpacity } from "react-native";
 
 import BottomTabBar from "../BottomTabBar";
@@ -31,6 +32,7 @@ const BottomTab = createBottomTabNavigator<IBottomTabParamList>();
 
 const BottomTabNavigator = () => {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const currentGroup = useAppSelector(currentGroupSelector);
   const groupUsers = useAppSelector((state) =>
@@ -127,7 +129,7 @@ const BottomTabNavigator = () => {
           tabBarIcon: ({ color }) => (
             <Ionicons name="home" size={24} color={color} />
           ),
-          tabBarLabel: "Home",
+          tabBarLabel: t("BottomTabNavigator:home"),
         }}
       />
       <BottomTab.Screen
@@ -137,7 +139,7 @@ const BottomTabNavigator = () => {
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="payment" size={24} color={color} />
           ),
-          tabBarLabel: "Payment",
+          tabBarLabel: t("BottomTabNavigator:payment"),
         }}
       />
       <BottomTab.Screen
@@ -147,7 +149,7 @@ const BottomTabNavigator = () => {
           tabBarIcon: ({ color }) => (
             <Ionicons name="stats-chart" size={24} color={color} />
           ),
-          tabBarLabel: "Stats",
+          tabBarLabel: t("BottomTabNavigator:stats"),
         }}
       />
       <BottomTab.Screen
@@ -157,7 +159,7 @@ const BottomTabNavigator = () => {
           tabBarIcon: ({ color }) => (
             <Ionicons name="options" size={24} color={color} />
           ),
-          tabBarLabel: "Options",
+          tabBarLabel: t("BottomTabNavigator:options"),
         }}
       />
     </BottomTab.Navigator>

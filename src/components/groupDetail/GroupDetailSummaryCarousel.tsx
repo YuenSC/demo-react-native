@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { Text, makeStyles } from "@rneui/themed";
 import { memo } from "react";
+import { useTranslation } from "react-i18next";
 import { ScrollView, View, useWindowDimensions } from "react-native";
 
 import GroupDetailSummaryItem from "./GroupDetailSummaryItem";
@@ -20,6 +21,7 @@ const GroupDetailSummaryCarousel = memo<IGroupDetailSummaryCarouselProps>(
     const styles = useStyles();
     const windowDimensions = useWindowDimensions();
     const navigation = useNavigation();
+    const { t } = useTranslation();
     const groupUsers = useAppSelector((state) =>
       groupUsersSelector(state, group.id),
     );
@@ -39,7 +41,9 @@ const GroupDetailSummaryCarousel = memo<IGroupDetailSummaryCarouselProps>(
     if (group.paymentRecords.length === 0) {
       return (
         <View style={styles.container}>
-          <Text>No payment records found</Text>
+          <Text>
+            {t("GroupDetailSummaryCarousel:no-payment-records-found")}
+          </Text>
         </View>
       );
     }
@@ -47,7 +51,9 @@ const GroupDetailSummaryCarousel = memo<IGroupDetailSummaryCarouselProps>(
     if (Object.keys(simplifiedPaymentRelationshipByCurrency).length === 0) {
       return (
         <View style={styles.container}>
-          <Text>All your expenses are balanced.</Text>
+          <Text>
+            {t("GroupDetailSummaryCarousel:all-your-expenses-are-balanced")}
+          </Text>
         </View>
       );
     }

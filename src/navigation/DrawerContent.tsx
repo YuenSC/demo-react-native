@@ -3,6 +3,7 @@ import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import { useNavigation } from "@react-navigation/native";
 import { Button, Text, makeStyles, useTheme } from "@rneui/themed";
 import { memo } from "react";
+import { useTranslation } from "react-i18next";
 import { TouchableOpacity, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -21,6 +22,7 @@ const DrawerContent = memo<IDrawerContentProps>(({ state }) => {
   const groups = useAppSelector((state) => state.groups.groups);
   const { theme } = useTheme();
   const navigation = useNavigation();
+  const { t } = useTranslation();
 
   const currentGroup = useAppSelector(currentGroupSelector);
   const dispatch = useAppDispatch();
@@ -28,7 +30,7 @@ const DrawerContent = memo<IDrawerContentProps>(({ state }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Text h2 style={{ marginBottom: 16 }}>
-        Groups
+        {t("DrawerContent:groups")}
       </Text>
       <FlatList
         data={groups}
@@ -51,7 +53,7 @@ const DrawerContent = memo<IDrawerContentProps>(({ state }) => {
                 size={24}
                 color={theme.colors.primary}
               />
-              Add Group
+              {t("DrawerContent:add-group")}
             </Button>
           );
         }}
@@ -75,7 +77,11 @@ const DrawerContent = memo<IDrawerContentProps>(({ state }) => {
         }}
       />
       <View>
-        <Text>Version {Config.version}</Text>
+        <Text>
+          {t("DrawerContent.version", {
+            version: Config.version,
+          })}
+        </Text>
       </View>
     </SafeAreaView>
   );

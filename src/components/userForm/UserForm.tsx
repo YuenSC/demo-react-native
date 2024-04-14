@@ -1,6 +1,7 @@
 import { Button, Input, Text, makeStyles } from "@rneui/themed";
 import { memo, useMemo } from "react";
 import { Controller, useController, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 
 import ProfileFormAvatarSelect from "./UserFormAvatarSelect";
@@ -23,6 +24,7 @@ const UserForm = memo<IUserFormProps>(
   ({ onSubmit, isEdit, userId, onDelete, submitButtonText }) => {
     const styles = useStyles();
     const user = useAppSelector((state) => userSelector(state, userId));
+    const { t } = useTranslation();
 
     const defaultUser = useMemo(() => {
       return isEdit
@@ -40,18 +42,22 @@ const UserForm = memo<IUserFormProps>(
     const nameController = useController({
       name: "name",
       control,
-      rules: { required: "Your name is required" },
+      rules: { required: t("UserForm:your-name-is-required") },
     });
 
     return (
       <View style={styles.container}>
         {isEdit ? (
           <Text h1 style={styles.title}>
-            Edit Member
+            {t("UserForm:edit-member")}
           </Text>
         ) : (
           <Text h1 style={styles.title}>
-            {defaultUser?.name ? `Hi ${defaultUser.name}` : "Create Profile"}
+            {defaultUser?.name
+              ? t("UserForm:hi-user", {
+                  name: defaultUser.name,
+                })
+              : t("UserForm:create-profile")}
           </Text>
         )}
 
@@ -59,14 +65,14 @@ const UserForm = memo<IUserFormProps>(
           autoFocus
           onChangeText={nameController.field.onChange}
           value={nameController.field.value}
-          placeholder="Name"
-          label="Who are you?"
+          placeholder={t("UserForm:name")}
+          label={t("UserForm:who-are-you")}
           errorMessage={nameController.fieldState.error?.message}
         />
 
         {nameController.field.value && (
           <View>
-            <Text style={styles.label}>Your avatar color</Text>
+            <Text style={styles.label}>{t("UserForm:your-avatar-color")}</Text>
             <Controller
               name="avatarColor"
               control={control}
@@ -89,7 +95,7 @@ const UserForm = memo<IUserFormProps>(
           />
           {onDelete && (
             <Button
-              title="Delete"
+              title={t("Common:delete")}
               type="outline"
               color="error"
               onPress={onDelete}

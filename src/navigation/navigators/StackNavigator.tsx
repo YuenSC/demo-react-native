@@ -1,6 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { useTheme } from "@rneui/themed";
 import { memo } from "react";
+import { useTranslation } from "react-i18next";
 
 import DrawerNavigator from "./DrawerNavigator";
 
@@ -27,6 +28,7 @@ const Stack = createStackNavigator<IStackParamList>();
 
 const StackNavigator = memo(() => {
   const { theme } = useTheme();
+  const { t } = useTranslation();
 
   const isInitialSetupDone = useAppSelector(
     (state) => !!state.profile.userId && !!state.groups?.groups?.[0]?.id,
@@ -70,7 +72,7 @@ const StackNavigator = memo(() => {
         component={GroupSummaryScreen}
         name="GroupSummary"
         options={{
-          headerTitle: "Group Summary",
+          headerTitle: t("StackNavigator:group-summary"),
         }}
       />
       <Stack.Screen
@@ -121,16 +123,14 @@ const StackNavigator = memo(() => {
       <Stack.Screen
         component={UserListScreen}
         name="UserList"
-        options={{ title: "Users" }}
+        options={{ title: t("StackNavigator:users") }}
       />
 
       {/* Modal */}
       <Stack.Group
         screenOptions={{
           presentation: "modal",
-          headerStyle: {
-            backgroundColor: theme.colors.modal,
-          },
+          headerStyle: { backgroundColor: theme.colors.modal },
         }}
       >
         <Stack.Screen

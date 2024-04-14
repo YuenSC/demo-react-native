@@ -3,6 +3,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { Button, Text, makeStyles, useTheme } from "@rneui/themed";
 import AnimatedLottieView from "lottie-react-native";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 
 import { HStack } from "@/components/common/Stack";
@@ -20,6 +21,7 @@ import {
 const GroupDetailScreen = ({
   navigation,
 }: IBottomTabScreenProps<"GroupDetail">) => {
+  const { t } = useTranslation();
   const styles = useStyles();
   const headerHeight = useHeaderHeight();
   const { theme } = useTheme();
@@ -53,9 +55,9 @@ const GroupDetailScreen = ({
       .map((item) => item.name);
 
     return names.length > 2
-      ? `${names.slice(0, 2).join(", ")} and more ...`
-      : names.join(" and ");
-  }, [currentGroup, groupUsers, profile.userId]);
+      ? `${names.slice(0, 2).join(", ")} ${t("GroupDetailScreen:and-more")}`
+      : names.join(` ${t("GroupDetailScreen:and")} `);
+  }, [currentGroup, groupUsers, profile.userId, t]);
 
   if (!currentGroup) {
     return (
@@ -66,8 +68,7 @@ const GroupDetailScreen = ({
           source={require("@/assets/lottie/empty.json")}
         />
         <Text style={styles.emptyText}>
-          You haven't created any group yet. Please create a group to get
-          started
+          {t("GroupDetailScreen:no-group-warning")}
         </Text>
         <Button title="Add Group" />
       </View>
@@ -81,8 +82,8 @@ const GroupDetailScreen = ({
           <Text h1>{currentGroup.name}</Text>
           <Text style={styles.subtitle}>
             {hasUnresolvedExpenses
-              ? "Your unresolved expenses are as below"
-              : "You have no unresolved expenses. Good job!"}
+              ? t("GroupDetailScreen:expense-reminder")
+              : t("GroupDetailScreen:expense-reminder-empty")}
           </Text>
           <HStack gap={6} justifyContent="flex-start" flexWrap="wrap">
             {Object.entries(totalNetAmountByCurrency).map(
@@ -126,7 +127,7 @@ const GroupDetailScreen = ({
         </View>
         <View>
           <HStack style={[styles.sectionPadding, { marginBottom: 2 }]}>
-            <Text style={styles.label}>Summary</Text>
+            <Text style={styles.label}>{t("GroupDetailScreen:summary")}</Text>
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate("GroupSummary", {
@@ -145,7 +146,7 @@ const GroupDetailScreen = ({
         </View>
 
         <View style={styles.sectionPadding}>
-          <Text style={styles.label}>Member</Text>
+          <Text style={styles.label}>{t("GroupDetailScreen:member")}</Text>
           <TouchableOpacity
             style={styles.members}
             onPress={() =>
@@ -153,7 +154,13 @@ const GroupDetailScreen = ({
             }
           >
             <HStack gap={8}>
-              <Text>{`Current: ${groupUsers.find((i) => i.id === profile.userId)?.name ?? "Not In Group"}`}</Text>
+              <Text>
+                {t("GroupDetailScreen:current-username", {
+                  name:
+                    groupUsers.find((i) => i.id === profile.userId)?.name ??
+                    t("GroupDetailScreen:not-in-group"),
+                })}
+              </Text>
               <Text style={{ flex: 1, textAlign: "right" }} numberOfLines={1}>
                 {memberListText}
               </Text>
@@ -162,11 +169,12 @@ const GroupDetailScreen = ({
         </View>
 
         <View style={styles.sectionPadding}>
-          <Text style={styles.label}>Payment</Text>
+          <Text style={styles.label}>{t("GroupDetailScreen:payment")}</Text>
           <HStack>
             <Text>
-              You have {currentGroup.paymentRecords.length} records in this
-              group
+              {t("GroupDetailScreen:payment-count", {
+                count: currentGroup.paymentRecords.length,
+              })}
             </Text>
 
             <TouchableOpacity

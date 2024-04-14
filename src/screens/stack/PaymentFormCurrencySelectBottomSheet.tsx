@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import BottomSheet, { BottomSheetSectionList } from "@gorhom/bottom-sheet";
 import { SearchBar, Text, makeStyles, useTheme } from "@rneui/themed";
 import { useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Keyboard, TouchableOpacity, View } from "react-native";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -27,6 +28,7 @@ const PaymentFormCurrencySelectBottomSheet = ({
   const insets = useSafeAreaInsets();
   const styles = useStyles(insets);
   const { theme } = useTheme();
+  const { t } = useTranslation();
 
   const [searchText, setSearchText] = useState("");
 
@@ -56,7 +58,7 @@ const PaymentFormCurrencySelectBottomSheet = ({
     if (suggestedCurrencyData.length === 0) {
       return [
         {
-          title: "All Currency",
+          title: t("PaymentFormCurrencySelectBottomSheet:all-currency"),
           data: allCurrencyData,
         },
       ];
@@ -64,15 +66,15 @@ const PaymentFormCurrencySelectBottomSheet = ({
 
     return [
       {
-        title: "Suggested Currency",
+        title: t("PaymentFormCurrencySelectBottomSheet:suggested-currency"),
         data: suggestedCurrencyData,
       },
       {
-        title: "All Currency",
+        title: t("PaymentFormCurrencySelectBottomSheet:all-currency"),
         data: allCurrencyData,
       },
     ];
-  }, [currencyCode, searchText, suggestedCurrencyCodes]);
+  }, [currencyCode, searchText, suggestedCurrencyCodes, t]);
 
   return (
     <StyledBottomSheet
@@ -87,7 +89,9 @@ const PaymentFormCurrencySelectBottomSheet = ({
           platform="ios"
           value={searchText}
           onChangeText={(text) => setSearchText(text)}
-          placeholder="Search currency code or name"
+          placeholder={t(
+            "PaymentFormCurrencySelectBottomSheet:search-currency-code-or-name",
+          )}
           containerStyle={styles.searchBar}
           searchIcon={
             <Ionicons name="search" size={20} color={theme.colors.grey3} />
@@ -102,7 +106,9 @@ const PaymentFormCurrencySelectBottomSheet = ({
         />
 
         <Text style={{ marginLeft: 8, fontSize: 20 }}>
-          {`Selected: ${currencyCode}`}
+          {t("PaymentFormCurrencySelectBottomSheet:selected-currency", {
+            currencyCode,
+          })}
         </Text>
       </View>
 

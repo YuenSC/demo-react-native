@@ -2,6 +2,7 @@ import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Text, makeStyles, useTheme } from "@rneui/themed";
 import AnimatedLottieView from "lottie-react-native";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FlatList, TouchableOpacity, View } from "react-native";
 
 import PaymentRecordDisplay from "@/components/PaymentRecordDisplay";
@@ -27,6 +28,7 @@ const PaymentRecordListScreen = ({
   navigation,
 }: IBottomTabScreenProps<"PaymentRecordList">) => {
   const styles = useStyles();
+  const { t } = useTranslation();
   const currentGroup = useAppSelector(currentGroupSelector);
   const { theme } = useTheme();
   const [sortDirection, setSortDirection] = useState(SortDirectionEnum.DESC);
@@ -136,8 +138,11 @@ const PaymentRecordListScreen = ({
 
             <Text style={styles.emptyText}>
               {selectedCurrency
-                ? `No payment records found for ${selectedCurrency}`
-                : "No payment records found"}
+                ? t(
+                    "PaymentRecordListScreen:no-payment-records-found-for-currency",
+                    { currency: selectedCurrency },
+                  )
+                : t("PaymentRecordListScreen:no-payment-records-found")}
             </Text>
           </View>
         );
@@ -146,7 +151,7 @@ const PaymentRecordListScreen = ({
         <VStack alignItems="stretch" gap={8}>
           <HStack>
             <HStack>
-              <Text h1>Payments</Text>
+              <Text h1>{t("PaymentRecordListScreen:payments")}</Text>
               <TouchableOpacity
                 style={styles.toggleTarget}
                 onPress={() =>

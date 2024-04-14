@@ -2,6 +2,7 @@ import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import { Button, Text, makeStyles } from "@rneui/themed";
 import AnimatedLottieView from "lottie-react-native";
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -21,6 +22,7 @@ const GroupExistingUserSelectBottomSheet = ({
   const insets = useSafeAreaInsets();
   const styles = useStyles(insets);
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   const bottomSheetRef = useRef<BottomSheet>(null);
   const groupUsers = useAppSelector((state) =>
@@ -48,12 +50,14 @@ const GroupExistingUserSelectBottomSheet = ({
         contentContainerStyle={styles.content}
         ListHeaderComponent={
           <VStack alignItems="flex-start" style={styles.header} gap={4}>
-            <Text h1>Existing Users</Text>
+            <Text h1>
+              {t("GroupExistingUserSelectBottomSheet:existing-users")}
+            </Text>
           </VStack>
         }
         ListFooterComponent={
           <Button
-            title="Done"
+            title={t("Common:done")}
             style={{ marginTop: 8 }}
             onPress={navigation.goBack}
           />
@@ -67,7 +71,9 @@ const GroupExistingUserSelectBottomSheet = ({
                 source={require("@/assets/lottie/empty.json")}
               />
 
-              <Text style={styles.emptyText}>No existing user found</Text>
+              <Text style={styles.emptyText}>
+                {t("GroupExistingUserSelectBottomSheet:no-existing-user-found")}
+              </Text>
             </VStack>
           );
         }}
@@ -84,13 +90,13 @@ const GroupExistingUserSelectBottomSheet = ({
                 <HStack gap={2}>
                   <Text>User : {item.name}</Text>
                   <Text style={styles.profileUserLabel}>
-                    {isProfileUser ? "(You)" : ""}
+                    {isProfileUser ? t("Common:profileUserLabel") : ""}
                   </Text>
                 </HStack>
                 <Text>
                   Related Group :{" "}
                   {item.groupIds.map((id) => groupNameById[id]).join(",") ||
-                    "N/A"}
+                    t("Common:NA")}
                 </Text>
               </VStack>
             </TouchableOpacity>

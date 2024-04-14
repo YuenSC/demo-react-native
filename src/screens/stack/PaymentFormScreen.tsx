@@ -4,6 +4,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { Text, makeStyles, useTheme } from "@rneui/themed";
 import { useEffect, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { TouchableOpacity, View } from "react-native";
 
 import Config from "@/Config";
@@ -26,6 +27,7 @@ const PaymentFormScreen = ({
 }: IStackScreenProps<"AddPayment" | "EditPayment" | "EditPaymentModal">) => {
   const styles = useStyles(name);
   const { theme } = useTheme();
+  const { t } = useTranslation();
 
   const lastUsedCurrency = useAppSelector(
     (state) => state.groups.lastUsedCurrency ?? "HKD",
@@ -155,18 +157,18 @@ const PaymentFormScreen = ({
             <Tab.Screen
               name="Bill"
               component={BillForm}
-              options={{ title: "Bill" }}
+              options={{ title: t("PaymentFormScreen:bill") }}
             />
             <Tab.Screen
               name="PayerSelect"
               component={PayerPayeeSelectForm}
-              options={{ title: "Who Paid?" }}
+              options={{ title: t("PaymentFormScreen:who-paid") }}
             />
             <Tab.Screen
               name="PayeeSelect"
               component={PayerPayeeSelectForm}
               options={{
-                title: "Paid For?",
+                title: t("PaymentFormScreen:paid-for"),
               }}
             />
           </Tab.Navigator>

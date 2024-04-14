@@ -1,5 +1,6 @@
 import { Text, makeStyles } from "@rneui/themed";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 
 import UserForm from "@/components/userForm/UserForm";
@@ -15,6 +16,7 @@ const EditMemberScreen = ({
 }: IStackScreenProps<"EditMember">) => {
   const styles = useStyles();
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   const member = useAppSelector((state) => userSelector(state, id));
 
@@ -30,7 +32,7 @@ const EditMemberScreen = ({
     <View style={styles.container}>
       <UserForm
         isEdit
-        submitButtonText="Save"
+        submitButtonText={t("Common:save")}
         userId={id}
         onSubmit={(values) => {
           dispatch(
