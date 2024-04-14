@@ -3,7 +3,10 @@ import AnimatedLottieView from "lottie-react-native";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { SectionList, TouchableOpacity, View } from "react-native";
+import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
+import { EdgeInsets, useSafeAreaInsets } from "react-native-safe-area-context";
 
+import Config from "@/Config";
 import { HStack, VStack } from "@/components/common/Stack";
 import PaymentRelationshipDisplay from "@/components/groupDetail/PaymentRelationshipDisplay";
 import { useAppSelector } from "@/hooks/reduxHook";
@@ -24,7 +27,8 @@ const GroupSummaryScreen = ({
     params: { groupId },
   },
 }: IStackScreenProps<"GroupSummary">) => {
-  const styles = useStyles();
+  const insets = useSafeAreaInsets();
+  const styles = useStyles(insets);
   const { t } = useTranslation();
 
   const group = useAppSelector((state) => groupSelector(state, groupId));
@@ -149,14 +153,20 @@ const GroupSummaryScreen = ({
           </TouchableOpacity>
         )}
       />
+
+      <BannerAd
+        unitId={Config.adBannerUnitId}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+      />
     </View>
   );
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme, insets: EdgeInsets) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
+    paddingBottom: insets.bottom,
   },
   horizontalSpacing: {
     paddingHorizontal: 16,

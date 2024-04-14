@@ -1,10 +1,17 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import { useTheme } from "@rneui/themed";
-import { memo } from "react";
+import { Text, useTheme } from "@rneui/themed";
+import { memo, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { ActivityIndicator, View } from "react-native";
+import {
+  AdEventType,
+  AppOpenAd,
+  InterstitialAd,
+} from "react-native-google-mobile-ads";
 
 import DrawerNavigator from "./DrawerNavigator";
 
+import Config from "@/Config";
 import Device from "@/constants/Device";
 import { useAppSelector } from "@/hooks/reduxHook";
 import SampleScreen from "@/screens/SampleScreen";
@@ -28,13 +35,59 @@ import { IStackParamList } from "@/types/navigation";
 
 const Stack = createStackNavigator<IStackParamList>();
 
+const interstitialAd = InterstitialAd.createForAdRequest(
+  Config.adInterstitialUnitId,
+);
+
 const StackNavigator = memo(() => {
   const { theme } = useTheme();
   const { t } = useTranslation();
+  const [loaded, setLoaded] = useState(false);
 
   const isInitialSetupDone = useAppSelector(
     (state) => !!state.profile.userId && !!state.groups?.groups?.[0]?.id,
   );
+
+  const isFirstPaymentDone = useAppSelector((state) =>
+    state.groups.groups.some((group) => group.paymentRecords.length > 0),
+  );
+
+  useEffect(() => {
+    const unsubscribe = interstitialAd.addAdEventListener(
+      AdEventType.LOADED,
+      () => {
+        interstitialAd.show();
+        setLoaded(true);
+      },
+    );
+
+    // Start loading the interstitial straight away
+    if (isFirstPaymentDone) {
+      interstitialAd.load();
+    } else {
+      setLoaded(true);
+    }
+
+    // Unsubscribe from events on unmount
+    return unsubscribe;
+  }, [isFirstPaymentDone]);
+
+  if (!loaded) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: theme.colors.background,
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 16,
+        }}
+      >
+        <ActivityIndicator size="large" color={theme.colors.black} />
+        <Text>{t("StackNavigator:loading-interstitial-ad")}</Text>
+      </View>
+    );
+  }
 
   return (
     <Stack.Navigator

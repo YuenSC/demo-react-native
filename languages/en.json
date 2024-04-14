@@ -100,6 +100,7 @@
     "warning": "Machine translation is employed to translate languages other than English."
   },
   "OptionsScreen": {
+    "Upgrade": "Upgrade to Pro",
     "all-members": "All Members",
     "app-related": "App Related",
     "category": "Category",
@@ -143,6 +144,7 @@
   },
   "StackNavigator": {
     "group-summary": "Group Summary",
+    "loading-interstitial-ad": "Ad Loading",
     "users": "Users"
   },
   "UserDeleteBottomSheet": {

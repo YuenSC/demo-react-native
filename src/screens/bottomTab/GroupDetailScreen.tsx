@@ -5,7 +5,9 @@ import AnimatedLottieView from "lottie-react-native";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { ScrollView, TouchableOpacity, View } from "react-native";
+import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
+import Config from "@/Config";
 import { HStack } from "@/components/common/Stack";
 import GroupDetailSummaryCarousel from "@/components/groupDetail/GroupDetailSummaryCarousel";
 import { useAppSelector } from "@/hooks/reduxHook";
@@ -197,6 +199,10 @@ const GroupDetailScreen = ({
           </HStack>
         </View>
       </ScrollView>
+      <BannerAd
+        unitId={Config.adBannerUnitId}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+      />
     </View>
   );
 };
@@ -205,11 +211,11 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-    paddingVertical: 16,
   },
   contentContainer: {
     gap: 16,
     paddingBottom: 32,
+    paddingTop: 16,
   },
   sectionPadding: {
     paddingHorizontal: 16,

@@ -4,7 +4,9 @@ import AnimatedLottieView from "lottie-react-native";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FlatList, TouchableOpacity, View } from "react-native";
+import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
+import Config from "@/Config";
 import PaymentRecordDisplay from "@/components/PaymentRecordDisplay";
 import { HStack, VStack } from "@/components/common/Stack";
 import PaymentCalendar from "@/components/paymentRecordList/PaymentCalendar";
@@ -117,130 +119,136 @@ const PaymentRecordListScreen = ({
   }, [mode, navigation, theme.colors.primary]);
 
   return (
-    <FlatList
-      data={data}
-      style={styles.container}
-      ListEmptyComponent={() => {
-        return (
-          <View style={styles.emptyContainer}>
-            <AnimatedLottieView
-              autoPlay
-              style={[
-                styles.lottie,
-                mode === PaymentRecordListMode.calendar && styles.lottieSmall,
-              ]}
-              source={require("@/assets/lottie/empty.json")}
-            />
+    <View style={{ flex: 1 }}>
+      <FlatList
+        data={data}
+        style={styles.container}
+        ListEmptyComponent={() => {
+          return (
+            <View style={styles.emptyContainer}>
+              <AnimatedLottieView
+                autoPlay
+                style={[
+                  styles.lottie,
+                  mode === PaymentRecordListMode.calendar && styles.lottieSmall,
+                ]}
+                source={require("@/assets/lottie/empty.json")}
+              />
 
-            <Text style={styles.emptyText}>
-              {selectedCurrency
-                ? t(
-                    "PaymentRecordListScreen:no-payment-records-found-for-currency",
-                    { currency: selectedCurrency },
-                  )
-                : t("PaymentRecordListScreen:no-payment-records-found")}
-            </Text>
-          </View>
-        );
-      }}
-      ListHeaderComponent={() => (
-        <VStack alignItems="stretch" gap={8}>
-          <HStack>
+              <Text style={styles.emptyText}>
+                {selectedCurrency
+                  ? t(
+                      "PaymentRecordListScreen:no-payment-records-found-for-currency",
+                      { currency: selectedCurrency },
+                    )
+                  : t("PaymentRecordListScreen:no-payment-records-found")}
+              </Text>
+            </View>
+          );
+        }}
+        ListHeaderComponent={() => (
+          <VStack alignItems="stretch" gap={8}>
             <HStack>
-              <Text h1>{t("PaymentRecordListScreen:payments")}</Text>
-              <TouchableOpacity
-                style={styles.toggleTarget}
-                onPress={() =>
-                  setTarget(
-                    target === PaymentRecordListTarget.Group
-                      ? PaymentRecordListTarget.You
-                      : PaymentRecordListTarget.Group,
-                  )
-                }
-              >
-                <Text style={styles.toggleTargetText}>
-                  {target === PaymentRecordListTarget.Group
-                    ? t("Common:groupLabel")
-                    : t("Common:profileUserLabel")}
-                </Text>
-              </TouchableOpacity>
-            </HStack>
-            <HStack gap={12}>
-              {hasMoreThanOneCurrency && (
+              <HStack>
+                <Text h1>{t("PaymentRecordListScreen:payments")}</Text>
                 <TouchableOpacity
-                  hitSlop={8}
+                  style={styles.toggleTarget}
                   onPress={() =>
-                    navigation.navigate("PaymentRecordFilter", {
-                      setSelectedCurrency,
-                      selectedCurrency,
-                    })
+                    setTarget(
+                      target === PaymentRecordListTarget.Group
+                        ? PaymentRecordListTarget.You
+                        : PaymentRecordListTarget.Group,
+                    )
                   }
                 >
-                  <MaterialCommunityIcons
-                    name={selectedCurrency ? "filter-remove" : "filter"}
-                    size={24}
-                    color={theme.colors.primary}
-                  />
+                  <Text style={styles.toggleTargetText}>
+                    {target === PaymentRecordListTarget.Group
+                      ? t("Common:groupLabel")
+                      : t("Common:profileUserLabel")}
+                  </Text>
                 </TouchableOpacity>
-              )}
-              {data.length > 0 && (
-                <TouchableOpacity
-                  hitSlop={8}
-                  onPress={() => {
-                    setSortDirection(
-                      sortDirection === SortDirectionEnum.ASC
-                        ? SortDirectionEnum.DESC
-                        : SortDirectionEnum.ASC,
-                    );
-                  }}
-                >
-                  <FontAwesome
-                    name={
-                      sortDirection === SortDirectionEnum.ASC
-                        ? "sort-amount-asc"
-                        : "sort-amount-desc"
+              </HStack>
+              <HStack gap={12}>
+                {hasMoreThanOneCurrency && (
+                  <TouchableOpacity
+                    hitSlop={8}
+                    onPress={() =>
+                      navigation.navigate("PaymentRecordFilter", {
+                        setSelectedCurrency,
+                        selectedCurrency,
+                      })
                     }
-                    size={20}
-                    color={theme.colors.primary}
-                  />
-                </TouchableOpacity>
-              )}
+                  >
+                    <MaterialCommunityIcons
+                      name={selectedCurrency ? "filter-remove" : "filter"}
+                      size={24}
+                      color={theme.colors.primary}
+                    />
+                  </TouchableOpacity>
+                )}
+                {data.length > 0 && (
+                  <TouchableOpacity
+                    hitSlop={8}
+                    onPress={() => {
+                      setSortDirection(
+                        sortDirection === SortDirectionEnum.ASC
+                          ? SortDirectionEnum.DESC
+                          : SortDirectionEnum.ASC,
+                      );
+                    }}
+                  >
+                    <FontAwesome
+                      name={
+                        sortDirection === SortDirectionEnum.ASC
+                          ? "sort-amount-asc"
+                          : "sort-amount-desc"
+                      }
+                      size={20}
+                      color={theme.colors.primary}
+                    />
+                  </TouchableOpacity>
+                )}
+              </HStack>
             </HStack>
-          </HStack>
 
-          {mode === PaymentRecordListMode.calendar && (
-            <PaymentCalendar
-              date={selectedDate}
-              onDateChange={setSelectedDate}
-              records={paymentRecords}
-            />
-          )}
-        </VStack>
-      )}
-      keyExtractor={(item) => item.id}
-      contentContainerStyle={styles.contentContainerStyle}
-      renderItem={({ item }) => {
-        if (!userId) return null;
-        if (!currentGroup?.id) return null;
+            {mode === PaymentRecordListMode.calendar && (
+              <PaymentCalendar
+                date={selectedDate}
+                onDateChange={setSelectedDate}
+                records={paymentRecords}
+              />
+            )}
+          </VStack>
+        )}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.contentContainerStyle}
+        renderItem={({ item }) => {
+          if (!userId) return null;
+          if (!currentGroup?.id) return null;
 
-        return (
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("EditPaymentModal", {
-                groupId: currentGroup.id,
-                recordId: item.id,
-              })
-            }
-          >
-            <PaymentRecordDisplay
-              record={item}
-              userId={userId}
-              paymentTarget={target}
-            />
-          </TouchableOpacity>
-        );
-      }}
-    />
+          return (
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("EditPaymentModal", {
+                  groupId: currentGroup.id,
+                  recordId: item.id,
+                })
+              }
+            >
+              <PaymentRecordDisplay
+                record={item}
+                userId={userId}
+                paymentTarget={target}
+              />
+            </TouchableOpacity>
+          );
+        }}
+      />
+      <BannerAd
+        unitId={Config.adBannerUnitId}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+      />
+    </View>
   );
 };
 
