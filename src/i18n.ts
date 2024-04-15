@@ -61,11 +61,20 @@ i18n
         console.log(userLanguage || languageCode || "en");
 
         // use tag if our LanguageEnum has that tag
-        const detectedTag = Object.values(LanguageEnum).find((lang) =>
+        const languageDetectedByTag = Object.values(LanguageEnum).find((lang) =>
           lang.includes(regionCode || ""),
         );
 
-        callback(userLanguage || detectedTag || languageCode || "en");
+        const languageDetectedByCode = Object.values(LanguageEnum).find(
+          (lang) => lang === languageCode,
+        );
+
+        callback(
+          userLanguage ||
+            languageDetectedByTag ||
+            languageDetectedByCode ||
+            "en",
+        );
       });
     },
     cacheUserLanguage(lng) {
