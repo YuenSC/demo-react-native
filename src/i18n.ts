@@ -58,8 +58,6 @@ i18n
     init(services, detectorOptions, i18nextOptions) {},
     detect(callback) {
       AsyncStorage.getItem("user-language").then((userLanguage) => {
-        console.log(userLanguage || languageCode || "en");
-
         // use tag if our LanguageEnum has that tag
         const languageDetectedByTag = Object.values(LanguageEnum).find((lang) =>
           lang.includes(regionCode || ""),

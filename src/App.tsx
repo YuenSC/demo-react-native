@@ -19,11 +19,11 @@ const useAds = () => {
     (async () => {
       const { status } = await requestTrackingPermissionsAsync();
       if (status === "granted") {
-        console.log("Yay! I have user permission to track data");
         mobileAds()
           .initialize()
           .then((adapterStatuses) => {
             // Initialization complete!
+            console.log("adapterStatuses", adapterStatuses);
           });
       }
     })();
