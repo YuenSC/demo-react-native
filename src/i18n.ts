@@ -24,6 +24,11 @@ export enum LanguageEnum {
   RU = "ru",
   FR = "fr",
 }
+enum LanguageStorageKey {
+  USER = "user-language",
+  DEVICE = "device-language",
+}
+
 export const LanguageLabels = {
   [LanguageEnum.EN]: "English",
   [LanguageEnum.JA]: "日本語",
@@ -50,6 +55,16 @@ const resources = {
 
 const { languageCode, regionCode } = getLocales()[0];
 
+const detectLanguage = () => {
+  const languageDetectedByTag = Object.values(LanguageEnum).find((lang) =>
+    lang.includes(regionCode || ""),
+  );
+  const languageDetectedByCode = Object.values(LanguageEnum).find(
+    (lang) => lang === languageCode,
+  );
+  return languageDetectedByTag || languageDetectedByCode;
+};
+
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .use({
@@ -57,26 +72,35 @@ i18n
     async: true, // If this is set to true, your detect function receives a callback function that you should call with your language, useful to retrieve your language stored in AsyncStorage for example
     init(services, detectorOptions, i18nextOptions) {},
     detect(callback) {
-      AsyncStorage.getItem("user-language").then((userLanguage) => {
-        // use tag if our LanguageEnum has that tag
-        const languageDetectedByTag = Object.values(LanguageEnum).find((lang) =>
-          lang.includes(regionCode || ""),
-        );
+      AsyncStorage.getItem(LanguageStorageKey.USER).then(
+        (storedUserLanguage) => {
+          AsyncStorage.getItem(LanguageStorageKey.DEVICE).then(
+            (storedDeviceLanguage) => {
+              const detectedLanguage = detectLanguage();
 
-        const languageDetectedByCode = Object.values(LanguageEnum).find(
-          (lang) => lang === languageCode,
-        );
+              //1. if detected language is updated, update the user language
+              if (
+                storedDeviceLanguage &&
+                storedDeviceLanguage !== detectedLanguage
+              ) {
+                callback(detectedLanguage);
+                return;
+              }
 
-        callback(
-          userLanguage ||
-            languageDetectedByTag ||
-            languageDetectedByCode ||
-            "en",
-        );
-      });
+              // 2. Keep the original user language if it is stored
+              callback(storedUserLanguage || detectedLanguage || "en");
+            },
+          );
+        },
+      );
     },
     cacheUserLanguage(lng) {
-      AsyncStorage.setItem("user-language", lng);
+      AsyncStorage.setItem(LanguageStorageKey.USER, lng);
+
+      // always store the detected language
+      const detectedLanguage = detectLanguage();
+      if (detectedLanguage)
+        AsyncStorage.setItem(LanguageStorageKey.DEVICE, detectedLanguage);
     },
   } satisfies LanguageDetectorAsyncModule)
   .init({
