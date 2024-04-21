@@ -1,3 +1,4 @@
+import { BillCategoryEnum } from "@/types/BillCategories";
 import { CurrencyCode, currencyCodes } from "@/types/Currency";
 import { PaymentDetail, PaymentRecord } from "@/types/PaymentRecord";
 import { User } from "@/types/User";
@@ -199,7 +200,10 @@ export const getPaymentRelationshipByCurrency = (
   };
 };
 
-export const getTotalNetAmount = (userId: string, records: PaymentRecord[]) => {
+export const getTotalNetAmountByUser = (
+  userId: string,
+  records: PaymentRecord[],
+) => {
   const totalNetAmount = records.reduce(
     (prev, curr) => {
       const { netAmount, currencyCode } = getRelatedAmount(userId, curr) ?? {
@@ -224,6 +228,50 @@ export const getTotalNetAmount = (userId: string, records: PaymentRecord[]) => {
   });
 
   return totalNetAmount;
+};
+
+export const getTotalCategoryExpenseByCurrencyCode = (
+  records: PaymentRecord[],
+) => {
+  return records.reduce(
+    (prev, curr) => {
+      return {
+        ...prev,
+        [curr.currencyCode]: {
+          ...prev[curr.currencyCode],
+          [curr.category]:
+            (prev[curr.currencyCode]?.[curr.category] ?? 0) + curr.amount,
+        },
+      };
+    },
+    {} as Record<CurrencyCode, Record<BillCategoryEnum, number>>,
+  );
+};
+
+export const getUserTotalCategoryExpenseByCurrencyCode = (
+  userId: string,
+  records: PaymentRecord[],
+) => {
+  return records.reduce(
+    (prev, curr) => {
+      const { receivedAmount = 0 } = getRelatedAmount(userId, curr) ?? {};
+      return {
+        ...prev,
+        [curr.currencyCode]: {
+          ...prev[curr.currencyCode],
+          [curr.category]:
+            (prev[curr.currencyCode]?.[curr.category] ?? 0) + receivedAmount,
+        },
+      };
+    },
+    {} as Record<CurrencyCode, Record<BillCategoryEnum, number>>,
+  );
+};
+
+export const getAvailableCurrencyCodes = (records: PaymentRecord[]) => {
+  return Array.from(new Set(records.map((record) => record.currencyCode))).sort(
+    (a, b) => (a > b ? 1 : -1),
+  ) as CurrencyCode[];
 };
 
 export const getRelatedAmount = (userId?: string, record?: PaymentRecord) => {

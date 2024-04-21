@@ -18,7 +18,7 @@ import { IStackScreenProps } from "@/types/navigation";
 import {
   formatAmount,
   getPaymentRelationshipByCurrency,
-  getTotalNetAmount,
+  getTotalNetAmountByUser,
 } from "@/utils/payment";
 
 const GroupSummaryScreen = ({
@@ -78,7 +78,7 @@ const GroupSummaryScreen = ({
               </Text>
               <VStack alignItems="stretch" style={styles.members}>
                 {groupUsers?.map((member, index) => {
-                  const totalNetAmount = getTotalNetAmount(
+                  const totalNetAmount = getTotalNetAmountByUser(
                     member.id,
                     group?.paymentRecords ?? [],
                   );

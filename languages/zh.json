@@ -150,7 +150,8 @@
   },
   "StatisticScreen": {
     "statistics": "统计数据",
-    "subtitle": "<Text>您的小组总共花费了 <Highlight>{{amount}}</Highlight>。\n这是你的费用分布</Text>"
+    "subtitle": "<Text>{{name}} 总共花费了 <Highlight>{{amount}}</Highlight>。\n这是你的费用分布</Text>",
+    "you": "你"
   },
   "UserDeleteBottomSheet": {
     "please-note-that-this-action-is-irreversible": "请注意，此操作不可逆转",

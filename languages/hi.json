@@ -150,7 +150,8 @@
   },
   "StatisticScreen": {
     "statistics": "आंकड़े",
-    "subtitle": "<Text>आपके समूह ने कुल मिलाकर <Highlight>{{amount}}</Highlight> खर्च किया है। \nयहां आपके खर्चों का वितरण है</Text>"
+    "subtitle": "<Text>{{name}} ने कुल मिलाकर <Highlight>{{amount}}</Highlight> खर्च किया है। \nयहां आपके खर्चों का वितरण है</Text>",
+    "you": "आप"
   },
   "UserDeleteBottomSheet": {
     "please-note-that-this-action-is-irreversible": "कृपया ध्यान दें कि यह क्रिया अपरिवर्तनीय है",

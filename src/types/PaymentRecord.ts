@@ -1,3 +1,4 @@
+import { BillCategoryEnum } from "./BillCategories";
 import { CurrencyCode } from "./Currency";
 
 export type PaymentDetail = {
@@ -12,7 +13,7 @@ export type PaymentRecord = {
   currencyCode: CurrencyCode;
   comment: string;
   date: string;
-  category: string;
+  category: BillCategoryEnum;
   payers: PaymentDetail[];
   payees: PaymentDetail[];
 };

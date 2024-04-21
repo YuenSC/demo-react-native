@@ -150,7 +150,8 @@
   },
   "StatisticScreen": {
     "statistics": "Статистика",
-    "subtitle": "<Text>В общей сложности ваша группа потратила <Highlight>{{amount}}</Highlight>. \nВот распределение ваших расходов</Text>"
+    "subtitle": "<Text>Пользователь {{name}} потратил в общей сложности <Highlight>{{amount}}</Highlight>. \nВот распределение ваших расходов</Text>",
+    "you": "Ты"
   },
   "UserDeleteBottomSheet": {
     "please-note-that-this-action-is-irreversible": "Обратите внимание, что это действие необратимо.",

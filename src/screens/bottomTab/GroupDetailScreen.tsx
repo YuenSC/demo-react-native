@@ -17,7 +17,7 @@ import { CurrencyCode } from "@/types/Currency";
 import { IBottomTabScreenProps } from "@/types/navigation";
 import {
   formatAmount,
-  getTotalNetAmount as getTotalNetAmountByCurrency,
+  getTotalNetAmountByUser as getTotalNetAmountByCurrency,
 } from "@/utils/payment";
 
 const GroupDetailScreen = ({

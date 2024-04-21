@@ -150,7 +150,8 @@
   },
   "StatisticScreen": {
     "statistics": "Estadísticas",
-    "subtitle": "<Text>Su grupo ha gastado <Highlight>{{amount}}</Highlight> en total. \nAquí está la distribución de tus gastos</Text>"
+    "subtitle": "<Text>{{name}} ha gastado <Highlight>{{amount}}</Highlight> en total. \nAquí está la distribución de tus gastos</Text>",
+    "you": "Tú"
   },
   "UserDeleteBottomSheet": {
     "please-note-that-this-action-is-irreversible": "Tenga en cuenta que esta acción es irreversible.",

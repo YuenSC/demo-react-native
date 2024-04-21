@@ -150,7 +150,8 @@
   },
   "StatisticScreen": {
     "statistics": "統計",
-    "subtitle": "<Text>あなたのグループは合計 <Highlight>{{amount}}</Highlight> を費やしました。\n経費の配分は次のとおりです</Text>"
+    "subtitle": "<Text>{{name}} は合計 <Highlight>{{amount}}</Highlight> を使いました。\n経費の配分は次のとおりです</Text>",
+    "you": "あなた"
   },
   "UserDeleteBottomSheet": {
     "please-note-that-this-action-is-irreversible": "この操作は元に戻せないことに注意してください",
