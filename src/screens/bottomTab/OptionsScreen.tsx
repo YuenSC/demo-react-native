@@ -221,7 +221,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 36,
     fontWeight: "bold",
   },
-
   section: {
     backgroundColor: theme.colors.background,
     borderRadius: 8,

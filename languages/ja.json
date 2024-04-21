@@ -148,6 +148,10 @@
     "loading-interstitial-ad": "広告の読み込み",
     "users": "ユーザー"
   },
+  "StatisticScreen": {
+    "statistics": "統計",
+    "subtitle": "<Text>あなたのグループは合計 <Highlight>{{amount}}</Highlight> を費やしました。\n経費の配分は次のとおりです</Text>"
+  },
   "UserDeleteBottomSheet": {
     "please-note-that-this-action-is-irreversible": "この操作は元に戻せないことに注意してください",
     "related-payment": "このユーザーを削除する前に、{{count}} 件の関連支払いを削除する必要があります。",

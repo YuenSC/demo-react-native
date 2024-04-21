@@ -148,6 +148,10 @@
     "loading-interstitial-ad": "Загрузка рекламы",
     "users": "Пользователи"
   },
+  "StatisticScreen": {
+    "statistics": "Статистика",
+    "subtitle": "<Text>В общей сложности ваша группа потратила <Highlight>{{amount}}</Highlight>. \nВот распределение ваших расходов</Text>"
+  },
   "UserDeleteBottomSheet": {
     "please-note-that-this-action-is-irreversible": "Обратите внимание, что это действие необратимо.",
     "related-payment": "Прежде чем удалять этого пользователя, вам придется удалить связанный с ним платеж {{count}}.",

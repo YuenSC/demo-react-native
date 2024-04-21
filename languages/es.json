@@ -148,6 +148,10 @@
     "loading-interstitial-ad": "Cargando anuncios",
     "users": "Usuarios"
   },
+  "StatisticScreen": {
+    "statistics": "Estadísticas",
+    "subtitle": "<Text>Su grupo ha gastado <Highlight>{{amount}}</Highlight> en total. \nAquí está la distribución de tus gastos</Text>"
+  },
   "UserDeleteBottomSheet": {
     "please-note-that-this-action-is-irreversible": "Tenga en cuenta que esta acción es irreversible.",
     "related-payment": "Tendrás que eliminar {{count}} pago relacionado antes de eliminar a este usuario.",

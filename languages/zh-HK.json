@@ -148,6 +148,10 @@
     "loading-interstitial-ad": "廣告載入",
     "users": "使用者"
   },
+  "StatisticScreen": {
+    "statistics": "統計數據",
+    "subtitle": "<Text>您的群組總共花了 <Highlight>{{amount}}</Highlight>。\n這是你的費用分佈</Text>"
+  },
   "UserDeleteBottomSheet": {
     "please-note-that-this-action-is-irreversible": "請注意，此操作不可逆轉",
     "related-payment": "在刪除該使用者之前，您必須先刪除 {{count}} 項相關付款。",

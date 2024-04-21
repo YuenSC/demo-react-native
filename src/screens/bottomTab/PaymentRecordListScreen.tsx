@@ -13,13 +13,9 @@ import PaymentCalendar from "@/components/paymentRecordList/PaymentCalendar";
 import { useAppSelector } from "@/hooks/reduxHook";
 import { currentGroupSelector } from "@/store/reducers/groups";
 import { CurrencyCode } from "@/types/Currency";
+import { DataDisplayTarget } from "@/types/DataDisplayTarget";
 import { SortDirectionEnum } from "@/types/SortDirectionEnum";
 import { IBottomTabScreenProps } from "@/types/navigation";
-
-export enum PaymentRecordListTarget {
-  You = "You",
-  Group = "Group",
-}
 
 export enum PaymentRecordListMode {
   list = "list",
@@ -43,8 +39,8 @@ const PaymentRecordListScreen = ({
   );
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const [target, setTarget] = useState<PaymentRecordListTarget>(
-    PaymentRecordListTarget.You,
+  const [target, setTarget] = useState<DataDisplayTarget>(
+    DataDisplayTarget.You,
   );
   const userId = useAppSelector((state) => state.profile.userId);
   const hasMoreThanOneCurrency = useMemo(() => {
@@ -155,14 +151,14 @@ const PaymentRecordListScreen = ({
                   style={styles.toggleTarget}
                   onPress={() =>
                     setTarget(
-                      target === PaymentRecordListTarget.Group
-                        ? PaymentRecordListTarget.You
-                        : PaymentRecordListTarget.Group,
+                      target === DataDisplayTarget.Group
+                        ? DataDisplayTarget.You
+                        : DataDisplayTarget.Group,
                     )
                   }
                 >
                   <Text style={styles.toggleTargetText}>
-                    {target === PaymentRecordListTarget.Group
+                    {target === DataDisplayTarget.Group
                       ? t("Common:groupLabel")
                       : t("Common:profileUserLabel")}
                   </Text>

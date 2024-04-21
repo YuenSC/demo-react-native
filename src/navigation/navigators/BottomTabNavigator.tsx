@@ -15,10 +15,10 @@ import BottomTabBar from "../BottomTabBar";
 
 import { HStack } from "@/components/common/Stack";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHook";
-import SampleScreen from "@/screens/SampleScreen";
 import GroupDetailScreen from "@/screens/bottomTab/GroupDetailScreen";
 import OptionsScreen from "@/screens/bottomTab/OptionsScreen";
 import PaymentRecordListScreen from "@/screens/bottomTab/PaymentRecordListScreen";
+import StatisticScreen from "@/screens/bottomTab/StatisticScreen";
 import {
   addPaymentRecord,
   currentGroupSelector,
@@ -144,7 +144,7 @@ const BottomTabNavigator = () => {
       />
       <BottomTab.Screen
         name="Statistic"
-        component={SampleScreen}
+        component={StatisticScreen}
         options={{
           tabBarIcon: ({ color }) => (
             <Ionicons name="stats-chart" size={24} color={color} />
