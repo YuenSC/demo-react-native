@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#050624"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "usesAppleSignIn": true,
@@ -30,13 +28,12 @@
       "zh": "./languages/zh-HK.json"
     },
     "android": {
+      "package": "com.scyuenab.demoreactnative",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": [
-        "com.google.android.gms.permission.AD_ID"
-      ]
+      "permissions": ["com.google.android.gms.permission.AD_ID"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
