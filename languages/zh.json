@@ -134,7 +134,7 @@
     "paid-for": "付费了吗？",
     "who-paid": "谁付钱？"
   },
-  "PaymentRecordFilterScreen": {
+  "CurrencyCodeSelectScreen": {
     "all": "全部",
     "currency": "货币"
   },

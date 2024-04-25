@@ -134,7 +134,7 @@
     "paid-for": "誰のために支払われたのか？",
     "who-paid": "誰が払ったの？"
   },
-  "PaymentRecordFilterScreen": {
+  "CurrencyCodeSelectScreen": {
     "all": "全て",
     "currency": "通貨"
   },

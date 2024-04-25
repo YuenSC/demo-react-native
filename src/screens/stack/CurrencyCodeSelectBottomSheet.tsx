@@ -11,15 +11,16 @@ import { currentGroupSelector } from "@/store/reducers/groups";
 import { CurrencyCode } from "@/types/Currency";
 import { IStackScreenProps } from "@/types/navigation";
 
-const PaymentRecordFilterScreen = ({
+const CurrencyCodeSelectBottomSheet = ({
   navigation,
   route: {
     params: {
       selectedCurrency: externalSelectedCurrency,
       setSelectedCurrency: externalSetSelectedCurrency,
+      isCurrencyNullable,
     },
   },
-}: IStackScreenProps<"PaymentRecordFilter">) => {
+}: IStackScreenProps<"CurrencyCodeSelect">) => {
   const insets = useSafeAreaInsets();
   const styles = useStyles(insets);
   const { theme } = useTheme();
@@ -52,17 +53,19 @@ const PaymentRecordFilterScreen = ({
       snapPoints={["50%"]}
     >
       <BottomSheetView style={styles.contentContainer}>
-        <Text h2>{t("PaymentRecordFilterScreen:currency")}</Text>
+        <Text h2>{t("CurrencyCodeSelectScreen:currency")}</Text>
         <Picker
           selectedValue={selectedCurrency}
           onValueChange={(itemValue) => setSelectedCurrency(itemValue)}
         >
-          <Picker.Item
-            label={t("PaymentRecordFilterScreen:all")}
-            value=""
-            color={theme.colors.black}
-            style={styles.pickerItemText}
-          />
+          {isCurrencyNullable && (
+            <Picker.Item
+              label={t("CurrencyCodeSelectScreen:all")}
+              value=""
+              color={theme.colors.black}
+              style={styles.pickerItemText}
+            />
+          )}
           {availableCurrencyCodes.map((code) => (
             <Picker.Item
               label={code}
@@ -102,4 +105,4 @@ const useStyles = makeStyles((theme, insets: EdgeInsets) => ({
   },
 }));
 
-export default PaymentRecordFilterScreen;
+export default CurrencyCodeSelectBottomSheet;

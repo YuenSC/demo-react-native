@@ -15,6 +15,7 @@ import Config from "@/Config";
 import Device from "@/constants/Device";
 import { useAppSelector } from "@/hooks/reduxHook";
 import SampleScreen from "@/screens/SampleScreen";
+import CurrencyCodeSelectBottomSheet from "@/screens/stack/CurrencyCodeSelectBottomSheet";
 import EditMemberScreen from "@/screens/stack/EditMemberScreen";
 import GroupCreateSuccessBottomSheet from "@/screens/stack/GroupCreateSuccessBottomSheet";
 import GroupDeleteBottomSheet from "@/screens/stack/GroupDeleteBottomSheet";
@@ -27,7 +28,6 @@ import OnboardingScreen from "@/screens/stack/OnboardingScreen";
 import PaymentFormCurrencySelectBottomSheet from "@/screens/stack/PaymentFormCurrencySelectBottomSheet";
 import PaymentFormDatePickerBottomSheet from "@/screens/stack/PaymentFormDatePickerBottomSheet";
 import PaymentFormScreen from "@/screens/stack/PaymentFormScreen";
-import PaymentRecordFilterScreen from "@/screens/stack/PaymentRecordFilterScreen";
 import UserDeleteBottomSheet from "@/screens/stack/UserDeleteBottomSheet";
 import UserListScreen from "@/screens/stack/UserListScreen";
 import WelcomeScreen from "@/screens/stack/WelcomeScreen";
@@ -159,8 +159,8 @@ const StackNavigator = memo(() => {
           name="UserDeleteBottomSheet"
         />
         <Stack.Screen
-          component={PaymentRecordFilterScreen}
-          name="PaymentRecordFilter"
+          component={CurrencyCodeSelectBottomSheet}
+          name="CurrencyCodeSelect"
         />
         <Stack.Screen
           component={GroupDeletePaymentRecordBottomSheet}

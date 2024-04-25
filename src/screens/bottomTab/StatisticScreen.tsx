@@ -1,12 +1,11 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Text, makeStyles, useTheme } from "@rneui/themed";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
-import { View, ScrollView } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { PieChart, pieDataItem } from "react-native-gifted-charts";
+import { PieChart } from "react-native-gifted-charts";
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useSelector } from "react-redux";
 
 import Config from "@/Config";
 import { HStack, VStack } from "@/components/common/Stack";
@@ -16,6 +15,7 @@ import { userSelector } from "@/store/reducers/users";
 import { BillCategoryColor, BillCategoryEnum } from "@/types/BillCategories";
 import { CurrencyCode } from "@/types/Currency";
 import { DataDisplayTarget } from "@/types/DataDisplayTarget";
+import { IBottomTabScreenProps } from "@/types/navigation";
 import {
   formatAmount,
   getAvailableCurrencyCodes,
@@ -24,30 +24,9 @@ import {
   roundAmountToDecimal,
 } from "@/utils/payment";
 
-const data: pieDataItem[] = [
-  {
-    value: 47,
-    color: "#009FFF",
-    gradientCenterColor: "#006DFF",
-  },
-  {
-    value: 40,
-    color: "#93FCF8",
-    gradientCenterColor: "#3BE9DE",
-  },
-  {
-    value: 16,
-    color: "#BDB2FA",
-    gradientCenterColor: "#8F80F3",
-  },
-  {
-    value: 3,
-    color: "#FFA5BA",
-    gradientCenterColor: "#FF7F97",
-  },
-];
-
-const StatisticScreen = () => {
+const StatisticScreen = ({
+  navigation,
+}: IBottomTabScreenProps<"Statistic">) => {
   const styles = useStyles();
   const { theme } = useTheme();
   const { t } = useTranslation();
@@ -67,8 +46,22 @@ const StatisticScreen = () => {
   const availableCurrencyCodes = getAvailableCurrencyCodes(
     currentGroup?.paymentRecords ?? [],
   );
+  const hasMoreThanOneCurrency = useMemo(() => {
+    if (!currentGroup) return false;
 
-  const { amountText, categoryExpense, pieData, totalAmount } = useMemo(() => {
+    return (
+      new Set(currentGroup.paymentRecords.map((item) => item.currencyCode))
+        .size > 1
+    );
+  }, [currentGroup]);
+
+  const {
+    amountText,
+    categoryExpense,
+    pieData,
+    totalAmount,
+    totalExpenseByCurrency,
+  } = useMemo(() => {
     const totalCategoryExpenseByCurrencyCode =
       getTotalCategoryExpenseByCurrencyCode(currentGroup?.paymentRecords ?? []);
 
@@ -87,29 +80,43 @@ const StatisticScreen = () => {
       ? categoryExpenseByCurrency[selectedCurrency]
       : ({} as Record<BillCategoryEnum, number>);
 
-    const pieData = Object.entries(categoryExpense).map(([category, value]) => {
-      return {
-        value,
-        color: BillCategoryColor[category as BillCategoryEnum],
-        gradientCenterColor: BillCategoryColor[category as BillCategoryEnum],
-      };
-    });
+    const pieData = Object.entries(categoryExpense)
+      .sort(([category1, value1], [category2, value2]) => value2 - value1)
+      .map(([category, value]) => {
+        return {
+          value,
+          color: BillCategoryColor[category as BillCategoryEnum],
+          gradientCenterColor: BillCategoryColor[category as BillCategoryEnum],
+        };
+      });
     const totalAmount = Object.values(categoryExpense).reduce(
       (acc, curr) => acc + curr,
       0,
     );
+    const totalExpenseByCurrency = Object.entries(categoryExpenseByCurrency)
+      .map(([code, categoryExpense]) => {
+        const amount = Object.values(categoryExpense).reduce(
+          (acc, curr) => acc + curr,
+          0,
+        );
+        return { code, amount };
+      })
+      .reduce(
+        (acc, { amount, code }) => ({
+          ...acc,
+          [code]: amount,
+        }),
+        {} as Record<CurrencyCode, number>,
+      );
 
     return {
       pieData,
       categoryExpense,
       totalAmount,
-      amountText: Object.entries(categoryExpenseByCurrency)
-        .map(([code, categoryExpense]) => {
-          const amount = Object.values(categoryExpense).reduce(
-            (acc, curr) => acc + curr,
-            0,
-          );
-          return formatAmount(amount, code as CurrencyCode);
+      totalExpenseByCurrency,
+      amountText: Object.entries(totalExpenseByCurrency)
+        .map(([code, totalExpense]) => {
+          return formatAmount(totalExpense, code as CurrencyCode);
         })
         .join(" / "),
     };
@@ -126,24 +133,48 @@ const StatisticScreen = () => {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.contentContainer}>
-        <HStack justifyContent="flex-start">
-          <Text h1>{t("StatisticScreen:statistics")}</Text>
-          <TouchableOpacity
-            style={styles.toggleTarget}
-            onPress={() =>
-              setTarget(
-                target === DataDisplayTarget.Group
-                  ? DataDisplayTarget.You
-                  : DataDisplayTarget.Group,
-              )
-            }
-          >
-            <Text style={styles.toggleTargetText}>
-              {target === DataDisplayTarget.Group
-                ? t("Common:groupLabel")
-                : t("Common:profileUserLabel")}
-            </Text>
-          </TouchableOpacity>
+        <HStack>
+          <HStack justifyContent="flex-start">
+            <Text h1>{t("StatisticScreen:statistics")}</Text>
+            <TouchableOpacity
+              style={styles.toggleTarget}
+              onPress={() =>
+                setTarget(
+                  target === DataDisplayTarget.Group
+                    ? DataDisplayTarget.You
+                    : DataDisplayTarget.Group,
+                )
+              }
+            >
+              <Text style={styles.toggleTargetText}>
+                {target === DataDisplayTarget.Group
+                  ? t("Common:groupLabel")
+                  : t("Common:profileUserLabel")}
+              </Text>
+            </TouchableOpacity>
+          </HStack>
+
+          {hasMoreThanOneCurrency && (
+            <TouchableOpacity
+              hitSlop={8}
+              onPress={() =>
+                navigation.navigate("CurrencyCodeSelect", {
+                  setSelectedCurrency,
+                  selectedCurrency,
+                  isCurrencyNullable: false,
+                })
+              }
+            >
+              <HStack gap={4}>
+                <Text style={styles.selectedCurrency}>{selectedCurrency}</Text>
+                <MaterialCommunityIcons
+                  name="filter"
+                  size={24}
+                  color={theme.colors.primary}
+                />
+              </HStack>
+            </TouchableOpacity>
+          )}
         </HStack>
         <Trans
           i18nKey="StatisticScreen:subtitle" // optional -> fallbacks to defaults if not provided
@@ -171,8 +202,14 @@ const StatisticScreen = () => {
               innerRadius={80}
               innerCircleColor={theme.colors.background}
               centerLabelComponent={() => {
+                if (!selectedCurrency) return null;
                 return (
-                  <Text style={{ fontSize: 32, color: "white" }}>47%</Text>
+                  <Text h4 style={{ textAlign: "center" }}>
+                    {formatAmount(
+                      totalExpenseByCurrency[selectedCurrency],
+                      selectedCurrency,
+                    )}
+                  </Text>
                 );
               }}
             />
@@ -190,28 +227,30 @@ const StatisticScreen = () => {
                   index === Object.keys(BillCategoryEnum).length - 1;
                 return (
                   <Fragment key={key}>
-                    <HStack style={styles.categoryItem}>
-                      <HStack gap={8}>
-                        <View
-                          style={[
-                            styles.categoryDot,
-                            { backgroundColor: BillCategoryColor[key] },
-                          ]}
-                        />
-                        <Text>{t(`BillCategoryEnum:${key}`)}</Text>
+                    <Pressable>
+                      <HStack style={styles.categoryItem}>
+                        <HStack gap={8}>
+                          <View
+                            style={[
+                              styles.categoryDot,
+                              { backgroundColor: BillCategoryColor[key] },
+                            ]}
+                          />
+                          <Text>{t(`BillCategoryEnum:${key}`)}</Text>
+                        </HStack>
+                        <HStack gap={8}>
+                          <Text style={styles.amount}>
+                            {formatAmount(
+                              categoryExpense[key] ?? 0,
+                              selectedCurrency,
+                            )}
+                          </Text>
+                          <Text style={styles.percentage}>
+                            {`${roundAmountToDecimal(((categoryExpense[key] ?? 0) * 100) / totalAmount, 1)}%`}
+                          </Text>
+                        </HStack>
                       </HStack>
-                      <HStack gap={8}>
-                        <Text style={styles.amount}>
-                          {formatAmount(
-                            categoryExpense[key] ?? 0,
-                            selectedCurrency,
-                          )}
-                        </Text>
-                        <Text style={styles.percentage}>
-                          {`${roundAmountToDecimal(((categoryExpense[key] ?? 0) * 100) / totalAmount, 1)}%`}
-                        </Text>
-                      </HStack>
-                    </HStack>
+                    </Pressable>
 
                     {isLast ? null : <View style={styles.divider} />}
                   </Fragment>
@@ -288,6 +327,10 @@ const useStyles = makeStyles((theme) => ({
   },
   toggleTargetText: {
     color: theme.colors.white,
+  },
+  selectedCurrency: {
+    color: theme.colors.primary,
+    fontWeight: "bold",
   },
 }));
 

@@ -134,7 +134,7 @@
     "paid-for": "Заплачено за?",
     "who-paid": "Кто заплатил?"
   },
-  "PaymentRecordFilterScreen": {
+  "CurrencyCodeSelectScreen": {
     "all": "Все",
     "currency": "Валюта"
   },

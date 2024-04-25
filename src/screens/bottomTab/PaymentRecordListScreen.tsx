@@ -169,9 +169,10 @@ const PaymentRecordListScreen = ({
                   <TouchableOpacity
                     hitSlop={8}
                     onPress={() =>
-                      navigation.navigate("PaymentRecordFilter", {
+                      navigation.navigate("CurrencyCodeSelect", {
                         setSelectedCurrency,
                         selectedCurrency,
+                        isCurrencyNullable: true,
                       })
                     }
                   >

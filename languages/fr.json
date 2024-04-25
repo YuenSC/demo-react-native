@@ -134,7 +134,7 @@
     "paid-for": "Payé pour?",
     "who-paid": "Qui a payé ?"
   },
-  "PaymentRecordFilterScreen": {
+  "CurrencyCodeSelectScreen": {
     "all": "Tous",
     "currency": "Devise"
   },

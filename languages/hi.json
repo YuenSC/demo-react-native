@@ -134,7 +134,7 @@
     "paid-for": "के लिए भुगतान किया?",
     "who-paid": "किसने भुगतान किया?"
   },
-  "PaymentRecordFilterScreen": {
+  "CurrencyCodeSelectScreen": {
     "all": "सभी",
     "currency": "मुद्रा"
   },

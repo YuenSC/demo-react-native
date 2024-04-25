@@ -134,7 +134,7 @@
     "paid-for": "¿Pagado?",
     "who-paid": "¿Quién pagó?"
   },
-  "PaymentRecordFilterScreen": {
+  "CurrencyCodeSelectScreen": {
     "all": "Todo",
     "currency": "Divisa"
   },

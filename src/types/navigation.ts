@@ -61,11 +61,12 @@ export type IStackParamList = {
     shouldEditUserList?: boolean;
   };
 
-  PaymentRecordFilter: {
+  CurrencyCodeSelect: {
     selectedCurrency: CurrencyCode | null;
     setSelectedCurrency: React.Dispatch<
       React.SetStateAction<CurrencyCode | null>
     >;
+    isCurrencyNullable: boolean;
   };
   PaymentFormDatePickerBottomSheet: {
     date: string;
