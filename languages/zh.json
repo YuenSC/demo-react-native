@@ -43,6 +43,10 @@
     "profileUserLabel": "（你）",
     "save": "节省"
   },
+  "CurrencyCodeSelectScreen": {
+    "all": "全部",
+    "currency": "货币"
+  },
   "DrawerContent": {
     "add-group": "添加组",
     "groups": "团体",
@@ -104,7 +108,7 @@
     "Upgrade": "升级到专业版",
     "all-members": "所有会员",
     "app-related": "应用程序相关",
-    "category": "类别",
+    "category": "类别配置",
     "contact-us": "联系我们",
     "delete-group": "删除组",
     "greeting": "嗨，{{name}}！\n希望您度过愉快的一天！",
@@ -133,10 +137,6 @@
     "bill": "账单",
     "paid-for": "付费了吗？",
     "who-paid": "谁付钱？"
-  },
-  "CurrencyCodeSelectScreen": {
-    "all": "全部",
-    "currency": "货币"
   },
   "PaymentRecordListScreen": {
     "no-payment-records-found": "没有找到付款记录",

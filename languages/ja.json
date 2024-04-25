@@ -43,6 +43,10 @@
     "profileUserLabel": "（あなた）",
     "save": "保存"
   },
+  "CurrencyCodeSelectScreen": {
+    "all": "全て",
+    "currency": "通貨"
+  },
   "DrawerContent": {
     "add-group": "グループの追加",
     "groups": "グループ",
@@ -104,7 +108,7 @@
     "Upgrade": "プロ仕様にアップグレードする",
     "all-members": "全員",
     "app-related": "アプリ関連",
-    "category": "カテゴリー",
+    "category": "カテゴリ構成",
     "contact-us": "お問い合わせ",
     "delete-group": "グループの削除",
     "greeting": "こんにちは、{{name}}!\n素晴らしい一日をお過ごしください。",
@@ -133,10 +137,6 @@
     "bill": "請求書",
     "paid-for": "誰のために支払われたのか？",
     "who-paid": "誰が払ったの？"
-  },
-  "CurrencyCodeSelectScreen": {
-    "all": "全て",
-    "currency": "通貨"
   },
   "PaymentRecordListScreen": {
     "no-payment-records-found": "支払い記録が見つかりません",

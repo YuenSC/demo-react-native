@@ -43,6 +43,10 @@
     "profileUserLabel": "（你）",
     "save": "保存"
   },
+  "CurrencyCodeSelectScreen": {
+    "all": "全部",
+    "currency": "貨幣"
+  },
   "DrawerContent": {
     "add-group": "新增群組",
     "groups": "團體",
@@ -104,7 +108,7 @@
     "Upgrade": "升級到專業版",
     "all-members": "所有會員",
     "app-related": "應用程式相關",
-    "category": "類別",
+    "category": "類別配置",
     "contact-us": "聯絡我們",
     "delete-group": "刪除群組",
     "greeting": "嗨，{{name}}！\n希望您度過愉快的一天！",
@@ -133,10 +137,6 @@
     "bill": "帳單",
     "paid-for": "為誰付費？",
     "who-paid": "誰付錢？"
-  },
-  "CurrencyCodeSelectScreen": {
-    "all": "全部",
-    "currency": "貨幣"
   },
   "PaymentRecordListScreen": {
     "no-payment-records-found": "沒有找到付款記錄",

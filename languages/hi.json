@@ -43,6 +43,10 @@
     "profileUserLabel": "(आप)",
     "save": "बचाना"
   },
+  "CurrencyCodeSelectScreen": {
+    "all": "सभी",
+    "currency": "मुद्रा"
+  },
   "DrawerContent": {
     "add-group": "समूह जोड़ें",
     "groups": "समूह",
@@ -104,7 +108,7 @@
     "Upgrade": "प्रो में अपग्रेड",
     "all-members": "सभी सदस्य",
     "app-related": "ऐप संबंधित",
-    "category": "वर्ग",
+    "category": "श्रेणी विन्यास",
     "contact-us": "संपर्क करें",
     "delete-group": "समूह हटाएँ",
     "greeting": "नमस्ते, {{name}}! \nआशा है आप का दिन बढ़िया गुज़र रहा होगा!",
@@ -133,10 +137,6 @@
     "bill": "बिल",
     "paid-for": "के लिए भुगतान किया?",
     "who-paid": "किसने भुगतान किया?"
-  },
-  "CurrencyCodeSelectScreen": {
-    "all": "सभी",
-    "currency": "मुद्रा"
   },
   "PaymentRecordListScreen": {
     "no-payment-records-found": "कोई भुगतान रिकॉर्ड नहीं मिला",

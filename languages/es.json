@@ -43,6 +43,10 @@
     "profileUserLabel": "(Tú)",
     "save": "Ahorrar"
   },
+  "CurrencyCodeSelectScreen": {
+    "all": "Todo",
+    "currency": "Divisa"
+  },
   "DrawerContent": {
     "add-group": "Añadir grupo",
     "groups": "Grupos",
@@ -104,7 +108,7 @@
     "Upgrade": "Actualízate a Pro",
     "all-members": "Todos los miembros",
     "app-related": "Relacionado con la aplicación",
-    "category": "Categoría",
+    "category": "Configuración de categoría",
     "contact-us": "Contáctenos",
     "delete-group": "Eliminar grupo",
     "greeting": "{{name}} Hola! \n¡Espero que estés teniendo un buen dia!",
@@ -133,10 +137,6 @@
     "bill": "Factura",
     "paid-for": "¿Pagado?",
     "who-paid": "¿Quién pagó?"
-  },
-  "CurrencyCodeSelectScreen": {
-    "all": "Todo",
-    "currency": "Divisa"
   },
   "PaymentRecordListScreen": {
     "no-payment-records-found": "No se encontraron registros de pago",

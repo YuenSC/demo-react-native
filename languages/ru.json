@@ -43,6 +43,10 @@
     "profileUserLabel": "(Ты)",
     "save": "Сохранять"
   },
+  "CurrencyCodeSelectScreen": {
+    "all": "Все",
+    "currency": "Валюта"
+  },
   "DrawerContent": {
     "add-group": "Добавить группу",
     "groups": "Группы",
@@ -104,7 +108,7 @@
     "Upgrade": "Обновите до Pro",
     "all-members": "Все участники",
     "app-related": "Связанное с приложением",
-    "category": "Категория",
+    "category": "Категория Конфигурация",
     "contact-us": "Связаться с нами",
     "delete-group": "Удалить группу",
     "greeting": "Привет, {{name}}! \nНадеюсь, у вас отличный день!",
@@ -133,10 +137,6 @@
     "bill": "Счет",
     "paid-for": "Заплачено за?",
     "who-paid": "Кто заплатил?"
-  },
-  "CurrencyCodeSelectScreen": {
-    "all": "Все",
-    "currency": "Валюта"
   },
   "PaymentRecordListScreen": {
     "no-payment-records-found": "Записи о платежах не найдены",

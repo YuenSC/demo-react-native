@@ -43,6 +43,10 @@
     "profileUserLabel": "(You)",
     "save": "Save"
   },
+  "CurrencyCodeSelectScreen": {
+    "all": "All",
+    "currency": "Currency"
+  },
   "DrawerContent": {
     "add-group": "Add Group",
     "groups": "Groups",
@@ -104,7 +108,7 @@
     "Upgrade": "Upgrade to Pro",
     "all-members": "All Members",
     "app-related": "App Related",
-    "category": "Category",
+    "category": "Category Configuration",
     "contact-us": "Contact Us",
     "delete-group": "Delete Group",
     "greeting": "Hi, {{name}}! Hope you are having a great day!",
@@ -133,10 +137,6 @@
     "bill": "Bill",
     "paid-for": "Paid For?",
     "who-paid": "Who Paid?"
-  },
-  "CurrencyCodeSelectScreen": {
-    "all": "All",
-    "currency": "Currency"
   },
   "PaymentRecordListScreen": {
     "no-payment-records-found": "No payment records found",
