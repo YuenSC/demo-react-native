@@ -149,6 +149,8 @@
     "users": "使用者"
   },
   "StatisticScreen": {
+    "add-payment-record": "新增付款記錄",
+    "emptyRecordWarning": "您還沒有付款記錄。\n從建立新的付款記錄開始！",
     "statistics": "統計數據",
     "subtitle": "<Text>{{name}} 總共花了 <Highlight>{{amount}}</Highlight>。\n這是你的費用分佈</Text>",
     "you": "你"

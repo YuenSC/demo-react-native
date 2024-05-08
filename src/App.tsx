@@ -35,8 +35,6 @@ const useAds = () => {
 const App = () => {
   useAds();
 
-  console.log("Updates.channel", process.env);
-
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

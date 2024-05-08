@@ -1,11 +1,13 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Text, makeStyles, useTheme } from "@rneui/themed";
+import { Button, Text, makeStyles, useTheme } from "@rneui/themed";
+import AnimatedLottieView from "lottie-react-native";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { Pressable, ScrollView, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { PieChart } from "react-native-gifted-charts";
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import Config from "@/Config";
 import { HStack, VStack } from "@/components/common/Stack";
@@ -128,7 +130,29 @@ const StatisticScreen = ({
     }
   }, [availableCurrencyCodes, selectedCurrency]);
 
-  if (!selectedCurrency) return null;
+  if (!selectedCurrency)
+    return (
+      <SafeAreaView style={styles.container}>
+        <VStack style={styles.emptyContainer} justifyContent="center">
+          <AnimatedLottieView
+            autoPlay
+            style={styles.lottie}
+            source={require("@/assets/lottie/empty.json")}
+          />
+          <Text style={styles.emptyText}>
+            {t("StatisticScreen:emptyRecordWarning")}
+          </Text>
+          {currentGroup?.id && (
+            <Button
+              title={t("StatisticScreen:add-payment-record")}
+              onPress={() =>
+                navigation.navigate("AddPayment", { groupId: currentGroup?.id })
+              }
+            />
+          )}
+        </VStack>
+      </SafeAreaView>
+    );
 
   return (
     <View style={styles.container}>
@@ -272,6 +296,10 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     backgroundColor: theme.colors.background,
   },
+  emptyContainer: {
+    flex: 1,
+    marginHorizontal: 16,
+  },
   contentContainer: {
     padding: 16,
   },
@@ -331,6 +359,19 @@ const useStyles = makeStyles((theme) => ({
   selectedCurrency: {
     color: theme.colors.primary,
     fontWeight: "bold",
+  },
+
+  lottie: {
+    height: 300,
+    aspectRatio: 1,
+    alignSelf: "center",
+    marginBottom: 32,
+  },
+  emptyText: {
+    textAlign: "center",
+    marginBottom: 16,
+    fontSize: 16,
+    fontWeight: "500",
   },
 }));
 

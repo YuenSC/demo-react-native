@@ -149,6 +149,8 @@
     "users": "उपयोगकर्ताओं"
   },
   "StatisticScreen": {
+    "add-payment-record": "भुगतान रिकॉर्ड जोड़ें",
+    "emptyRecordWarning": "आपके पास अभी तक कोई भुगतान रिकॉर्ड नहीं है. \nएक नया भुगतान रिकॉर्ड बनाकर प्रारंभ करें!",
     "statistics": "आंकड़े",
     "subtitle": "<Text>{{name}} ने कुल मिलाकर <Highlight>{{amount}}</Highlight> खर्च किया है। \nयहां आपके खर्चों का वितरण है</Text>",
     "you": "आप"

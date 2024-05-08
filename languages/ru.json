@@ -149,6 +149,8 @@
     "users": "Пользователи"
   },
   "StatisticScreen": {
+    "add-payment-record": "Добавить запись о платеже",
+    "emptyRecordWarning": "У вас пока нет записей о платежах. \nНачните с создания новой записи платежа!",
     "statistics": "Статистика",
     "subtitle": "<Text>Пользователь {{name}} потратил в общей сложности <Highlight>{{amount}}</Highlight>. \nВот распределение ваших расходов</Text>",
     "you": "Ты"

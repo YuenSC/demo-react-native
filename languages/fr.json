@@ -149,6 +149,8 @@
     "users": "Utilisateurs"
   },
   "StatisticScreen": {
+    "add-payment-record": "Ajouter un enregistrement de paiement",
+    "emptyRecordWarning": "Vous n'avez pas encore de relevé de paiement. \nCommencez par créer un nouvel enregistrement de paiement !",
     "statistics": "Statistiques",
     "subtitle": "<Text>{{name}} ont dépensé <Highlight>{{amount}}</Highlight> au total. \nVoici la répartition de vos dépenses</Text>",
     "you": "Toi"

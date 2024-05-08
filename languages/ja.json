@@ -149,6 +149,8 @@
     "users": "ユーザー"
   },
   "StatisticScreen": {
+    "add-payment-record": "支払い記録を追加する",
+    "emptyRecordWarning": "まだ支払い記録がありません。\nまずは新しい支払い記録を作成してください。",
     "statistics": "統計",
     "subtitle": "<Text>{{name}} は合計 <Highlight>{{amount}}</Highlight> を使いました。\n経費の配分は次のとおりです</Text>",
     "you": "あなた"

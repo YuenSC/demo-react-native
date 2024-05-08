@@ -149,6 +149,8 @@
     "users": "Users"
   },
   "StatisticScreen": {
+    "add-payment-record": "Add payment record",
+    "emptyRecordWarning": "You have no payment records yet. Start by creating a new payment record!",
     "statistics": "Statistics",
     "subtitle": "<Text>{{name}} have spent <Highlight>{{amount}}</Highlight> in total. Here is the distribution of your expenses</Text>",
     "you": "You"

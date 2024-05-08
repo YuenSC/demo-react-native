@@ -149,6 +149,8 @@
     "users": "Usuarios"
   },
   "StatisticScreen": {
+    "add-payment-record": "Agregar registro de pago",
+    "emptyRecordWarning": "Aún no tienes registros de pago. \n¡Empiece por crear un nuevo registro de pago!",
     "statistics": "Estadísticas",
     "subtitle": "<Text>{{name}} ha gastado <Highlight>{{amount}}</Highlight> en total. \nAquí está la distribución de tus gastos</Text>",
     "you": "Tú"

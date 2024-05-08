@@ -3,11 +3,12 @@ import { TestIds } from "react-native-google-mobile-ads";
 
 import { version } from "../package.json";
 
-const isProduction = process.env.NODE_ENV === "prod";
+const isProduction = process.env.EXPO_PUBLIC_ENV === "prod";
 
 const Config = {
-  apiUrl: process.env.EXPO_PUBLIC_API_URL,
-  isDev: process.env.EXPO_PUBLIC_ENV === "dev",
+  apiUrl: process.env.EXPO_PUBLIC_API_URL || "",
+  env: process.env.EXPO_PUBLIC_ENV || "",
+  isDev: !isProduction,
   version,
   adBannerUnitId: isProduction
     ? Platform.select({
