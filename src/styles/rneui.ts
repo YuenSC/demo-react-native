@@ -22,7 +22,7 @@ const theme = createTheme({
   components: {
     Button,
     Input: () => ({
-      keyboardAppearance: "light",
+      keyboardAppearance: "dark",
     }),
   },
 });

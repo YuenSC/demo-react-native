@@ -23,8 +23,13 @@
       }
     },
     "locales": {
-      "ja": "./languages/ja.json",
       "en": "./languages/en.json",
+      "es": "./languages/es.json",
+      "fr": "./languages/fr.json",
+      "hi": "./languages/hi.json",
+      "ja": "./languages/ja.json",
+      "pt": "./languages/pt.json",
+      "ru": "./languages/ru.json",
       "zh": "./languages/zh-HK.json"
     },
     "android": {

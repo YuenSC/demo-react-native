@@ -1,4 +1,5 @@
 import { Button, Dialog, makeStyles, Text } from "@rneui/themed";
+import * as Updates from "expo-updates";
 import AnimatedLottieView from "lottie-react-native";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -40,6 +41,7 @@ const WelcomeScreen = ({ navigation }: IStackScreenProps<"Welcome">) => {
         onBackdropPress={() => setIsDebugMode(false)}
       >
         <Text>{JSON.stringify(Config, null, 2)}</Text>
+        <Text>Updates: {Updates.channel}</Text>
       </Dialog>
     </SafeAreaView>
   );

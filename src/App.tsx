@@ -1,17 +1,15 @@
 import { ThemeProvider } from "@rneui/themed";
 import { registerRootComponent } from "expo";
 import { StatusBar } from "expo-status-bar";
-import "react-native-gesture-handler";
 import { requestTrackingPermissionsAsync } from "expo-tracking-transparency";
-import * as Updates from "expo-updates";
 import { useEffect } from "react";
+import "react-native-gesture-handler";
 import mobileAds from "react-native-google-mobile-ads";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import "./i18n";
 
-import Config from "./Config";
 import Navigation from "./navigation/Navigation";
 import { persistor, store } from "./store";
 import theme from "./styles/rneui";

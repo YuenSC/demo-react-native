@@ -30,7 +30,7 @@
     "payment": "Payment",
     "stats": "Stats"
   },
-  "CFBundleDisplayName": "GroupExpense",
+  "CFBundleDisplayName": "Group Expense",
   "Common": {
     "NA": "N/A",
     "back": "Back",
