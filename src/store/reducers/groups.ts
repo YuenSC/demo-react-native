@@ -156,11 +156,30 @@ export const {
 
 export default groupsSlice.reducer;
 
-export const currentGroupSelector = (state: RootState) =>
-  state.groups.groups.find((group) => group.id === state.groups.currentGroupId);
+export const currentGroupSelector = createSelector(
+  [
+    (state: RootState) => state.groups.groups,
+    (state: RootState) => state.groups.currentGroupId,
+  ],
+  (groups, currentGroupId) =>
+    groups.find((group) => group.id === currentGroupId),
+  {
+    memoize: weakMapMemoize,
+    argsMemoize: weakMapMemoize,
+  },
+);
 
-export const groupSelector = (state: RootState, groupId: string) =>
-  state.groups.groups.find((group) => group.id === groupId);
+export const groupSelector = createSelector(
+  [
+    (state: RootState) => state.groups.groups,
+    (state: RootState, groupId: string) => groupId,
+  ],
+  (groups, groupId) => groups.find((group) => group.id === groupId),
+  {
+    memoize: weakMapMemoize,
+    argsMemoize: weakMapMemoize,
+  },
+);
 
 export const relatedPaymentsSelector = createSelector(
   [
@@ -193,11 +212,18 @@ export const relatedPaymentsSelector = createSelector(
   },
 );
 
-export const groupNameByIdSelector = (state: RootState) =>
-  state.groups.groups.reduce(
-    (acc, group) => {
-      acc[group.id] = group.name;
-      return acc;
-    },
-    {} as Record<string, string>,
-  );
+export const groupNameByIdSelector = createSelector(
+  [(state: RootState) => state.groups.groups],
+  (groups) =>
+    groups.reduce(
+      (acc, group) => {
+        acc[group.id] = group.name;
+        return acc;
+      },
+      {} as Record<string, string>,
+    ),
+  {
+    memoize: weakMapMemoize,
+    argsMemoize: weakMapMemoize,
+  },
+);

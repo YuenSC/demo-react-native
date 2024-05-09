@@ -92,6 +92,14 @@ export const groupUsersSelector = createSelector(
   },
 );
 
-export const userSelector = (state: RootState, userId?: string) => {
-  return state.users.users.find((user) => user.id === userId);
-};
+export const userSelector = createSelector(
+  [
+    (state: RootState) => state.users.users,
+    (_: RootState, userId?: string) => userId,
+  ],
+  (users, userId) => users.find((user) => user.id === userId),
+  {
+    memoize: weakMapMemoize,
+    argsMemoize: weakMapMemoize,
+  },
+);

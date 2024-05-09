@@ -95,7 +95,7 @@ const GroupExistingUserSelectBottomSheet = ({
                 </HStack>
                 <Text>
                   Related Group :{" "}
-                  {item.groupIds.map((id) => groupNameById[id]).join(",") ||
+                  {item.groupIds?.map((id) => groupNameById[id]).join(",") ||
                     t("Common:NA")}
                 </Text>
               </VStack>
