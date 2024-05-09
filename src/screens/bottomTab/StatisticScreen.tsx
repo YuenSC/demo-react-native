@@ -7,7 +7,6 @@ import { Pressable, ScrollView, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { PieChart } from "react-native-gifted-charts";
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 import Config from "@/Config";
 import { HStack, VStack } from "@/components/common/Stack";
@@ -79,7 +78,8 @@ const StatisticScreen = ({
         : userTotalCategoryExpenseByCurrencyCode;
 
     const categoryExpense = selectedCurrency
-      ? categoryExpenseByCurrency[selectedCurrency]
+      ? categoryExpenseByCurrency[selectedCurrency] ??
+        ({} as Record<BillCategoryEnum, number>)
       : ({} as Record<BillCategoryEnum, number>);
 
     const pieData = Object.entries(categoryExpense)
@@ -132,26 +132,25 @@ const StatisticScreen = ({
 
   if (!selectedCurrency)
     return (
-      <SafeAreaView style={styles.container}>
-        <VStack style={styles.emptyContainer} justifyContent="center">
-          <AnimatedLottieView
-            autoPlay
-            style={styles.lottie}
-            source={require("@/assets/lottie/empty.json")}
+      <View style={[styles.container, styles.contentContainer]}>
+        <Text h1>{t("StatisticScreen:statistics")}</Text>
+        <AnimatedLottieView
+          autoPlay
+          style={styles.lottie}
+          source={require("@/assets/lottie/empty.json")}
+        />
+        <Text style={styles.emptyText}>
+          {t("StatisticScreen:emptyRecordWarning")}
+        </Text>
+        {currentGroup?.id && (
+          <Button
+            title={t("StatisticScreen:add-payment-record")}
+            onPress={() =>
+              navigation.navigate("AddPayment", { groupId: currentGroup?.id })
+            }
           />
-          <Text style={styles.emptyText}>
-            {t("StatisticScreen:emptyRecordWarning")}
-          </Text>
-          {currentGroup?.id && (
-            <Button
-              title={t("StatisticScreen:add-payment-record")}
-              onPress={() =>
-                navigation.navigate("AddPayment", { groupId: currentGroup?.id })
-              }
-            />
-          )}
-        </VStack>
-      </SafeAreaView>
+        )}
+      </View>
     );
 
   return (
@@ -295,10 +294,6 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-  },
-  emptyContainer: {
-    flex: 1,
-    marginHorizontal: 16,
   },
   contentContainer: {
     padding: 16,
