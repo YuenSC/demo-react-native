@@ -3,18 +3,13 @@ import { Text, useTheme } from "@rneui/themed";
 import { memo, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, View } from "react-native";
-import {
-  AdEventType,
-  AppOpenAd,
-  InterstitialAd,
-} from "react-native-google-mobile-ads";
+import { AdEventType, InterstitialAd } from "react-native-google-mobile-ads";
 
 import DrawerNavigator from "./DrawerNavigator";
 
 import Config from "@/Config";
 import Device from "@/constants/Device";
 import { useAppSelector } from "@/hooks/reduxHook";
-import SampleScreen from "@/screens/SampleScreen";
 import CurrencyCodeSelectBottomSheet from "@/screens/stack/CurrencyCodeSelectBottomSheet";
 import EditMemberScreen from "@/screens/stack/EditMemberScreen";
 import GroupCreateSuccessBottomSheet from "@/screens/stack/GroupCreateSuccessBottomSheet";

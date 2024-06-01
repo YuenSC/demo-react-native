@@ -1,6 +1,7 @@
 import { makeStyles } from "@rneui/themed";
-import { SafeAreaView } from "react-native-safe-area-context";
 import "react-native-get-random-values";
+import { useTranslation } from "react-i18next";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { v4 as uuidv4 } from "uuid";
 
 import Config from "@/Config";
@@ -14,8 +15,6 @@ import { addUser, updateUser } from "@/store/reducers/users";
 import { AvatarColor } from "@/types/AvatarColor";
 import { User } from "@/types/User";
 import { IStackScreenProps } from "@/types/navigation";
-
-import { useTranslation } from "react-i18next";
 
 const OnboardingScreen = ({
   navigation,
