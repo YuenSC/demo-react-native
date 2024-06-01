@@ -2,6 +2,7 @@
   "expo": {
     "name": "demo-react-native",
     "slug": "demo-react-native",
+    "scheme": "demo-react-native",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -60,7 +61,8 @@
         {
           "userTrackingPermission": "This identifier will be used to deliver personalized ads to you."
         }
-      ]
+      ],
+      "expo-router"
     ],
     "extra": {
       "eas": {
