@@ -9,7 +9,7 @@
       "channel": "development",
       "env": {
         "EXPO_PUBLIC_ENV": "dev",
-        "EXPO_PUBLIC_API_URL": "https://api.production.com"
+        "EXPO_PUBLIC_API_URL": "https://group-expense-628faa35624f.herokuapp.com/"
       },
       "android": {
         "image": "latest"
@@ -25,7 +25,7 @@
       "channel": "development",
       "env": {
         "EXPO_PUBLIC_ENV": "dev",
-        "EXPO_PUBLIC_API_URL": "https://api.production.com"
+        "EXPO_PUBLIC_API_URL": "https://group-expense-628faa35624f.herokuapp.com/"
       },
       "android": {
         "image": "latest"
@@ -39,7 +39,7 @@
       "channel": "preview",
       "env": {
         "EXPO_PUBLIC_ENV": "preview",
-        "EXPO_PUBLIC_API_URL": "https://api.production.com"
+        "EXPO_PUBLIC_API_URL": "https://group-expense-628faa35624f.herokuapp.com/"
       },
       "android": {
         "image": "latest"
@@ -52,7 +52,7 @@
       "channel": "production",
       "env": {
         "EXPO_PUBLIC_ENV": "prod",
-        "EXPO_PUBLIC_API_URL": "https://api.production.com"
+        "EXPO_PUBLIC_API_URL": "https://group-expense-628faa35624f.herokuapp.com/"
       },
       "android": {
         "image": "latest"
