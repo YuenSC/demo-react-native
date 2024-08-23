@@ -9,14 +9,15 @@
       "channel": "development",
       "env": {
         "EXPO_PUBLIC_ENV": "dev",
-        "EXPO_PUBLIC_API_URL": "https://api.production.com"
+        "EXPO_PUBLIC_API_URL": "https://group-expense-628faa35624f.herokuapp.com/"
       },
       "android": {
         "image": "latest"
       },
       "ios": {
         "simulator": true,
-        "image": "latest"
+        "image": "latest",
+        "enterpriseProvisioning": "universal"
       }
     },
     "development": {
@@ -25,13 +26,14 @@
       "channel": "development",
       "env": {
         "EXPO_PUBLIC_ENV": "dev",
-        "EXPO_PUBLIC_API_URL": "https://api.production.com"
+        "EXPO_PUBLIC_API_URL": "https://group-expense-628faa35624f.herokuapp.com/"
       },
       "android": {
         "image": "latest"
       },
       "ios": {
-        "image": "latest"
+        "image": "latest",
+        "enterpriseProvisioning": "universal"
       }
     },
     "preview": {
@@ -39,26 +41,28 @@
       "channel": "preview",
       "env": {
         "EXPO_PUBLIC_ENV": "preview",
-        "EXPO_PUBLIC_API_URL": "https://api.production.com"
+        "EXPO_PUBLIC_API_URL": "https://group-expense-628faa35624f.herokuapp.com/"
       },
       "android": {
         "image": "latest"
       },
       "ios": {
-        "image": "latest"
+        "image": "latest",
+        "enterpriseProvisioning": "universal"
       }
     },
     "production": {
       "channel": "production",
       "env": {
         "EXPO_PUBLIC_ENV": "prod",
-        "EXPO_PUBLIC_API_URL": "https://api.production.com"
+        "EXPO_PUBLIC_API_URL": "https://group-expense-628faa35624f.herokuapp.com/"
       },
       "android": {
         "image": "latest"
       },
       "ios": {
-        "image": "latest"
+        "image": "latest",
+        "enterpriseProvisioning": "universal"
       }
     }
   },

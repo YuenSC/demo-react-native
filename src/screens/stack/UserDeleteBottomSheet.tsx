@@ -1,6 +1,5 @@
 import BottomSheet, { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import { Button, Text, makeStyles } from "@rneui/themed";
-import { StatusBar } from "expo-status-bar";
 import { useRef } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { useWindowDimensions } from "react-native";

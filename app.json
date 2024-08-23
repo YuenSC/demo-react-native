@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#050624"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "usesAppleSignIn": true,
@@ -38,7 +40,9 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["com.google.android.gms.permission.AD_ID"]
+      "permissions": [
+        "com.google.android.gms.permission.AD_ID"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -75,7 +79,8 @@
     },
     "updates": {
       "url": "https://u.expo.dev/096b25fb-91e1-4331-96bd-65cbd5373e03"
-    }
+    },
+    "owner": "scyuenab"
   },
   "react-native-google-mobile-ads": {
     "ios_app_id": "ca-app-pub-3349863138501385~9578743941",
